@@ -41,8 +41,13 @@
         max-width: 560px;
         background: #fbfaf7;
         border-radius: 24px;
+<<<<<<< HEAD
         padding: 38px 34px 28px;
         border: 1px solid #e8e0d7;
+=======
+        padding: 36px 34px 28px;
+        border: 1px solid #e7dfd3;
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
     }
 
@@ -50,13 +55,21 @@
         text-align: center;
         font-size: 28px;
         font-weight: 800;
+<<<<<<< HEAD
         color: #2c3a32;
+=======
+        color: #2b3a31;
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
         margin-bottom: 8px;
     }
 
     .register-subtitle {
         text-align: center;
+<<<<<<< HEAD
         color: #8d918c;
+=======
+        color: #8e948e;
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
         font-size: 14px;
         margin-bottom: 28px;
     }
@@ -69,11 +82,19 @@
     }
 
     .custom-label span {
+<<<<<<< HEAD
         color: #d68a52;
     }
 
     .custom-input-group {
         border: 1px solid #ddd7ce;
+=======
+        color: #d9864c;
+    }
+
+    .custom-input-group {
+        border: 1px solid #ddd6cb;
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
         border-radius: 10px;
         overflow: hidden;
         background: #fff;
@@ -96,7 +117,11 @@
     }
 
     .custom-input-group .form-control::placeholder {
+<<<<<<< HEAD
         color: #a5a5a5;
+=======
+        color: #a7a7a7;
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
     }
 
     .register-btn {
@@ -110,7 +135,11 @@
     }
 
     .register-btn:hover {
+<<<<<<< HEAD
         background-color: #3e624f;
+=======
+        background-color: #3d614f;
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
         color: #fff;
     }
 
@@ -122,7 +151,10 @@
         display: flex;
         justify-content: center;
         gap: 8px;
+<<<<<<< HEAD
         flex-wrap: wrap;
+=======
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
     }
 
     .login-text a {
@@ -134,20 +166,30 @@
     .bg-circle {
         position: absolute;
         border-radius: 50%;
+<<<<<<< HEAD
         background: #eef4ee;
+=======
+        background: #edf3ec;
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
         z-index: 1;
     }
 
     .circle-top {
         width: 170px;
         height: 170px;
+<<<<<<< HEAD
         top: 22px;
         right: 62px;
+=======
+        top: 24px;
+        right: 65px;
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
     }
 
     .circle-bottom {
         width: 220px;
         height: 220px;
+<<<<<<< HEAD
         left: -35px;
         bottom: -55px;
     }
@@ -178,6 +220,15 @@
 
 <div class="register-page">
     <div class="page-label">Register Mahasiswa</div>
+=======
+        left: -40px;
+        bottom: -55px;
+    }
+</style>
+
+<div class="register-page">
+
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
 
     <div class="register-wrapper">
         <div class="bg-circle circle-top"></div>
@@ -185,6 +236,7 @@
 
         <div class="register-card">
             <h1 class="register-title">Daftar Akun</h1>
+<<<<<<< HEAD
             <p class="register-subtitle">Lengkapi biodata singkat untuk membuat akun mahasiswa</p>
 
             <form action="{{ route('register.post') }}" method="POST">
@@ -209,11 +261,29 @@
                     @error('nama_lengkap')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
+=======
+            <p class="register-subtitle">
+                Lengkapi biodata singkat untuk membuat akun SBUM
+            </p>
+
+            <form action="#" method="POST">
+                @csrf
+
+                <div class="mb-3">
+                    <label class="form-label custom-label">Nama Lengkap <span>*</span></label>
+                    <div class="input-group custom-input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Masukkan nama lengkap">
+                    </div>
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label custom-label">NIM <span>*</span></label>
                     <div class="input-group custom-input-group">
+<<<<<<< HEAD
                         <span class="input-group-text"><i class="bi bi-card-text"></i></span>
                         <input
                             type="text"
@@ -225,11 +295,19 @@
                     @error('nim')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
+=======
+                        <span class="input-group-text">
+                            <i class="bi bi-card-text"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Masukkan NIM">
+                    </div>
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label custom-label">Email <span>*</span></label>
                     <div class="input-group custom-input-group">
+<<<<<<< HEAD
                         <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                         <input
                             type="email"
@@ -242,11 +320,19 @@
                     @error('email')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
+=======
+                        <span class="input-group-text">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+                        <input type="email" class="form-control" placeholder="Masukkan email">
+                    </div>
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label custom-label">Password <span>*</span></label>
                     <div class="input-group custom-input-group">
+<<<<<<< HEAD
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
                         <input
                             type="password"
@@ -258,11 +344,19 @@
                     @error('password')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
+=======
+                        <span class="input-group-text">
+                            <i class="bi bi-lock"></i>
+                        </span>
+                        <input type="password" class="form-control" placeholder="Masukkan password">
+                    </div>
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label custom-label">Konfirmasi Password <span>*</span></label>
                     <div class="input-group custom-input-group">
+<<<<<<< HEAD
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
                         <input
                             type="password"
@@ -278,6 +372,22 @@
                 <div class="login-text">
                     <span>Sudah punya akun?</span>
                     <a href="{{ route('login') }}">Masuk</a>
+=======
+                        <span class="input-group-text">
+                            <i class="bi bi-lock"></i>
+                        </span>
+                        <input type="password" class="form-control" placeholder="Masukkan konfirmasi password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn register-btn w-100">
+                    Daftar
+                </button>
+
+                <div class="login-text">
+                    <span>Sudah punya akun?</span>
+                    <a href="login.php">Masuk</a>
+>>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4
                 </div>
             </form>
         </div>
