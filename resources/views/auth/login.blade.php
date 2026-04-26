@@ -187,7 +187,7 @@
 </style>
 
 <div class="login-page">
-    <div class="page-label">Login</div>
+    <div class="page-label">Login Mahasiswa</div>
 
     <div class="login-wrapper">
         <div class="bg-circle circle-top"></div>
@@ -195,30 +195,47 @@
 
         <div class="login-card">
             <h1 class="login-title">Selamat Datang</h1>
-            <p class="login-subtitle">
-                Masuk ke sistem peminjaman ruangan dan fasilitas
-            </p>
+            <p class="login-subtitle">Masuk ke sistem peminjaman ruangan dan fasilitas</p>
 
-            <form action="#" method="POST">
+            <form action="{{ route('login.post') }}" method="POST">
                 @csrf
+
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
 
                 <div class="mb-4">
                     <label class="form-label custom-label">Email / NIM</label>
                     <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-envelope"></i>
-                        </span>
-                        <input type="text" class="form-control" placeholder="Masukkan email atau NIM">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input
+                            type="text"
+                            name="login"
+                            class="form-control"
+                            placeholder="Masukkan email atau NIM"
+                            value="{{ old('login') }}"
+                            autocomplete="username">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label custom-label">Password</label>
                     <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-lock"></i>
-                        </span>
-                        <input type="password" class="form-control" placeholder="Masukkan password">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Masukkan password"
+                            autocomplete="current-password">
                     </div>
                 </div>
 
@@ -226,9 +243,7 @@
                     <a href="#">Lupa password?</a>
                 </div>
 
-                <button type="submit" class="btn login-btn w-100">
-                    Masuk
-                </button>
+                <button type="submit" class="btn login-btn w-100">Masuk</button>
 
                 <div class="register-text">
                     <span>Belum punya akun?</span>

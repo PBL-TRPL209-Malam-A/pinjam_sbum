@@ -41,8 +41,8 @@
         max-width: 560px;
         background: #fbfaf7;
         border-radius: 24px;
-        padding: 36px 34px 28px;
-        border: 1px solid #e7dfd3;
+        padding: 38px 34px 28px;
+        border: 1px solid #e8e0d7;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
     }
 
@@ -50,13 +50,13 @@
         text-align: center;
         font-size: 28px;
         font-weight: 800;
-        color: #2b3a31;
+        color: #2c3a32;
         margin-bottom: 8px;
     }
 
     .register-subtitle {
         text-align: center;
-        color: #8e948e;
+        color: #8d918c;
         font-size: 14px;
         margin-bottom: 28px;
     }
@@ -69,11 +69,11 @@
     }
 
     .custom-label span {
-        color: #d9864c;
+        color: #d68a52;
     }
 
     .custom-input-group {
-        border: 1px solid #ddd6cb;
+        border: 1px solid #ddd7ce;
         border-radius: 10px;
         overflow: hidden;
         background: #fff;
@@ -96,7 +96,7 @@
     }
 
     .custom-input-group .form-control::placeholder {
-        color: #a7a7a7;
+        color: #a5a5a5;
     }
 
     .register-btn {
@@ -110,7 +110,7 @@
     }
 
     .register-btn:hover {
-        background-color: #3d614f;
+        background-color: #3e624f;
         color: #fff;
     }
 
@@ -122,6 +122,7 @@
         display: flex;
         justify-content: center;
         gap: 8px;
+        flex-wrap: wrap;
     }
 
     .login-text a {
@@ -133,27 +134,50 @@
     .bg-circle {
         position: absolute;
         border-radius: 50%;
-        background: #edf3ec;
+        background: #eef4ee;
         z-index: 1;
     }
 
     .circle-top {
         width: 170px;
         height: 170px;
-        top: 24px;
-        right: 65px;
+        top: 22px;
+        right: 62px;
     }
 
     .circle-bottom {
         width: 220px;
         height: 220px;
-        left: -40px;
+        left: -35px;
         bottom: -55px;
+    }
+
+    @media (max-width: 768px) {
+        .register-card {
+            padding: 28px 20px 22px;
+        }
+
+        .register-title {
+            font-size: 24px;
+        }
+
+        .circle-top {
+            width: 120px;
+            height: 120px;
+            right: -20px;
+        }
+
+        .circle-bottom {
+            width: 150px;
+            height: 150px;
+            left: -40px;
+            bottom: -40px;
+        }
     }
 </style>
 
 <div class="register-page">
-
+    <div class="page-label">Register Mahasiswa</div>
 
     <div class="register-wrapper">
         <div class="bg-circle circle-top"></div>
@@ -161,70 +185,99 @@
 
         <div class="register-card">
             <h1 class="register-title">Daftar Akun</h1>
-            <p class="register-subtitle">
-                Lengkapi biodata singkat untuk membuat akun SBUM
-            </p>
+            <p class="register-subtitle">Lengkapi biodata singkat untuk membuat akun mahasiswa</p>
 
-            <form action="#" method="POST">
+            <form action="{{ route('register.post') }}" method="POST">
                 @csrf
+
+                @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
 
                 <div class="mb-3">
                     <label class="form-label custom-label">Nama Lengkap <span>*</span></label>
                     <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-person"></i>
-                        </span>
-                        <input type="text" class="form-control" placeholder="Masukkan nama lengkap">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input
+                            type="text"
+                            name="nama_lengkap"
+                            class="form-control"
+                            placeholder="Masukkan nama lengkap"
+                            value="{{ old('nama_lengkap') }}"
+                            autocomplete="name">
                     </div>
+                    @error('nama_lengkap')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label custom-label">NIM <span>*</span></label>
                     <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-card-text"></i>
-                        </span>
-                        <input type="text" class="form-control" placeholder="Masukkan NIM">
+                        <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                        <input
+                            type="text"
+                            name="nim"
+                            class="form-control"
+                            placeholder="Masukkan NIM"
+                            value="{{ old('nim') }}">
                     </div>
+                    @error('nim')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label custom-label">Email <span>*</span></label>
                     <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-envelope"></i>
-                        </span>
-                        <input type="email" class="form-control" placeholder="Masukkan email">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Masukkan email"
+                            value="{{ old('email') }}"
+                            autocomplete="email">
                     </div>
+                    @error('email')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label custom-label">Password <span>*</span></label>
                     <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-lock"></i>
-                        </span>
-                        <input type="password" class="form-control" placeholder="Masukkan password">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Masukkan password"
+                            autocomplete="new-password">
                     </div>
+                    @error('password')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label custom-label">Konfirmasi Password <span>*</span></label>
                     <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-lock"></i>
-                        </span>
-                        <input type="password" class="form-control" placeholder="Masukkan konfirmasi password">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            class="form-control"
+                            placeholder="Masukkan konfirmasi password"
+                            autocomplete="new-password">
                     </div>
                 </div>
 
-                <button type="submit" class="btn register-btn w-100">
-                    Daftar
-                </button>
+                <button type="submit" class="btn register-btn w-100">Daftar</button>
 
                 <div class="login-text">
                     <span>Sudah punya akun?</span>
-                    <a href="login.php">Masuk</a>
+                    <a href="{{ route('login') }}">Masuk</a>
                 </div>
             </form>
         </div>
