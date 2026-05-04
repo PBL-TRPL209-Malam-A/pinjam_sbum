@@ -531,11 +531,11 @@
                     <span class="side-icon"></span>
                     <span>Pengembalian</span>
                 </a>
-                <a href="#" class="side-link">
+                <a href="{{ route('mahasiswa.notifikasi') }}" class="side-link">
                     <span class="side-icon"></span>
                     <span>Notifikasi</span>
                 </a>
-                <a href="#" class="side-link">
+                <a href="{{ route ('mahasiswa.profil')}}" class="side-link">
                     <span class="side-icon"></span>
                     <span>Profil</span>
                 </a>

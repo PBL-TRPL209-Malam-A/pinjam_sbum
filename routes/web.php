@@ -1,6 +1,5 @@
 <?php
 
-<<<<<<< HEAD
 use App\Http\Controllers\AuthMahasiswaController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,12 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/mahasiswa/jadwal', [AuthMahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal');
     Route::get('/mahasiswa/pengajuan', [AuthMahasiswaController::class, 'pengajuan'])->name('mahasiswa.pengajuan');
     Route::get('/mahasiswa/pengembalian', [AuthMahasiswaController::class, 'pengembalian'])->name('mahasiswa.pengembalian');
+    Route::get('/mahasiswa/profil', [AuthMahasiswaController::class, 'profil'])->name('mahasiswa.profil');
+    Route::get('/mahasiswa/notifikasi', [AuthMahasiswaController::class, 'notifikasi'])->name('mahasiswa.notifikasi');
     Route::post('/logout', [AuthMahasiswaController::class, 'logout'])->name('logout');
 });
-=======
-use Illuminate\Support\Facades\Route;
-
-Route::view('/', 'index')->name('home');
-Route::view('/register', 'auth.register')->name('register');
-Route::view('/login', 'auth.login')->name('login');
->>>>>>> 4dea1910bb6bdff32fc71724c337cfa2a72847e4

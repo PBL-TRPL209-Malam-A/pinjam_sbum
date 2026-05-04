@@ -146,6 +146,24 @@ class AuthMahasiswaController extends Controller
         return view('mahasiswa.pengembalian');
     }
 
+    public function profil()
+    {
+        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
+            abort(403, 'Akses hanya untuk mahasiswa.');
+        }
+
+        return view('mahasiswa.profil');
+    }
+
+    public function notifikasi()
+    {
+        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
+            abort(403, 'Akses hanya untuk mahasiswa.');
+        }
+
+        return view('mahasiswa.notifikasi');
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();
