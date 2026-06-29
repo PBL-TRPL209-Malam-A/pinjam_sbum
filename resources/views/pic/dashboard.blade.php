@@ -58,6 +58,24 @@
         border-radius: 2rem;
         display: inline-block;
     }
+    .badge-tidak-tersedia {
+        background-color:  #8b3c3c;
+        color: #fcebeb;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.4rem 1.25rem;
+        border-radius: 2rem;
+        display: inline-block;
+    }
+    .badge-maintenance {
+        background-color: #fcf1d3;
+        color:  #7d6006;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.4rem 1.25rem;
+        border-radius: 2rem;
+        display: inline-block;
+    }
 </style>
 
 <!-- Banner Card -->
@@ -100,7 +118,17 @@
 </div>
 
 <!-- Table: Managed Rooms -->
-<div class="mb-3 fw-semibold text-secondary">Fasilitas Ruangan Anda</div>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+    <div class="fw-semibold text-secondary">Fasilitas Ruangan Anda</div>
+    <form action="{{ route('pic.dashboard') }}" method="GET" class="d-flex align-items-center gap-2" style="max-width: 350px; width: 100%;">
+        <input type="hidden" name="search_item" value="{{ request('search_item') }}">
+        <input type="text" name="search_room" class="form-control" placeholder="Cari ruangan..." value="{{ request('search_room') }}" style="border-radius: 0.75rem; border: 1px solid var(--line); background: #fffdfa; height: 2.5rem; font-size: 0.9rem;">
+        <button type="submit" class="btn btn-sm btn-main d-flex align-items-center justify-content-center" style="min-width: auto; height: 2.5rem; border-radius: 0.75rem; padding: 0 1rem; font-size: 0.9rem; color: white;">Cari</button>
+        @if(request('search_room'))
+            <a href="{{ route('pic.dashboard', ['search_item' => request('search_item')]) }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" style="height: 2.5rem; border-radius: 0.75rem; font-size: 0.9rem;">Reset</a>
+        @endif
+    </form>
+</div>
 <div class="custom-table mb-4">
     <table class="table table-borderless mb-0">
         <thead>
@@ -122,20 +150,65 @@
                 <td>Lantai {{ $room->lantai ?? '1' }}</td>
                 <td>{{ $room->kapasitas }} orang</td>
                 <td>
-                    <span class="badge-aktif">Aktif</span>
+                    @if($room->status_ruangan == 'tersedia')
+                        <span class="badge-aktif">Tersedia</span>
+                    @elseif($room->status_ruangan == 'tidak tersedia')
+                        <span class="badge-tidak-tersedia">Tidak Tersedia</span>
+                    @elseif($room->status_ruangan == 'maintenance')
+                        <span class="badge-maintenance">Maintenance</span>
+                    @endif
                 </td>
             </tr>
             @empty
-            <!-- Fallback Mock Room -->
             <tr>
-                <td class="fw-semibold">Aula Utama Polibatam</td>
-                <td>R101</td>
-                <td>Gedung Utama</td>
-                <td>Lantai 1</td>
-                <td>250 orang</td>
+                <td colspan="6" class="text-center py-4 text-muted">Tidak ada data fasilitas ruangan yang dikelola.</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
+<!-- Table: Managed Items -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3 mt-4">
+    <div class="fw-semibold text-secondary">Barang Inventaris Anda</div>
+    <form action="{{ route('pic.dashboard') }}" method="GET" class="d-flex align-items-center gap-2" style="max-width: 350px; width: 100%;">
+        <input type="hidden" name="search_room" value="{{ request('search_room') }}">
+        <input type="text" name="search_item" class="form-control" placeholder="Cari barang..." value="{{ request('search_item') }}" style="border-radius: 0.75rem; border: 1px solid var(--line); background: #fffdfa; height: 2.5rem; font-size: 0.9rem;">
+        <button type="submit" class="btn btn-sm btn-main d-flex align-items-center justify-content-center" style="min-width: auto; height: 2.5rem; border-radius: 0.75rem; padding: 0 1rem; font-size: 0.9rem; color: white;">Cari</button>
+        @if(request('search_item'))
+            <a href="{{ route('pic.dashboard', ['search_room' => request('search_room')]) }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" style="height: 2.5rem; border-radius: 0.75rem; font-size: 0.9rem;">Reset</a>
+        @endif
+    </form>
+</div>
+<div class="custom-table mb-4">
+    <table class="table table-borderless mb-0">
+        <thead>
+            <tr>
+                <th>Nama Barang</th>
+                <th>Foto</th>
+                <th>Keterangan/Lokasi</th>
+                <th>Total Stok</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($barang as $item)
+            <tr>
+                <td class="fw-semibold">{{ $item->nama_barang }}</td>
                 <td>
-                    <span class="badge-aktif">Aktif</span>
+                    @if($item->foto_barang)
+                        <img src="{{ asset($item->foto_barang) }}" alt="{{ $item->nama_barang }}" class="img-fluid rounded-3" style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;">
+                    @else
+                        <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">
+                            Tidak ada foto
+                        </div>
+                    @endif
                 </td>
+                <td>{{ $item->keterangan ?: 'Gudang SBUM' }}</td>
+                <td>{{ $item->stok_tersedia }} unit</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="4" class="text-center py-4 text-muted">Tidak ada data barang inventaris yang didelegasikan.</td>
             </tr>
             @endforelse
         </tbody>

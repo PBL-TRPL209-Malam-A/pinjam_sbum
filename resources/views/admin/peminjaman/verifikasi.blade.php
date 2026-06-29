@@ -126,52 +126,108 @@
                 <div class="queue-card {{ $item->id_peminjaman == $selectedId ? 'active' : '' }}" onclick="window.location.href='?selected_id={{ $item->id_peminjaman }}'">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="fw-bold text-main">SBUM-2026-{{ str_pad($item->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · {{ $item->nama_kegiatan }}</div>
-                            <div class="text-secondary small mt-1">
+                            <div class="fw-bold text-main">SBUM-2026-{{ str_pad($item->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · {{ $item->nama_kegiatan }}</div>                            <div class="text-secondary small mt-1">
                                 Peminjam: {{ $item->user->nama_lengkap ?? 'Mahasiswa' }} · 
                                 {{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : (count($item->barang) > 0 ? $item->barang->first()->nama_barang : 'Fasilitas') }}
                             </div>
                             <div class="text-muted small mt-2">
-                                Sudah diverifikasi dosen · {{ $item->tanggal_pengajuan ? $item->tanggal_pengajuan->format('d M Y') : now()->format('d M Y') }} · 08.00 - 12.00
+                                Sudah diverifikasi dosen · {{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}
                             </div>
                         </div>
                         <span class="badge-warning-soft">Menunggu Admin</span>
                     </div>
-
+ 
                     <!-- Timeline flow -->
-                    <div class="timeline-bar">
-                        <div class="timeline-step completed"></div>
-                        <div class="timeline-step {{ $item->status != 'pending' ? 'completed' : '' }}"></div>
-                        <div class="timeline-step"></div>
+                    @php
+                        $statusSteps = [
+                            'menunggu_dosen' => 1,
+                            'menunggu_admin' => 2,
+                            'menunggu_kepala' => 3,
+                            'menunggu_pic' => 4,
+                            'siap_digunakan' => 5,
+                            'pending' => 1,
+                            'disetujui' => 5,
+                            'revisi' => 1,
+                            'ditolak' => 1,
+                        ];
+                        $currentStep = $statusSteps[$item->status] ?? 2;
+                    @endphp
+                    <div class="timeline-bar d-flex gap-1 mt-2">
+                        <div class="timeline-step {{ $currentStep >= 1 ? 'completed' : '' }}" style="flex: 1; height: 8px; border-radius: 10px;"></div>
+                        <div class="timeline-step {{ $currentStep >= 2 ? 'completed' : '' }}" style="flex: 1; height: 8px; border-radius: 10px;"></div>
+                        <div class="timeline-step {{ $currentStep >= 3 ? 'completed' : '' }}" style="flex: 1; height: 8px; border-radius: 10px;"></div>
+                        <div class="timeline-step {{ $currentStep >= 4 ? 'completed' : '' }}" style="flex: 1; height: 8px; border-radius: 10px;"></div>
+                        <div class="timeline-step {{ $currentStep >= 5 ? 'completed' : '' }}" style="flex: 1; height: 8px; border-radius: 10px;"></div>
                     </div>
-                    <div class="d-flex justify-content-between small text-muted mt-1" style="font-size:0.75rem;">
+                    <div class="d-flex justify-content-between small text-muted mt-1" style="font-size:0.65rem;">
                         <span>Diajukan</span>
+                        <span>Dosen PJ</span>
                         <span>Admin</span>
-                        <span>Kepala SBUM</span>
+                        <span>Kepala</span>
+                        <span>PIC</span>
+                    </div>
+ 
+                    <div class="mt-3 text-end">
+                        <button type="button" class="btn btn-sm btn-link text-main fw-semibold p-0 text-decoration-none" style="font-size: 0.8rem; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#adminDetailModal{{ $item->id_peminjaman }}" onclick="openDetailModal(event)">
+                            <i class="bi bi-info-circle me-1"></i> Detail
+                        </button>
+                    </div>
+                </div>
+ 
+                <!-- Modal for each request -->
+                <div class="modal fade" id="adminDetailModal{{ $item->id_peminjaman }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #fffdfa;">
+                            <div class="modal-header border-0 pb-0" style="background-color: #f7f3eb; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                                <h5 class="modal-title fw-bold text-main">Detail Peminjaman</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Nama Kegiatan</span>
+                                    <span class="fw-bold text-main fs-5">{{ $item->nama_kegiatan }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Waktu Acara</span>
+                                    <span class="fw-semibold text-main">
+                                        {{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · 
+                                        {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Jumlah Peserta</span>
+                                    <span class="fw-semibold text-main">{{ $item->jumlah_peserta ?? '0' }} Orang</span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Keterangan / Deskripsi Acara</span>
+                                    <span class="fw-semibold text-main">{{ $item->keterangan ?: 'Tidak ada keterangan tambahan.' }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Dosen Penanggung Jawab</span>
+                                    <span class="fw-semibold text-main">{{ $item->dosen->nama_lengkap ?? '-' }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">PIC Fasilitas</span>
+                                    <span class="fw-semibold text-main">
+                                        @if(count($item->ruangan) > 0)
+                                            {{ $item->ruangan->first()->pic->nama_lengkap ?? '-' }}
+                                        @elseif(count($item->barang) > 0)
+                                            {{ $item->barang->first()->pic->nama_lengkap ?? '-' }}
+                                        @else
+                                            -
+                                        @endif
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-main w-100" data-bs-dismiss="modal" style="border-radius:0.75rem;">Tutup</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @empty
-                <!-- Mock item if queue is empty to show working mockup -->
-                <div class="queue-card active">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div class="fw-bold text-main">SBUM-2026-0148 · Seminar Mahasiswa Baru</div>
-                            <div class="text-secondary small mt-1">Peminjam: Moch Azmi Aris Sandita - Aula Utama Polibatam</div>
-                            <div class="text-muted small mt-2">Sudah diverifikasi dosen · 12 Apr 2026 · 08.00 - 12.00</div>
-                        </div>
-                        <span class="badge-warning-soft">Menunggu Admin</span>
-                    </div>
-
-                    <div class="timeline-bar">
-                        <div class="timeline-step completed"></div>
-                        <div class="timeline-step"></div>
-                        <div class="timeline-step"></div>
-                    </div>
-                    <div class="d-flex justify-content-between small text-muted mt-1" style="font-size:0.75rem;">
-                        <span>Diajukan</span>
-                        <span>Admin</span>
-                        <span>Kepala SBUM</span>
-                    </div>
+                <div class="card p-5 text-center text-secondary border-0 w-100" style="background:#fffdfa; border-radius:1.5rem; border: 1px solid var(--line) !important;">
+                    Antrian verifikasi peminjaman tidak ada.
                 </div>
             @endforelse
         </div>
@@ -179,60 +235,77 @@
 
     <!-- Right Column: Verification Form & Decisions -->
     <div class="col-lg-5">
-        <form action="{{ route('admin.verifikasi-peminjaman.verifikasi', $selectedItem ? $selectedItem->id_peminjaman : 1) }}" method="POST" id="decisionForm">
-            @csrf
-            @method('PUT')
-            <input type="hidden" name="status_pengajuan" id="statusField" value="disetujui">
+        @if($selectedItem)
+            <form action="{{ route('admin.verifikasi-peminjaman.verifikasi', $selectedItem->id_peminjaman) }}" method="POST" id="decisionForm">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="status_pengajuan" id="statusField" value="disetujui">
 
-            <div class="mb-3 fw-semibold text-secondary">Checklist Verifikasi</div>
-            <div class="checklist-card mb-4">
-                <div class="checklist-item">
-                    <input class="form-check-input mt-0" type="checkbox" id="check1" required>
-                    <label class="form-check-label text-main fw-semibold" for="check1">Data peminjaman lengkap</label>
-                </div>
-                <div class="checklist-item">
-                    <input class="form-check-input mt-0" type="checkbox" id="check2" required>
-                    <label class="form-check-label text-main fw-semibold" for="check2">Fasilitas tersedia pada jam tersebut</label>
-                </div>
-                <div class="checklist-item">
-                    <input class="form-check-input mt-0" type="checkbox" id="check3" required>
-                    <label class="form-check-label text-main fw-semibold" for="check3">Dokumen pendukung valid</label>
+                <div class="mb-3 fw-semibold text-secondary text-start">Checklist Verifikasi</div>
+                <div class="checklist-card mb-4">
+                    <div class="checklist-item text-start">
+                        <input class="form-check-input mt-0" type="checkbox" id="check1" required>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check1">Data peminjaman lengkap</label>
+                    </div>
+                    <div class="checklist-item text-start">
+                        <input class="form-check-input mt-0" type="checkbox" id="check2" required>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check2">Fasilitas tersedia pada jam tersebut</label>
+                    </div>
+                    <div class="checklist-item text-start">
+                        <input class="form-check-input mt-0" type="checkbox" id="check3" required>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check3">Dokumen pendukung valid</label>
+                    </div>
+
+                    <div class="mt-4 text-start">
+                        <label class="form-label text-secondary fw-semibold">Catatan Admin</label>
+                        <textarea name="catatan" class="form-control" rows="3" placeholder="Tambahkan catatan verifikasi" style="border-radius: 0.75rem; border-color: #dfd4c8;"></textarea>
+                    </div>
                 </div>
 
-                <div class="mt-4">
-                    <label class="form-label text-secondary fw-semibold">Catatan Admin</label>
-                    <textarea name="catatan" class="form-control" rows="3" placeholder="Tambahkan catatan verifikasi" style="border-radius: 0.75rem; border-color: #dfd4c8;"></textarea>
+                <div class="mb-3 fw-semibold text-secondary text-start">Keputusan</div>
+                <div class="decision-card">
+                    <div class="d-grid gap-2">
+                        <button type="submit" onclick="setStatus('disetujui')" class="btn btn-decision-verify">Verifikasi</button>
+                        <button type="submit" onclick="setStatus('ditolak')" class="btn btn-decision-reject">Tolak</button>
+                        <button type="submit" onclick="setStatus('revisi')" class="btn btn-decision-revision">Minta Revisi</button>
+                    </div>
                 </div>
+            </form>
+        @else
+            <div class="card p-5 text-center text-secondary border-0" style="background:#fffdfa; border-radius:1.5rem; border: 1px solid var(--line) !important;">
+                Antrian verifikasi peminjaman tidak ada.
             </div>
-
-            <div class="mb-3 fw-semibold text-secondary">Keputusan</div>
-            <div class="decision-card">
-                <div class="d-grid gap-2">
-                    <button type="submit" onclick="setStatus('disetujui')" class="btn btn-decision-verify">Verifikasi</button>
-                    <button type="submit" onclick="setStatus('ditolak')" class="btn btn-decision-reject">Tolak</button>
-                    <button type="submit" onclick="setStatus('revisi')" class="btn btn-decision-revision">Minta Revisi</button>
-                </div>
-            </div>
-        </form>
+        @endif
     </div>
 </div>
 
 <script>
+    function openDetailModal(event) {
+        if (event) {
+            event.stopPropagation();
+        }
+    }
+
     function setStatus(status) {
-        document.getElementById('statusField').value = status;
+        var statusField = document.getElementById('statusField');
+        if (statusField) {
+            statusField.value = status;
+        }
         
         // Remove 'required' logic for checkboxes if rejecting or requesting revision
         var check1 = document.getElementById('check1');
         var check2 = document.getElementById('check2');
         var check3 = document.getElementById('check3');
-        if (status === 'ditolak' || status === 'revisi') {
-            check1.removeAttribute('required');
-            check2.removeAttribute('required');
-            check3.removeAttribute('required');
-        } else {
-            check1.setAttribute('required', 'required');
-            check2.setAttribute('required', 'required');
-            check3.setAttribute('required', 'required');
+        if (check1 && check2 && check3) {
+            if (status === 'ditolak' || status === 'revisi') {
+                check1.removeAttribute('required');
+                check2.removeAttribute('required');
+                check3.removeAttribute('required');
+            } else {
+                check1.setAttribute('required', 'required');
+                check2.setAttribute('required', 'required');
+                check3.setAttribute('required', 'required');
+            }
         }
     }
 </script>

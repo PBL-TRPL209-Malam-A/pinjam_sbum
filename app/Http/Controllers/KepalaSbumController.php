@@ -131,9 +131,8 @@ class KepalaSbumController extends Controller
     // F-018: Persetujuan akhir peminjaman
     public function persetujuanIndex()
     {
-        $peminjaman = Peminjaman::with(['user', 'ruangan', 'barang'])
-            ->where('status', 'pending')
-            ->orWhere('status', 'disetujui')
+        $peminjaman = Peminjaman::with(['user', 'ruangan.pic', 'barang.pic', 'dosen', 'verifikasi.verifikator'])
+            ->where('status', 'menunggu_kepala')
             ->get();
         return view('kepalasbum.persetujuan', compact('peminjaman'));
     }
@@ -148,22 +147,25 @@ class KepalaSbumController extends Controller
 
         $status = $request->status_pengajuan;
         if ($status === 'disetujui_kepala' || $status === 'disetujui') {
-            $status = 'disetujui';
+            $status = 'menunggu_pic';
         }
 
-        $peminjaman->update([
-            'status' => $status
-        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($peminjaman, $status, $request) {
+            $peminjaman->update([
+                'status' => $status
+            ]);
 
-        // Insert log in verifikasi_peminjaman
-        \App\Models\VerifikasiPeminjaman::create([
-            'id_peminjaman' => $peminjaman->id_peminjaman,
-            'id_verifikator' => auth()->user()->id_user,
-            'peran_verifikasi' => 'Kepala SBUM',
-            'jenis_verifikasi' => 'Persetujuan Akhir',
-            'status' => $status === 'disetujui' ? 'disetujui' : 'ditolak',
-            'catatan' => $request->catatan ?? 'Diverifikasi oleh Kepala SBUM',
-        ]);
+            // Insert log in verifikasi_peminjaman
+            \App\Models\VerifikasiPeminjaman::create([
+                'id_peminjaman' => $peminjaman->id_peminjaman,
+                'id_verifikator' => auth()->user()->id_user,
+                'peran_verifikasi' => 'Kepala SBUM',
+                'jenis_verifikasi' => 'Persetujuan Akhir',
+                'status' => $status === 'menunggu_pic' ? 'disetujui' : 'ditolak',
+                'catatan' => $request->catatan ?? 'Diverifikasi oleh Kepala SBUM',
+                'tanggal' => now(),
+            ]);
+        });
 
         return back()->with('success', 'Persetujuan akhir berhasil disimpan');
     }
@@ -238,7 +240,7 @@ class KepalaSbumController extends Controller
         })->count();
 
         $totalPeminjaman = Peminjaman::count();
-        $pendingPersetujuan = Peminjaman::where('status', 'pending')->count();
+        $pendingPersetujuan = Peminjaman::where('status', 'menunggu_kepala')->count();
 
         return view('kepalasbum.dashboard', compact('totalStaff', 'totalPeminjaman', 'pendingPersetujuan'));
     }

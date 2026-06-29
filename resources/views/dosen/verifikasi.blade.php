@@ -86,11 +86,11 @@
     </div>
     <div class="d-flex gap-3">
         <div class="stat-pill">
-            <div class="stat-num">6</div>
+            <div class="stat-num">{{ $menungguVerifikasi }}</div>
             <div class="stat-label">Perlu<br>Review</div>
         </div>
         <div class="stat-pill">
-            <div class="stat-num">2</div>
+            <div class="stat-num">{{ $ditolakRevisi }}</div>
             <div class="stat-label">Butuh<br>Revisi</div>
         </div>
     </div>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="mb-4">
                     <div class="text-secondary small fw-semibold">Tanggal & Waktu:</div>
-                    <div class="text-main fw-semibold small">{{ $item->tanggal_pengajuan ? $item->tanggal_pengajuan->format('d M Y') : now()->format('d M Y') }} · 08.00 - 12.00</div>
+                    <div class="text-main fw-semibold small">{{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}</div>
                 </div>
             </div>
             <div>
@@ -152,12 +152,16 @@
                             <span class="fw-semibold text-main">{{ $item->nama_kegiatan }}</span>
                         </div>
                         <div class="mb-3">
+                            <span class="text-muted small d-block">Keterangan / Deskripsi Kegiatan</span>
+                            <span class="fw-semibold text-main">{{ $item->keterangan ?: 'Tidak ada keterangan tambahan.' }}</span>
+                        </div>
+                        <div class="mb-3">
                             <span class="text-muted small d-block">Fasilitas</span>
                             <span class="fw-semibold text-main">{{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : (count($item->barang) > 0 ? $item->barang->first()->nama_barang : 'Fasilitas') }}</span>
                         </div>
                         <div class="mb-3">
                             <span class="text-muted small d-block">Waktu</span>
-                            <span class="fw-semibold text-main">{{ $item->tanggal_pengajuan ? $item->tanggal_pengajuan->format('d M Y') : now()->format('d M Y') }} · 08.00 - 12.00</span>
+                            <span class="fw-semibold text-main">{{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}</span>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-secondary fw-semibold">Catatan Dosen</label>
@@ -174,104 +178,9 @@
         </div>
     </div>
     @empty
-    <!-- Fallback requests matching Image 2 exactly -->
-    <div class="col-md-6">
-        <div class="req-card">
-            <div>
-                <div class="req-header">
-                    <div>
-                        <h4 class="fs-5 fw-bold text-main mb-0">Moch Azmi Aris Sandita</h4>
-                        <div class="text-secondary small">NIM 4342511024 · Himpunan TRPL</div>
-                    </div>
-                    <span class="badge-menunggu">Menunggu Verifikasi</span>
-                </div>
-                <div class="mb-3">
-                    <div class="text-secondary small fw-semibold">Ruangan / Fasilitas:</div>
-                    <div class="text-main fw-semibold">Aula Utama Polibatam</div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-secondary small fw-semibold">Tanggal & Waktu:</div>
-                    <div class="text-main fw-semibold small">12 Apr 2026 · 08.00 - 12.00</div>
-                </div>
-            </div>
-            <div>
-                <button class="btn action-btn-outline w-100" style="border: 1px solid var(--line); border-radius: 0.75rem;">Lihat Detail</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="req-card">
-            <div>
-                <div class="req-header">
-                    <div>
-                        <h4 class="fs-5 fw-bold text-main mb-0">Ayudia Permata Pabatia</h4>
-                        <div class="text-secondary small">NIM 4342511020 · Workshop UKM</div>
-                    </div>
-                    <span class="badge-menunggu">Menunggu Verifikasi</span>
-                </div>
-                <div class="mb-3">
-                    <div class="text-secondary small fw-semibold">Ruangan / Fasilitas:</div>
-                    <div class="text-main fw-semibold">Lab Komputer 1</div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-secondary small fw-semibold">Tanggal & Waktu:</div>
-                    <div class="text-main fw-semibold small">14 Apr 2026 · 09.00 - 11.00</div>
-                </div>
-            </div>
-            <div>
-                <button class="btn action-btn-outline w-100" style="border: 1px solid var(--line); border-radius: 0.75rem;">Lihat Detail</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="req-card">
-            <div>
-                <div class="req-header">
-                    <div>
-                        <h4 class="fs-5 fw-bold text-main mb-0">Danudenta Arhab Tsaqif</h4>
-                        <div class="text-secondary small">NIM 4342511021 · Seminar Prodi</div>
-                    </div>
-                    <span class="badge-menunggu">Menunggu Verifikasi</span>
-                </div>
-                <div class="mb-3">
-                    <div class="text-secondary small fw-semibold">Ruangan / Fasilitas:</div>
-                    <div class="text-main fw-semibold">Ruang Multimedia 2</div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-secondary small fw-semibold">Tanggal & Waktu:</div>
-                    <div class="text-main fw-semibold small">13 Apr 2026 · 13.00 - 16.00</div>
-                </div>
-            </div>
-            <div>
-                <button class="btn action-btn-outline w-100" style="border: 1px solid var(--line); border-radius: 0.75rem;">Lihat Detail</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="req-card">
-            <div>
-                <div class="req-header">
-                    <div>
-                        <h4 class="fs-5 fw-bold text-main mb-0">Grexia Angelina</h4>
-                        <div class="text-secondary small">NIM 4342511008 · Rapat Panitia</div>
-                    </div>
-                    <span class="badge-revisi">Butuh Revisi</span>
-                </div>
-                <div class="mb-3">
-                    <div class="text-secondary small fw-semibold">Ruangan / Fasilitas:</div>
-                    <div class="text-main fw-semibold">Ruang Rapat SBUM</div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-secondary small fw-semibold">Tanggal & Waktu:</div>
-                    <div class="text-main fw-semibold small">15 Apr 2026 · 15.00 - 17.00</div>
-                </div>
-            </div>
-            <div>
-                <button class="btn action-btn-outline w-100" style="border: 1px solid var(--line); border-radius: 0.75rem;" disabled>Butuh Revisi</button>
-            </div>
+    <div class="col-12 text-center py-5">
+        <div class="card p-5 border-0 shadow-none text-secondary" style="background:#fffdfa; border-radius:1.5rem; border: 1px solid var(--line) !important;">
+            <p class="mb-0 fw-semibold text-muted">Permohonan peminjaman tidak ada.</p>
         </div>
     </div>
     @endforelse

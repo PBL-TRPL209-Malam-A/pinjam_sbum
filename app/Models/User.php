@@ -37,6 +37,14 @@ class User extends Authenticatable
         );
     }
 
+    public function scopePenanggungJawab($query)
+    {
+        return $query->whereHas('roles', function ($q) {
+            $q->whereIn('role.nama_role', ['Dosen', 'PIC Fasilitas'])
+              ->orWhereIn('role.id_role', [2, 5]);
+        });
+    }
+
     public function isMahasiswa(): bool
     {
         return $this->roles()->where('role.nama_role', 'Mahasiswa')->exists() || 

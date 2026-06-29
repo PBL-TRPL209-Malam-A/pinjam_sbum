@@ -11,14 +11,16 @@ class DosenController extends Controller
     // Dashboard Dosen
     public function dashboard()
     {
+        $dosenId = auth()->id();
         $peminjaman = Peminjaman::with(['user', 'ruangan', 'barang'])
-            ->where('status', 'pending')
+            ->where('dosen_id', $dosenId)
+            ->where('status', 'menunggu_dosen')
             ->get();
             
-        $menungguVerifikasi = Peminjaman::where('status', 'pending')->count();
-        $disetujuiHariIni = 3; // Mocked
-        $ditolakRevisi = 2; // Mocked
-        $kegiatanTerdekat = 4; // Mocked
+        $menungguVerifikasi = Peminjaman::where('dosen_id', $dosenId)->where('status', 'menunggu_dosen')->count();
+        $disetujuiHariIni = Peminjaman::where('dosen_id', $dosenId)->whereIn('status', ['menunggu_admin', 'menunggu_kepala', 'menunggu_pic', 'siap_digunakan'])->count();
+        $ditolakRevisi = Peminjaman::where('dosen_id', $dosenId)->whereIn('status', ['ditolak', 'revisi'])->count();
+        $kegiatanTerdekat = Peminjaman::where('dosen_id', $dosenId)->where('status', 'siap_digunakan')->count();
 
         return view('dosen.dashboard', compact(
             'peminjaman',
@@ -32,8 +34,15 @@ class DosenController extends Controller
     // Verifikasi Peminjaman index page
     public function verifikasiPeminjamanIndex()
     {
-        $peminjaman = Peminjaman::with(['user', 'ruangan', 'barang'])->get();
-        return view('dosen.verifikasi', compact('peminjaman'));
+        $peminjaman = Peminjaman::with(['user', 'ruangan', 'barang'])
+            ->where('dosen_id', auth()->id())
+            ->where('status', 'menunggu_dosen')
+            ->get();
+        
+        $menungguVerifikasi = Peminjaman::where('dosen_id', auth()->id())->where('status', 'menunggu_dosen')->count();
+        $ditolakRevisi = Peminjaman::where('dosen_id', auth()->id())->where('status', 'revisi')->count();
+
+        return view('dosen.verifikasi', compact('peminjaman', 'menungguVerifikasi', 'ditolakRevisi'));
     }
 
     // Process Dosen verification decision
@@ -48,25 +57,27 @@ class DosenController extends Controller
 
         $status = $request->status_pengajuan;
         if ($status === 'verif_dosen' || $status === 'disetujui') {
-            $status = 'disetujui';
+            $status = 'menunggu_admin';
         } elseif ($status === 'revisi') {
-            $status = 'pending';
+            $status = 'revisi';
         }
 
-        $peminjaman->update([
-            'status' => $status
-        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($peminjaman, $status, $request) {
+            $peminjaman->update([
+                'status' => $status
+            ]);
 
-        // Insert log in verifikasi_peminjaman
-        VerifikasiPeminjaman::create([
-            'id_peminjaman' => $peminjaman->id_peminjaman,
-            'id_verifikator' => auth()->user()->id_user,
-            'peran_verifikasi' => 'Dosen',
-            'jenis_verifikasi' => 'Persetujuan Akademik',
-            'status' => $status === 'disetujui' ? 'disetujui' : ($status === 'ditolak' ? 'ditolak' : 'pending'),
-            'catatan' => $request->catatan ?? 'Diverifikasi oleh Dosen',
-            'tanggal' => now(),
-        ]);
+            // Insert log in verifikasi_peminjaman
+            VerifikasiPeminjaman::create([
+                'id_peminjaman' => $peminjaman->id_peminjaman,
+                'id_verifikator' => auth()->user()->id_user,
+                'peran_verifikasi' => 'Dosen',
+                'jenis_verifikasi' => 'Persetujuan Akademik',
+                'status' => $status === 'menunggu_admin' ? 'disetujui' : ($status === 'ditolak' ? 'ditolak' : 'pending'),
+                'catatan' => $request->catatan ?? 'Diverifikasi oleh Dosen',
+                'tanggal' => now(),
+            ]);
+        });
 
         return redirect()->route('dosen.verifikasi-peminjaman')->with('success', 'Keputusan verifikasi berhasil disimpan.');
     }

@@ -111,8 +111,9 @@
             <tr>
                 <th>Barang</th>
                 <th>Foto</th>
-                <th>Lokasi</th>
+                <th>Keterangan</th>
                 <th>Stok</th>
+                <th>PIC Barang</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -131,6 +132,7 @@
                 </td>
                 <td>{{ $b->keterangan ?: 'Gudang SBUM' }}</td>
                 <td>{{ $b->stok_tersedia }} unit</td>
+                <td class="fw-semibold">{{ $b->pic ? $b->pic->nama_lengkap : '-' }}</td>
                 <td>
                     <div class="action-btn-group">
                         <button class="btn btn-ubah" data-bs-toggle="modal" data-bs-target="#editInventarisModal{{ $b->id_barang }}">Ubah</button>
@@ -172,6 +174,15 @@
                                     <input type="text" name="keterangan" class="form-control" value="{{ $b->keterangan }}" placeholder="cth: Gudang SBUM" style="border-radius:0.75rem;">
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-label text-secondary fw-semibold">PIC Barang <span class="text-danger">*</span></label>
+                                    <select name="pic_id" class="form-select" style="border-radius:0.75rem;" required>
+                                        <option value="">-- Pilih PIC --</option>
+                                        @foreach($pics as $p)
+                                            <option value="{{ $p->id_user }}" {{ $b->pic_id == $p->id_user ? 'selected' : '' }}>{{ $p->nama_lengkap }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
                                     <label class="form-label text-secondary fw-semibold">Foto Barang</label>
                                     @if($b->foto_barang)
                                         <div class="mb-2">
@@ -201,6 +212,7 @@
                 </td>
                 <td>Gudang SBUM</td>
                 <td>4 unit</td>
+                <td class="fw-semibold">-</td>
                 <td>
                     <div class="action-btn-group">
                         <button class="btn btn-ubah">Ubah</button>
@@ -217,6 +229,7 @@
                 </td>
                 <td>Unit Audio</td>
                 <td>2 set</td>
+                <td class="fw-semibold">-</td>
                 <td>
                     <div class="action-btn-group">
                         <button class="btn btn-ubah">Ubah</button>
@@ -233,6 +246,7 @@
                 </td>
                 <td>Gudang Sarpras</td>
                 <td>60 unit</td>
+                <td class="fw-semibold">-</td>
                 <td>
                     <div class="action-btn-group">
                         <button class="btn btn-ubah">Ubah</button>
@@ -271,6 +285,15 @@
                     <div class="mb-3">
                         <label class="form-label text-secondary fw-semibold">Keterangan / Lokasi</label>
                         <input type="text" name="keterangan" class="form-control" placeholder="cth: Gudang SBUM" style="border-radius:0.75rem;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary fw-semibold">PIC Barang <span class="text-danger">*</span></label>
+                        <select name="pic_id" class="form-select" style="border-radius:0.75rem;" required>
+                            <option value="">-- Pilih PIC --</option>
+                            @foreach($pics as $p)
+                                <option value="{{ $p->id_user }}">{{ $p->nama_lengkap }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary fw-semibold">Foto Barang</label>

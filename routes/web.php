@@ -16,9 +16,13 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/mahasiswa/dashboard', [AuthMahasiswaController::class, 'dashboard'])->name('mahasiswa.dashboard');
     Route::get('/mahasiswa/fasilitas', [AuthMahasiswaController::class, 'fasilitas'])->name('mahasiswa.fasilitas');
+    Route::get('/mahasiswa/fasilitas/detail', [AuthMahasiswaController::class, 'fasilitasDetail'])->name('mahasiswa.fasilitas.detail');
     Route::get('/mahasiswa/jadwal', [AuthMahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal');
+    Route::get('/mahasiswa/jadwal/slots', [\App\Http\Controllers\ScheduleController::class, 'getSlots'])->name('mahasiswa.jadwal.slots');
     Route::get('/mahasiswa/pengajuan', [AuthMahasiswaController::class, 'pengajuan'])->name('mahasiswa.pengajuan');
+    Route::post('/mahasiswa/pengajuan', [AuthMahasiswaController::class, 'pengajuanStore'])->name('mahasiswa.pengajuan.store');
     Route::get('/mahasiswa/pengembalian', [AuthMahasiswaController::class, 'pengembalian'])->name('mahasiswa.pengembalian');
+    Route::post('/mahasiswa/pengembalian', [AuthMahasiswaController::class, 'storePengembalian'])->name('mahasiswa.pengembalian.store');
     Route::get('/mahasiswa/profil', [AuthMahasiswaController::class, 'profil'])->name('mahasiswa.profil');
     Route::get('/mahasiswa/notifikasi', [AuthMahasiswaController::class, 'notifikasi'])->name('mahasiswa.notifikasi');
     Route::post('/logout', [AuthMahasiswaController::class, 'logout'])->name('logout');
@@ -43,6 +47,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/admin/jadwal', [\App\Http\Controllers\AdminController::class, 'jadwalIndex'])->name('admin.jadwal');
     Route::post('/admin/jadwal', [\App\Http\Controllers\AdminController::class, 'jadwalStore'])->name('admin.jadwal.store');
+    Route::get('/admin/jadwal/api-slots', [\App\Http\Controllers\AdminController::class, 'apiGetSlots'])->name('admin.jadwal.api-slots');
+    Route::post('/admin/jadwal/api-save', [\App\Http\Controllers\AdminController::class, 'apiSaveSlots'])->name('admin.jadwal.api-save');
 
     Route::get('/admin/peminjaman', [\App\Http\Controllers\AdminController::class, 'peminjamanIndex'])->name('admin.peminjaman');
     Route::put('/admin/peminjaman/{id}', [\App\Http\Controllers\AdminController::class, 'peminjamanVerifikasi'])->name('admin.peminjaman.verifikasi');
@@ -85,6 +91,8 @@ Route::middleware(['auth', 'role:pic'])->group(function () {
     Route::get('/pic/dashboard', [\App\Http\Controllers\PicController::class, 'dashboard'])->name('pic.dashboard');
     Route::get('/pic/kesiapan', [\App\Http\Controllers\PicController::class, 'kesiapanIndex'])->name('pic.kesiapan');
     Route::post('/pic/kesiapan', [\App\Http\Controllers\PicController::class, 'kesiapanStore'])->name('pic.kesiapan.store');
+    Route::get('/pic/pengembalian', [\App\Http\Controllers\PicController::class, 'konfirmasiPengembalianIndex'])->name('pic.pengembalian');
+    Route::post('/pic/pengembalian', [\App\Http\Controllers\PicController::class, 'konfirmasiPengembalianStore'])->name('pic.pengembalian.store');
     Route::get('/pic/profil', [\App\Http\Controllers\PicController::class, 'profilIndex'])->name('pic.profil');
     Route::put('/pic/profil', [\App\Http\Controllers\PicController::class, 'profilUpdate'])->name('pic.profil.update');
 });

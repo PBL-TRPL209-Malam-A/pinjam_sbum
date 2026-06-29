@@ -1,1 +1,0 @@
-App\Models\User::updateOrCreate(['nim' =, ['nama_lengkap' = SBUM', 'email' =, 'password' =; DB::table('user_role')-, ['role_id' =; 

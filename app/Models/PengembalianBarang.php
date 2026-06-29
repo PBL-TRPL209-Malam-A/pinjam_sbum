@@ -14,6 +14,7 @@ class PengembalianBarang extends Model
         'peminjaman_id',
         'tanggal',
         'catatan',
+        'status',
     ];
 
     protected $casts = [

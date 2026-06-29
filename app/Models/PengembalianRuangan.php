@@ -14,6 +14,7 @@ class PengembalianRuangan extends Model
         'peminjaman_id',
         'tanggal_pengembalian',
         'catatan',
+        'status',
     ];
 
     protected $casts = [

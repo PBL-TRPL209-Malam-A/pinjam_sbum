@@ -108,90 +108,173 @@
 </div>
 
 @php
-    $selectedItem = $peminjaman->first();
+    $selectedId = request()->query('selected_id');
+    $selectedItem = null;
 @endphp
 
+@foreach($peminjaman as $item)
+    @if(!$selectedId && $loop->first)
+        @php $selectedId = $item->id_peminjaman; @endphp
+    @endif
+    @if($item->id_peminjaman == $selectedId)
+        @php $selectedItem = $item; @endphp
+    @endif
+@endforeach
+
+<style>
+    .list-item-card {
+        background: #fffdfa;
+        border: 1px solid var(--line);
+        border-radius: 1.25rem;
+        padding: 1.25rem;
+        cursor: pointer;
+        transition: 0.2s;
+        margin-bottom: 1rem;
+        text-align: left;
+    }
+    .list-item-card.active {
+        background-color: #f7f3eb;
+        border-left: 5px solid var(--primary-main);
+    }
+    .badge-verifikasi-soft {
+        background-color: #fcf1d3;
+        color: #7d6006;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.4rem 1rem;
+        border-radius: 2rem;
+    }
+</style>
+
 <div class="row g-4 mb-4">
-    <!-- Left Column: Details & Checklists -->
-    <div class="col-lg-7">
-        <form action="{{ route('pic.kesiapan.store') }}" method="POST" id="kesiapanForm">
-            @csrf
-            <input type="hidden" name="peminjaman_id" value="{{ $selectedItem ? $selectedItem->id_peminjaman : 1 }}">
-            <input type="hidden" name="status_kesiapan" id="kesiapanField" value="siap">
-
-            <div class="mb-3 fw-semibold text-secondary">Detail Jadwal Hari Ini</div>
-            <div class="detail-card mb-4">
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <div class="info-row">
-                            <div class="info-label">Kegiatan</div>
-                            <div class="info-value">{{ $selectedItem ? $selectedItem->nama_kegiatan : 'Seminar Mahasiswa Baru' }}</div>
+    <!-- Left Column: Antrian Permohonan Masuk -->
+    <div class="col-lg-6">
+        <div class="mb-3 fw-semibold text-secondary text-start">Daftar Permohonan Masuk</div>
+        <div class="d-grid gap-2">
+            @forelse($peminjaman as $item)
+                <div class="list-item-card {{ $item->id_peminjaman == $selectedId ? 'active' : '' }}" onclick="window.location.href='?selected_id={{ $item->id_peminjaman }}'">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="fw-bold text-main">SBUM-2026-{{ str_pad($item->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · {{ $item->nama_kegiatan }}</div>
+                            <div class="text-secondary small mt-1">
+                                Peminjam: {{ $item->user->nama_lengkap ?? 'Mahasiswa' }} · 
+                                {{ $item->ruangan->isNotEmpty() ? $item->ruangan->first()->nama_ruangan : ($item->barang->isNotEmpty() ? $item->barang->first()->nama_barang : 'Fasilitas') }}
+                            </div>
+                            <div class="text-muted small mt-2">
+                                {{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-row">
-                            <div class="info-label">Fasilitas</div>
-                            <div class="info-value">{{ $selectedItem && count($selectedItem->ruangan) > 0 ? $selectedItem->ruangan->first()->nama_ruangan : 'Aula Utama Polibatam' }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-row">
-                            <div class="info-label">Waktu</div>
-                            <div class="info-value">{{ $selectedItem && $selectedItem->tanggal_pengajuan ? $selectedItem->tanggal_pengajuan->format('d M Y') : '12 Apr 2026' }} · 08.00 - 12.00</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-row">
-                            <div class="info-label">PIC</div>
-                            <div class="info-value">Petugas SBUM / PIC Aula</div>
-                        </div>
+                        <span class="badge-verifikasi-soft">Menunggu PIC</span>
                     </div>
                 </div>
-
-                <hr class="my-4" style="border-top: 1px solid var(--line);">
-
-                <div class="mb-3 fw-semibold text-secondary">Checklist Kesiapan</div>
-                <div class="checklist-item">
-                    <input class="form-check-input mt-0" type="checkbox" id="check1" required>
-                    <label class="form-check-label text-main fw-semibold" for="check1">Ruangan bersih dan siap pakai</label>
+            @empty
+                <div class="card p-5 text-center text-secondary border-0" style="background:#fffdfa; border-radius:1.5rem; border: 1px solid var(--line) !important;">
+                    Tidak ada permohonan masuk.
                 </div>
-                <div class="checklist-item">
-                    <input class="form-check-input mt-0" type="checkbox" id="check2" required>
-                    <label class="form-check-label text-main fw-semibold" for="check2">Sound system dan listrik normal</label>
-                </div>
-                <div class="checklist-item">
-                    <input class="form-check-input mt-0" type="checkbox" id="check3" required>
-                    <label class="form-check-label text-main fw-semibold" for="check3">Kursi, meja, dan akses ruangan lengkap</label>
-                </div>
-            </div>
-        </form>
+            @endforelse
+        </div>
     </div>
 
-    <!-- Right Column: Status Kesiapan, Catatan & Upload -->
-    <div class="col-lg-5">
-        <div class="mb-3 fw-semibold text-secondary">Status Kesiapan</div>
-        <div class="status-side-card mb-4">
-            <div class="mb-3">
-                <span class="status-badge-ready">Siap Digunakan</span>
-            </div>
+    <!-- Right Column: Details & Form Kesiapan -->
+    <div class="col-lg-6">
+        @if($selectedItem)
+            <form action="{{ route('pic.kesiapan.store') }}" method="POST" id="kesiapanForm" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="peminjaman_id" value="{{ $selectedItem->id_peminjaman }}">
+                <input type="hidden" name="status_kesiapan" id="kesiapanField" value="siap">
 
-            <div class="mb-3">
-                <label class="form-label text-secondary small fw-semibold">Catatan PIC</label>
-                <textarea form="kesiapanForm" name="catatan" class="form-control" rows="4" style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.9rem;">Semua perangkat berfungsi, ruangan bersih, dan akses siap dibuka untuk kegiatan.</textarea>
-            </div>
+                <div class="mb-3 fw-semibold text-secondary text-start">Detail Kesiapan Fasilitas</div>
+                <div class="detail-card mb-4" style="background: #fffdfa; border: 1px solid var(--line); border-radius: 1.5rem; padding: 1.5rem;">
+                    <div class="row g-3 mb-4 text-start">
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Kegiatan</div>
+                                <div class="info-value" style="color: var(--text-main); font-weight: 600;">{{ $selectedItem->nama_kegiatan }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Fasilitas</div>
+                                <div class="info-value" style="color: var(--text-main); font-weight: 600;">
+                                    @if($selectedItem->ruangan->isNotEmpty())
+                                        {{ $selectedItem->ruangan->first()->nama_ruangan }}
+                                    @elseif($selectedItem->barang->isNotEmpty())
+                                        {{ $selectedItem->barang->first()->nama_barang }}
+                                    @else
+                                        Fasilitas
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Waktu</div>
+                                <div class="info-value" style="color: var(--text-main); font-weight: 600;">{{ $selectedItem->tanggal_pengajuan ? \Carbon\Carbon::parse($selectedItem->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $selectedItem->jam_mulai ? str_replace(':', '.', substr($selectedItem->jam_mulai, 0, 5)) : '08.00' }} - {{ $selectedItem->jam_selesai ? str_replace(':', '.', substr($selectedItem->jam_selesai, 0, 5)) : '12.00' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Peminjam</div>
+                                <div class="info-value" style="color: var(--text-main); font-weight: 600;">{{ $selectedItem->user->nama_lengkap ?? '-' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Dosen Penanggung Jawab</div>
+                                <div class="info-value" style="color: var(--text-main); font-weight: 600;">{{ $selectedItem->dosen->nama_lengkap ?? '-' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Jumlah Peserta</div>
+                                <div class="info-value" style="color: var(--text-main); font-weight: 600;">{{ $selectedItem->jumlah_peserta ?? '0' }} Orang</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="info-row">
+                                <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Deskripsi Acara</div>
+                                <div class="info-value" style="color: var(--text-main); font-weight: 600;">{{ $selectedItem->keterangan ?: 'Tidak ada keterangan tambahan.' }}</div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="mb-4">
-                <label class="form-label text-secondary small fw-semibold">Upload Bukti</label>
-                <button type="button" class="btn btn-upload-photo">
-                    <i class="bi bi-camera-fill"></i> Tambah foto kondisi
-                </button>
-            </div>
+                    <hr class="my-4" style="border-top: 1px solid var(--line);">
 
-            <div class="d-grid gap-2">
-                <button type="button" onclick="submitKesiapan('siap')" class="btn btn-confirm-ready">Konfirmasi Siap</button>
-                <button type="button" onclick="submitKesiapan('kendala')" class="btn btn-report-issue">Laporkan Kendala</button>
+                    <div class="mb-3 fw-semibold text-secondary text-start">Checklist Kesiapan</div>
+                    <div class="checklist-item text-start">
+                        <input class="form-check-input mt-0" type="checkbox" id="check1" required>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check1">Ruangan bersih dan siap pakai</label>
+                    </div>
+                    <div class="checklist-item text-start">
+                        <input class="form-check-input mt-0" type="checkbox" id="check2" required>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check2">Sound system dan listrik normal</label>
+                    </div>
+                    <div class="checklist-item text-start">
+                        <input class="form-check-input mt-0" type="checkbox" id="check3" required>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check3">Kursi, meja, dan akses ruangan lengkap</label>
+                    </div>
+
+                    <div class="mt-4 text-start">
+                        <label class="form-label text-secondary small fw-semibold">Catatan PIC</label>
+                        <textarea name="catatan" class="form-control" rows="3" style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.9rem;" placeholder="Masukkan catatan kesiapan fasilitas..."></textarea>
+                    </div>
+
+                    <div class="mt-3 text-start">
+                        <label class="form-label text-secondary small fw-semibold">Upload Bukti Kondisi Ruangan</label>
+                        <input type="file" name="foto_kondisi" class="form-control" accept="image/png, image/jpeg, image/jpg, image/webp" style="border-radius: 0.75rem;">
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="button" onclick="submitKesiapan('siap')" class="btn btn-confirm-ready">Konfirmasi Siap</button>
+                        <button type="button" onclick="submitKesiapan('kendala')" class="btn btn-report-issue">Laporkan Kendala</button>
+                    </div>
+                </div>
+            </form>
+        @else
+            <div class="card p-5 text-center text-secondary border-0" style="background:#fffdfa; border-radius:1.5rem; border: 1px solid var(--line) !important;">
+                Pilih permohonan di antrean untuk melakukan konfirmasi kesiapan.
             </div>
-        </div>
+        @endif
     </div>
 </div>
 
@@ -204,14 +287,14 @@
         var check3 = document.getElementById('check3');
 
         if (status === 'siap') {
-            if (!check1.checked || !check2.checked || !check3.checked) {
+            if (!check1 || !check2 || !check3 || !check1.checked || !check2.checked || !check3.checked) {
                 alert('Silahkan centang semua checklist kesiapan sebelum mengonfirmasi siap.');
                 return;
             }
         } else {
-            check1.removeAttribute('required');
-            check2.removeAttribute('required');
-            check3.removeAttribute('required');
+            if (check1) check1.removeAttribute('required');
+            if (check2) check2.removeAttribute('required');
+            if (check3) check3.removeAttribute('required');
         }
 
         document.getElementById('kesiapanForm').submit();

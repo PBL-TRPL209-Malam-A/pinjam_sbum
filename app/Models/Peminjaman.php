@@ -19,6 +19,8 @@ class Peminjaman extends Model
         'tanggal_pengajuan',
         'status',
         'keterangan',
+        'jam_mulai',
+        'jam_selesai',
     ];
 
     protected $casts = [
@@ -36,11 +38,17 @@ class Peminjaman extends Model
 
     public function getTanggalMulaiAttribute()
     {
+        if ($this->tanggal_pengajuan && $this->jam_mulai) {
+            return $this->tanggal_pengajuan->format('Y-m-d') . ' ' . substr($this->jam_mulai, 0, 5);
+        }
         return $this->tanggal_pengajuan ? $this->tanggal_pengajuan->format('Y-m-d H:i') : '-';
     }
 
     public function getTanggalSelesaiAttribute()
     {
+        if ($this->tanggal_pengajuan && $this->jam_selesai) {
+            return $this->tanggal_pengajuan->format('Y-m-d') . ' ' . substr($this->jam_selesai, 0, 5);
+        }
         return $this->tanggal_pengajuan ? $this->tanggal_pengajuan->format('Y-m-d H:i') : '-';
     }
 

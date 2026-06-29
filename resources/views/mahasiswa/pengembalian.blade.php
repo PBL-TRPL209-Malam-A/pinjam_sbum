@@ -109,68 +109,134 @@
                         </p>
                     </div>
                 </div>
-
-                <div class="row g-4">
+                <form action="{{ route('mahasiswa.pengembalian.store') }}" method="POST" enctype="multipart/form-data" class="row g-4">
+                    @csrf
                     <div class="col-xl-8">
                         <div class="mb-3 fw-semibold text-secondary">Form Pengembalian</div>
-
+ 
                         <div class="d-grid gap-3">
                             <div>
                                 <label class="form-label text-secondary fw-semibold">ID Peminjaman</label>
-                                <input type="text" class="form-control soft-input" value="SBUM-2026-0148">
+                                <select name="peminjaman_id" id="peminjamanSelect" class="form-select soft-input" style="padding-left: 1rem; border-radius: 1rem; border-color: #dfd4c8; background-color: #fffdfa;" required>
+                                    <option value="">Pilih PJM Aktif</option>
+                                    @foreach($peminjaman as $p)
+                                        @php
+                                            $facilityName = $p->ruangan->isNotEmpty() ? $p->ruangan->first()->nama_ruangan : ($p->barang->isNotEmpty() ? $p->barang->first()->nama_barang : 'Fasilitas');
+                                        @endphp
+                                        <option value="{{ $p->id_peminjaman }}" 
+                                            data-fasilitas="{{ $facilityName }}"
+                                            data-kegiatan="{{ $p->nama_kegiatan }}"
+                                            data-waktu="{{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $p->jam_mulai ? substr($p->jam_mulai, 0, 5) : '08:00' }} - {{ $p->jam_selesai ? substr($p->jam_selesai, 0, 5) : '12:00' }}">
+                                            [SBUM-2026-{{ str_pad($p->id_peminjaman, 4, '0', STR_PAD_LEFT) }}] - {{ $p->nama_kegiatan }} ({{ $facilityName }})
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-
+ 
                             <div>
                                 <label class="form-label text-secondary fw-semibold">Fasilitas</label>
-                                <input type="text" class="form-control soft-input" value="Aula Utama Polibatam">
+                                <input type="text" id="facilityInput" class="form-control soft-input" style="background-color: #f7f3eb;" readonly value="-">
                             </div>
-
+ 
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label text-secondary fw-semibold">Tanggal & Waktu Selesai Aktual</label>
-                                    <input type="text" class="form-control soft-input" value="12 Apr 2026">
+                                    <label class="form-label text-secondary fw-semibold">Tanggal Selesai Aktual</label>
+                                    <input type="date" name="tanggal_selesai_aktual" class="form-control soft-input" value="{{ now()->format('Y-m-d') }}" required style="border-radius: 1rem; border-color: #dfd4c8;">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label text-secondary fw-semibold">&nbsp;</label>
-                                    <input type="text" class="form-control soft-input" value="12.10 WIB">
+                                    <label class="form-label text-secondary fw-semibold">Jam Selesai Aktual</label>
+                                    <input type="time" name="jam_selesai_aktual" class="form-control soft-input" value="{{ now()->format('H:i') }}" required style="border-radius: 1rem; border-color: #dfd4c8;">
                                 </div>
                             </div>
-
+ 
                             <div>
                                 <label class="form-label text-secondary fw-semibold">Kondisi Fasilitas</label>
+                                <input type="hidden" name="kondisi" id="kondisiInput" value="baik">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="status-choice status-good d-flex align-items-center justify-content-center">Baik</div>
+                                        <div class="status-choice status-good d-flex align-items-center justify-content-center" style="border: 2px solid #557b58; cursor: pointer;">Baik</div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="status-choice status-note d-flex align-items-center justify-content-center">Ada Catatan</div>
+                                        <div class="status-choice status-note d-flex align-items-center justify-content-center" style="border: 1px solid transparent; cursor: pointer;">Ada Catatan</div>
                                     </div>
                                 </div>
                             </div>
-
+ 
                             <div>
                                 <label class="form-label text-secondary fw-semibold">Catatan Pengembalian</label>
-                                <textarea class="form-control soft-input">Kegiatan selesai, ruangan dikembalikan rapi, sound system baik.</textarea>
+                                <textarea name="catatan" class="form-control soft-input" placeholder="Masukkan catatan pengembalian (opsional)"></textarea>
+                            </div>
+ 
+                            <div>
+                                <label class="form-label text-secondary fw-semibold">Upload Foto Kondisi Fasilitas (Format: .jpg, .jpeg, .png, maks 5MB)</label>
+                                <input type="file" name="foto_kondisi" class="form-control" accept="image/png, image/jpeg, image/jpg" required style="border-radius: 1rem; border-color: #dfd4c8; padding: 0.75rem 1rem; height: auto;">
+                            </div>
+ 
+                            <div>
+                                <label class="form-label text-secondary fw-semibold">Upload Dokumen Administrasi Pasca-Pakai (Format: .pdf, maks 10MB)</label>
+                                <input type="file" name="dokumen_administrasi" class="form-control" accept="application/pdf" required style="border-radius: 1rem; border-color: #dfd4c8; padding: 0.75rem 1rem; height: auto;">
                             </div>
                         </div>
                     </div>
-
+ 
                     <div class="col-xl-4">
                         <div class="mb-3 fw-semibold text-secondary">Ringkasan Pengembalian</div>
-
+ 
                         <div class="summary-card p-4 mb-4">
                             <div class="text-secondary mb-2">Peminjaman Aktif</div>
-                            <div class="fw-semibold mb-2">Seminar Mahasiswa Baru</div>
-                            <div class="text-secondary">Aula Utama · 08.00 - 12.00</div>
+                            <div class="fw-semibold mb-2" id="summaryKegiatan">-</div>
+                            <div class="text-secondary" id="summaryWaktu">-</div>
                         </div>
-
+ 
                         <div class="d-grid">
-                            <button class="btn btn-main">Submit Pengembalian</button>
+                            <button type="submit" class="btn btn-main">Submit Pengembalian</button>
                         </div>
                     </div>
-                </div>
+                </form>
             </main>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const peminjamanSelect = document.getElementById('peminjamanSelect');
+        if (peminjamanSelect) {
+            peminjamanSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                if (selectedOption && selectedOption.value) {
+                    const facility = selectedOption.getAttribute('data-fasilitas');
+                    const kegiatan = selectedOption.getAttribute('data-kegiatan');
+                    const waktu = selectedOption.getAttribute('data-waktu');
+                    
+                    document.getElementById('facilityInput').value = facility;
+                    document.getElementById('summaryKegiatan').innerText = kegiatan;
+                    document.getElementById('summaryWaktu').innerText = facility + ' · ' + waktu;
+                } else {
+                    document.getElementById('facilityInput').value = '-';
+                    document.getElementById('summaryKegiatan').innerText = '-';
+                    document.getElementById('summaryWaktu').innerText = '-';
+                }
+            });
+        }
+
+        const choiceGood = document.querySelector('.status-good');
+        const choiceNote = document.querySelector('.status-note');
+        const kondisiInput = document.getElementById('kondisiInput');
+
+        if (choiceGood && choiceNote && kondisiInput) {
+            choiceGood.addEventListener('click', function() {
+                kondisiInput.value = 'baik';
+                choiceGood.style.border = '2px solid #557b58';
+                choiceNote.style.border = '1px solid transparent';
+            });
+
+            choiceNote.addEventListener('click', function() {
+                kondisiInput.value = 'ada_catatan';
+                choiceNote.style.border = '2px solid #92723c';
+                choiceGood.style.border = '1px solid transparent';
+            });
+        }
+    });
+</script>
 @endsection

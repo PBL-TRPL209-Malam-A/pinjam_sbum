@@ -333,13 +333,13 @@
                                 </span>
                             </p>
                             <p class="mb-0 text-secondary" style="font-size: 0.9rem;">
-                                {{ date('d M Y', strtotime($p->tanggal_pengajuan)) }} - 08.00 - 12.00 - 
+                                {{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} - {{ $p->jam_mulai ? str_replace(':', '.', substr($p->jam_mulai, 0, 5)) : '08.00' }} - {{ $p->jam_selesai ? str_replace(':', '.', substr($p->jam_selesai, 0, 5)) : '12.00' }} - 
                                 <span class="text-success fw-medium">Sudah diverifikasi dosen dan admin</span>
                             </p>
                         </div>
 
                         <div class="d-flex gap-2 align-self-md-center">
-                            <button class="btn-action-detail">Detail</button>
+                            <button class="btn-action-detail" data-bs-toggle="modal" data-bs-target="#detailModal{{ $p->id_peminjaman }}">Detail</button>
                             <form action="{{ route('kepalasbum.verifikasi', $p->id_peminjaman) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('PUT')
@@ -354,6 +354,80 @@
                                 <input type="hidden" name="catatan" id="catatan_tolak_{{ $p->id_peminjaman }}" value="">
                                 <button type="submit" class="btn-action-reject" onclick="document.getElementById('catatan_tolak_{{ $p->id_peminjaman }}').value = document.getElementById('catatan_keputusan').value">Tolak</button>
                             </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Detail -->
+                <div class="modal fade" id="detailModal{{ $p->id_peminjaman }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #fffdfa; border: 1px solid var(--line) !important;">
+                            <div class="modal-header border-0 pb-0" style="background-color: #f7f3eb; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                                <h5 class="modal-title fw-bold text-main">Detail Permohonan</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4 text-start">
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Nama Kegiatan</span>
+                                    <span class="fw-bold text-main fs-5">{{ $p->nama_kegiatan }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Peminjam</span>
+                                    <span class="fw-semibold text-main">{{ $p->user->nama_lengkap ?? '-' }}</span>
+                                </div>
+                                <div class="mb-3">
+                                     <span class="text-muted small d-block">Tanggal & Waktu</span>
+                                     <span class="fw-semibold text-main">{{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $p->jam_mulai ? str_replace(':', '.', substr($p->jam_mulai, 0, 5)) : '08.00' }} - {{ $p->jam_selesai ? str_replace(':', '.', substr($p->jam_selesai, 0, 5)) : '12.00' }}</span>
+                                 </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Jumlah Peserta</span>
+                                    <span class="fw-semibold text-main">{{ $p->jumlah_peserta ?? 0 }} orang</span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Keterangan Acara</span>
+                                    <span class="fw-semibold text-main">{{ $p->keterangan ?: 'Tidak ada keterangan tambahan.' }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Dosen Penanggung Jawab</span>
+                                    <span class="fw-semibold text-main">{{ $p->dosen ? $p->dosen->nama_lengkap : 'N/A' }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Nama Ruangan / Barang</span>
+                                    <span class="fw-semibold text-main">
+                                        @if($p->ruangan->isNotEmpty())
+                                            {{ $p->ruangan->first()->nama_ruangan }}
+                                        @elseif($p->barang->isNotEmpty())
+                                            {{ $p->barang->first()->nama_barang }}
+                                        @else
+                                            Fasilitas
+                                        @endif
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">PIC Fasilitas</span>
+                                    <span class="fw-semibold text-main">
+                                        @if($p->ruangan->isNotEmpty() && $p->ruangan->first()->pic)
+                                            {{ $p->ruangan->first()->pic->nama_lengkap }}
+                                        @elseif($p->barang->isNotEmpty() && $p->barang->first()->pic)
+                                            {{ $p->barang->first()->pic->nama_lengkap }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Admin Verifikator</span>
+                                    <span class="fw-semibold text-main">
+                                        @php
+                                            $adminVerif = $p->verifikasi->firstWhere('peran_verifikasi', 'Admin SBUM');
+                                        @endphp
+                                        {{ $adminVerif && $adminVerif->verifikator ? $adminVerif->verifikator->nama_lengkap : 'N/A' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-main w-100" data-bs-dismiss="modal" style="border-radius:0.75rem;">Tutup</button>
+                            </div>
                         </div>
                     </div>
                 </div>

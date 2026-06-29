@@ -102,7 +102,6 @@
                         <div class="search-dot"></div>
                     </div>
                 </div>
-
                 <div class="card intro-card shadow-none mb-4">
                     <div class="card-body p-4 p-lg-5">
                         <h2 class="fs-5 fw-semibold mb-3">Ajukan peminjaman fasilitas</h2>
@@ -112,72 +111,264 @@
                     </div>
                 </div>
 
-                <div class="row g-4">
-                    <div class="col-xl-8">
-                        <div class="mb-3 fw-semibold text-secondary">Form Peminjaman</div>
+                @if ($errors->any())
+                    <div class="alert alert-danger rounded-4 border-0 mb-4 p-3" style="background-color: #fcebeb; color: #8a3c3c; border: 1px solid #f7d1d1;">
+                        <ul class="mb-0 px-3">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-                        <div class="d-grid gap-3">
-                            <div>
-                                <label class="form-label text-secondary fw-semibold">Fasilitas</label>
-                                <input type="text" class="form-control soft-input" value="Aula Utama Polibatam">
+                @if (session('error'))
+                    <div class="alert alert-danger rounded-4 border-0 mb-4 p-3" style="background-color: #fcebeb; color: #8a3c3c; border: 1px solid #f7d1d1;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="alert alert-success rounded-4 border-0 mb-4 p-3" style="background-color: #edf7ed; color: #2e7d32; border: 1px solid #c8e6c9;">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('mahasiswa.pengajuan.store') }}" method="POST">
+                    @csrf
+                    <div class="row g-4">
+                        <div class="col-xl-8">
+                            <div class="mb-3 fw-semibold text-secondary">Form Peminjaman</div>
+
+                            <div class="d-grid gap-3">
+                                <div>
+                                    <label class="form-label text-secondary fw-semibold">Fasilitas</label>
+                                    <select id="facilitySelect" name="facility_id" class="form-select soft-input" required>
+                                        <option value="">-- Pilih Ruangan atau Barang --</option>
+                                        <optgroup label="Ruangan">
+                                            @foreach($rooms as $room)
+                                                <option value="Ruangan-{{ $room->id_ruangan }}" {{ (old('facility_id') ?? $selectedFacilityId) == "Ruangan-{$room->id_ruangan}" ? 'selected' : '' }}>
+                                                    {{ $room->nama_ruangan }} ({{ $room->kode_ruangan }} - {{ $room->nama_gedung }})
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                        <optgroup label="Barang Inventaris">
+                                            @foreach($items as $item)
+                                                <option value="Inventaris-{{ $item->id_barang }}" {{ (old('facility_id') ?? $selectedFacilityId) == "Inventaris-{$item->id_barang}" ? 'selected' : '' }}>
+                                                    {{ $item->nama_barang }} ({{ $item->kode_barang }} - Stok: {{ $item->stok_tersedia }})
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="form-label text-secondary fw-semibold">Nama Kegiatan</label>
+                                    <input type="text" name="nama_kegiatan" class="form-control soft-input" value="{{ old('nama_kegiatan') ?? 'Seminar Mahasiswa Baru' }}" required>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label text-secondary fw-semibold">Tanggal</label>
+                                        <input type="date" name="tanggal" class="form-control soft-input" min="{{ date('Y-m-d') }}" value="{{ old('tanggal') ?? date('Y-m-d') }}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <label class="form-label text-secondary fw-semibold">Jam Mulai</label>
+                                                <select name="jam_mulai" id="jamMulai" class="form-select soft-input" required style="cursor: pointer;">
+                                                    @for($h = 8; $h <= 17; $h++)
+                                                        @php $time = sprintf('%02d:00', $h); @endphp
+                                                        <option value="{{ $time }}" {{ old('jam_mulai', '08:00') == $time ? 'selected' : '' }}>{{ $time }}</option>
+                                                     @endfor
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label text-secondary fw-semibold">Jam Selesai</label>
+                                                <select name="jam_selesai" id="jamSelesai" class="form-select soft-input" required style="cursor: pointer;">
+                                                    @for($h = 9; $h <= 18; $h++)
+                                                        @php $time = sprintf('%02d:00', $h); @endphp
+                                                        <option value="{{ $time }}" {{ old('jam_selesai', '12:00') == $time ? 'selected' : '' }}>{{ $time }}</option>
+                                                     @endfor
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label text-secondary fw-semibold">Jumlah Peserta</label>
+                                        <input type="number" name="jumlah_peserta" class="form-control soft-input" min="1" value="{{ old('jumlah_peserta') ?? '180' }}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-secondary fw-semibold">Penanggung Jawab</label>
+                                        <select name="dosen_id" class="form-select soft-input" required>
+                                            <option value="">-- Pilih Dosen / PIC Penanggung Jawab --</option>
+                                            @foreach($staff as $member)
+                                                <option value="{{ $member->id_user }}" {{ old('dosen_id') == $member->id_user ? 'selected' : '' }}>
+                                                    {{ $member->nama_lengkap }} ({{ $member->roles->pluck('nama_role')->first() ?? 'Staf' }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="form-label text-secondary fw-semibold">Catatan</label>
+                                    <textarea name="keterangan" class="form-control soft-input">{{ old('keterangan') ?? 'Tambahkan kebutuhan tambahan atau informasi kegiatan.' }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4">
+                            <div class="mb-3 fw-semibold text-secondary">Ringkasan Pengajuan</div>
+
+                            <div class="summary-card p-4 mb-4">
+                                <div class="fw-semibold mb-2" id="summaryFacility">-- Pilih Fasilitas --</div>
+                                <div class="text-secondary mb-2" id="summaryTime">-- Tanggal & Waktu --</div>
+                                <div class="text-secondary">Perlu verifikasi dosen dan admin</div>
                             </div>
 
-                            <div>
-                                <label class="form-label text-secondary fw-semibold">Nama Kegiatan</label>
-                                <input type="text" class="form-control soft-input" value="Seminar Mahasiswa Baru">
+                            <div class="d-grid gap-3 mb-4">
+                                <button type="submit" class="btn btn-main" style="cursor: pointer;">Submit Pengajuan</button>
+                                <button type="button" class="btn btn-soft" onclick="alert('Draft berhasil disimpan (Mocked).')">Simpan Draft</button>
                             </div>
 
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label text-secondary fw-semibold">Tanggal</label>
-                                    <input type="text" class="form-control soft-input" value="12 Apr 2026">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label text-secondary fw-semibold">Waktu</label>
-                                    <input type="text" class="form-control soft-input" value="08.00 - 12.00">
-                                </div>
-                            </div>
-
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label text-secondary fw-semibold">Jumlah Peserta</label>
-                                    <input type="text" class="form-control soft-input" value="180 orang">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label text-secondary fw-semibold">Penanggung Jawab</label>
-                                    <input type="text" class="form-control soft-input" value="Moch Azmi Aris Sandita">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="form-label text-secondary fw-semibold">Catatan</label>
-                                <textarea class="form-control soft-input">Tambahkan kebutuhan tambahan atau informasi kegiatan.</textarea>
+                            <div class="info-card p-4">
+                                <div class="fw-semibold mb-2">Info Validasi</div>
+                                <div class="text-secondary">Jika data tidak lengkap, sistem menolak submit.</div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-xl-4">
-                        <div class="mb-3 fw-semibold text-secondary">Ringkasan Pengajuan</div>
-
-                        <div class="summary-card p-4 mb-4">
-                            <div class="fw-semibold mb-2">Aula Utama Polibatam</div>
-                            <div class="text-secondary mb-2">12 Apr 2026 · 08.00 - 12.00</div>
-                            <div class="text-secondary">Perlu verifikasi dosen dan admin</div>
-                        </div>
-
-                        <div class="d-grid gap-3 mb-4">
-                            <button class="btn btn-main">Submit Pengajuan</button>
-                            <button class="btn btn-soft">Simpan Draft</button>
-                        </div>
-
-                        <div class="info-card p-4">
-                            <div class="fw-semibold mb-2">Info Validasi</div>
-                            <div class="text-secondary">Jika data tidak lengkap, sistem menolak submit.</div>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </main>
         </div>
     </div>
 </div>
+
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    /* Custom premium styling for Tom Select */
+    .ts-wrapper.soft-input-ts {
+        border: none;
+        background: transparent;
+    }
+    .ts-control {
+        height: 50px !important;
+        border-radius: 1rem !important;
+        border: 1px solid #dfd4c8 !important;
+        background: #fffdfa !important;
+        padding: 0.65rem 1rem !important;
+        font-size: 1rem;
+        color: var(--text-main);
+        box-shadow: none !important;
+        display: flex;
+        align-items: center;
+    }
+    .ts-dropdown {
+        border-radius: 1rem !important;
+        border: 1px solid #dfd4c8 !important;
+        background: #fffdfa !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+        padding: 0.5rem;
+        z-index: 1050;
+    }
+    .ts-dropdown .optgroup-header {
+        font-weight: 700;
+        color: var(--text-muted);
+        padding: 0.5rem 0.75rem;
+    }
+    .ts-dropdown .option {
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .ts-dropdown .option:hover, .ts-dropdown .active {
+        background-color: #edf3ee !important;
+        color: var(--primary-dark) !important;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const facilitySelect = document.getElementById('facilitySelect');
+    const tanggalInput = document.getElementsByName('tanggal')[0];
+    const jamMulaiSelect = document.getElementById('jamMulai');
+    const jamSelesaiSelect = document.getElementById('jamSelesai');
+    
+    const summaryFacility = document.getElementById('summaryFacility');
+    const summaryTime = document.getElementById('summaryTime');
+
+    // Initialize Tom Select
+    let tomSelectInst = null;
+    if (facilitySelect) {
+        facilitySelect.className = "form-select soft-input-ts";
+        tomSelectInst = new TomSelect(facilitySelect, {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        });
+    }
+    
+    function validateHours() {
+        if (jamMulaiSelect && jamSelesaiSelect) {
+            const start = jamMulaiSelect.value;
+            const end = jamSelesaiSelect.value;
+            if (start >= end) {
+                const startHour = parseInt(start.split(':')[0]);
+                const nextHour = startHour + 1;
+                const paddedHour = nextHour < 10 ? '0' + nextHour + ':00' : nextHour + ':00';
+                jamSelesaiSelect.value = paddedHour;
+            }
+        }
+    }
+    
+    function updateSummary() {
+        if (facilitySelect && summaryFacility) {
+            const selectedOpt = facilitySelect.options[facilitySelect.selectedIndex];
+            if (selectedOpt && selectedOpt.value) {
+                summaryFacility.textContent = selectedOpt.text.split('(')[0].trim();
+            } else {
+                summaryFacility.textContent = '-- Pilih Fasilitas --';
+            }
+        }
+        
+        if (tanggalInput && summaryTime) {
+            const dateVal = tanggalInput.value;
+            const startVal = jamMulaiSelect ? jamMulaiSelect.value : '';
+            const endVal = jamSelesaiSelect ? jamSelesaiSelect.value : '';
+            if (dateVal) {
+                summaryTime.textContent = `${dateVal} · ${startVal.replace(':00', '.00')} - ${endVal.replace(':00', '.00')}`;
+            } else {
+                summaryTime.textContent = '-- Tanggal & Waktu --';
+            }
+        }
+    }
+    
+    if (tomSelectInst) tomSelectInst.on('change', updateSummary);
+    if (tanggalInput) tanggalInput.addEventListener('change', updateSummary);
+    
+    if (jamMulaiSelect) {
+        jamMulaiSelect.addEventListener('change', function() {
+            validateHours();
+            updateSummary();
+        });
+    }
+    if (jamSelesaiSelect) {
+        jamSelesaiSelect.addEventListener('change', function() {
+            if (jamMulaiSelect && jamMulaiSelect.value >= jamSelesaiSelect.value) {
+                alert('Jam selesai harus lebih besar dari jam mulai.');
+                validateHours();
+            }
+            updateSummary();
+        });
+    }
+    
+    updateSummary();
+});
+</script>
 @endsection

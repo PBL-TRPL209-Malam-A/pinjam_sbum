@@ -79,6 +79,7 @@
                 <th>Foto</th>
                 <th>Kategori</th>
                 <th>Kapasitas</th>
+                <th>PIC Ruangan</th>
                 <th>Status</th>
                 <th>Aksi</th>
             </tr>
@@ -99,6 +100,7 @@
                 </td>
                 <td>Ruangan</td>
                 <td>{{ $r->kapasitas ?? 'N/A' }} orang</td>
+                <td class="fw-semibold">{{ $r->pic ? $r->pic->nama_lengkap : '-' }}</td>
                 <td>
                     @if($r->status_ruangan == 'tersedia')
                         <span class="badge-aktif">Aktif</span>
@@ -125,10 +127,11 @@
                 <td class="fw-semibold">Aula Utama Polibatam</td>
                 <td><code>kode-ruangan</code></td>
                 <td>
-                    <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 150px; height: 150px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">Tidak ada foto</div>
+                    <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">Tidak ada foto</div>
                 </td>
                 <td>Ruangan</td>
                 <td>250 orang</td>
+                <td class="fw-semibold">-</td>
                 <td><span class="badge-aktif">Aktif</span></td>
                 <td>
                     <div class="action-btn-group">
@@ -208,6 +211,15 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary fw-semibold">PIC Ruangan <span class="text-danger">*</span></label>
+                        <select name="pic_id" class="form-select" style="border-radius:0.75rem;" required>
+                            <option value="">-- Pilih PIC --</option>
+                            @foreach($pics as $p)
+                                <option value="{{ $p->id_user }}">{{ $p->nama_lengkap }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary fw-semibold">Foto Ruangan</label>
@@ -294,6 +306,15 @@
                             </div>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label text-secondary fw-semibold">PIC Ruangan <span class="text-danger">*</span></label>
+                            <select name="pic_id" class="form-select" style="border-radius:0.75rem;" required>
+                                <option value="">-- Pilih PIC --</option>
+                                @foreach($pics as $p)
+                                    <option value="{{ $p->id_user }}" {{ $r->pic_id == $p->id_user ? 'selected' : '' }}>{{ $p->nama_lengkap }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label text-secondary fw-semibold">Foto Ruangan</label>
                             @if($r->foto_ruangan)
                                 <div class="mb-2">
@@ -342,6 +363,10 @@
                             <div class="mb-3">
                                 <span class="text-secondary small fw-semibold d-block">Kapasitas</span>
                                 <span class="fw-semibold text-main">{{ $r->kapasitas ?? 'N/A' }} orang</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="text-secondary small fw-semibold d-block">PIC Ruangan</span>
+                                <span class="fw-semibold text-main">{{ $r->pic ? $r->pic->nama_lengkap : '-' }}</span>
                             </div>
                             <div class="mb-3">
                                 <span class="text-secondary small fw-semibold d-block mb-1">Status Keaktifan</span>

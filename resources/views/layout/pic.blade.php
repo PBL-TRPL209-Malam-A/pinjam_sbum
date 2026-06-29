@@ -171,6 +171,9 @@
                     <a href="{{ route('pic.kesiapan') }}" class="sidebar-link {{ request()->routeIs('pic.kesiapan*') ? 'active' : '' }}">
                         <span class="sidebar-dot"></span><span>Konfirmasi Kesiapan</span>
                     </a>
+                    <a href="{{ route('pic.pengembalian') }}" class="sidebar-link {{ request()->routeIs('pic.pengembalian*') ? 'active' : '' }}">
+                        <span class="sidebar-dot"></span><span>Verifikasi Pengembalian</span>
+                    </a>
                     <a href="{{ route('pic.profil') }}" class="sidebar-link {{ request()->routeIs('pic.profil*') ? 'active' : '' }}">
                         <span class="sidebar-dot"></span><span>Profil</span>
                     </a>
