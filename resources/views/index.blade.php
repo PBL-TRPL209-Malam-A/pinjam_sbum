@@ -50,7 +50,7 @@
                 rgba(246, 241, 233, 0.84),
                 rgba(246, 241, 233, 0.92)
             ),
-            url('{{ asset('assets/images/gedungpoli.jpg') }}');
+            url('{{ asset('images/gedungpoli.jpg') }}');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

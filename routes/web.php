@@ -25,6 +25,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/mahasiswa/pengembalian', [AuthMahasiswaController::class, 'storePengembalian'])->name('mahasiswa.pengembalian.store');
     Route::get('/mahasiswa/profil', [AuthMahasiswaController::class, 'profil'])->name('mahasiswa.profil');
     Route::get('/mahasiswa/notifikasi', [AuthMahasiswaController::class, 'notifikasi'])->name('mahasiswa.notifikasi');
+    Route::get('/mahasiswa/riwayat', [AuthMahasiswaController::class, 'riwayat'])->name('mahasiswa.riwayat');
+    Route::get('/mahasiswa/riwayat/pdf/{id}', [AuthMahasiswaController::class, 'eksporPdf'])->name('mahasiswa.riwayat.pdf');
     Route::post('/logout', [AuthMahasiswaController::class, 'logout'])->name('logout');
 });
 

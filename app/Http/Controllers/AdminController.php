@@ -640,7 +640,7 @@ class AdminController extends Controller
         return back()->with('success', 'Pengembalian berhasil diverifikasi.');
     }
  
-    public function verifikasiPengembalianIndex()
+    public function verifikasiPengembalianIndex(\Illuminate\Http\Request $request)
     {
         $ruangan = PengembalianRuangan::with(['peminjaman.user', 'peminjaman.ruangan'])
             ->where('status', 'menunggu_admin')
@@ -676,8 +676,15 @@ class AdminController extends Controller
                 ]);
             }
         }
+
+        $selectedItem = null;
+        if ($request->has('selected_id') && $request->has('kategori')) {
+            $selectedItem = $pengembalian->first(function($item) use ($request) {
+                return $item->id_pengembalian == $request->selected_id && $item->kategori == $request->kategori;
+            });
+        }
  
-        return view('admin.pengembalian.verifikasi', compact('pengembalian'));
+        return view('admin.pengembalian.verifikasi', compact('pengembalian', 'selectedItem'));
     }
  
     public function verifikasiPengembalianStore(Request $request, $id)

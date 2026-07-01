@@ -108,10 +108,12 @@
                         <h4 class="fs-5 fw-bold text-main mb-0">{{ $item->user->nama_lengkap ?? 'Mahasiswa' }}</h4>
                         <div class="text-secondary small">{{ $item->user->nim ?? '-' }} · Kegiatan</div>
                     </div>
-                    @if($item->status == 'pending')
+                    @if($item->status == 'menunggu_dosen')
                         <span class="badge-menunggu">Menunggu Verifikasi</span>
-                    @else
+                    @elseif($item->status == 'revisi')
                         <span class="badge-revisi">Butuh Revisi</span>
+                    @else
+                        <span class="badge-pending-soft" style="background-color: #f7f6f2; color: #55615b; font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.85rem; border-radius: 2rem;">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
                     @endif
                 </div>
                 <div class="mb-3">
@@ -164,14 +166,36 @@
                             <span class="fw-semibold text-main">{{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}</span>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label text-secondary fw-semibold">Checklist Verifikasi Dosen</label>
+                            @if($item->jenis_peminjaman == 'barang')
+                                <div class="d-flex align-items-center mb-2">
+                                    <input class="form-check-input mt-0" type="checkbox" id="check1_{{ $item->id_peminjaman }}" required>
+                                    <label class="form-check-label text-main fw-semibold ms-2" for="check1_{{ $item->id_peminjaman }}">Kebutuhan barang sesuai dengan kegiatan akademik/proyek</label>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <input class="form-check-input mt-0" type="checkbox" id="check2_{{ $item->id_peminjaman }}" required>
+                                    <label class="form-check-label text-main fw-semibold ms-2" for="check2_{{ $item->id_peminjaman }}">Jumlah dan jenis barang masuk akal dan diperlukan mahasiswa</label>
+                                </div>
+                            @else
+                                <div class="d-flex align-items-center mb-2">
+                                    <input class="form-check-input mt-0" type="checkbox" id="check1_{{ $item->id_peminjaman }}" required>
+                                    <label class="form-check-label text-main fw-semibold ms-2" for="check1_{{ $item->id_peminjaman }}">Kegiatan mahasiswa sesuai dengan ranah akademik/kemahasiswaan</label>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <input class="form-check-input mt-0" type="checkbox" id="check2_{{ $item->id_peminjaman }}" required>
+                                    <label class="form-check-label text-main fw-semibold ms-2" for="check2_{{ $item->id_peminjaman }}">Waktu pelaksanaan tidak mengganggu kegiatan belajar mengajar rutin</label>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label text-secondary fw-semibold">Catatan Dosen</label>
                             <textarea name="catatan" class="form-control" rows="3" placeholder="Tambahkan catatan akademik..." style="border-radius: 0.75rem; border-color: #dfd4c8;"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer border-0 pt-0 d-flex gap-2">
-                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='verif_dosen'" class="btn btn-main flex-grow-1" style="border-radius:0.75rem;">Setujui</button>
-                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='revisi'" class="btn btn-warning text-white flex-grow-1" style="border-radius:0.75rem; background-color:#dca134; border:none;">Minta Revisi</button>
-                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='ditolak'" class="btn btn-danger flex-grow-1" style="border-radius:0.75rem; background-color:#c95b50; border:none;">Tolak</button>
+                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='verif_dosen'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=true; document.getElementById('check2_{{ $item->id_peminjaman }}').required=true;" class="btn btn-main flex-grow-1" style="border-radius:0.75rem;">Setujui</button>
+                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='revisi'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=false; document.getElementById('check2_{{ $item->id_peminjaman }}').required=false;" class="btn btn-warning text-white flex-grow-1" style="border-radius:0.75rem; background-color:#dca134; border:none;">Minta Revisi</button>
+                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='ditolak'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=false; document.getElementById('check2_{{ $item->id_peminjaman }}').required=false;" class="btn btn-danger flex-grow-1" style="border-radius:0.75rem; background-color:#c95b50; border:none;">Tolak</button>
                     </div>
                 </form>
             </div>

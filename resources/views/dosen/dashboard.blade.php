@@ -132,10 +132,10 @@
                     </div>
                 </div>
                 <div>
-                    @if($item->status == 'pending')
+                    @if($item->status == 'menunggu_dosen')
                         <span class="badge-verifikasi-soft">Perlu Verifikasi</span>
                     @else
-                        <span class="badge-pending-soft">Pending</span>
+                        <span class="badge-pending-soft">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
                     @endif
                 </div>
             </div>

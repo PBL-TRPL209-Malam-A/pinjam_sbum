@@ -351,26 +351,26 @@
                         <div class="col-md-3">
                             <div class="stat-item">
                                 <div class="stat-item-label">Total Peminjaman</div>
-                                <div class="stat-item-val">54</div>
+                                <div class="stat-item-val">{{ $totalPeminjaman }}</div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-item">
                                 <div class="stat-item-label">Disetujui</div>
-                                <div class="stat-item-val text-success">48</div>
+                                <div class="stat-item-val text-success">{{ $disetujui }}</div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-item">
                                 <div class="stat-item-label">Ditolak</div>
-                                <div class="stat-item-val text-danger">6</div>
+                                <div class="stat-item-val text-danger">{{ $ditolak }}</div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-item">
-                                <div class="stat-item-label">Ruang Terbanyak</div>
-                                <div class="stat-item-val" style="font-size: 1.25rem;">Aula Utama</div>
-                                <div class="stat-item-desc mt-1">18 Transaksi</div>
+                                <div class="stat-item-label">Fasilitas Terbanyak</div>
+                                <div class="stat-item-val" style="font-size: 1.25rem;">{{ $ruangTerbanyak }}</div>
+                                <div class="stat-item-desc mt-1">{{ $ruangTerbanyakCount }} Transaksi</div>
                             </div>
                         </div>
                     </div>
@@ -413,26 +413,20 @@
                                     <thead>
                                         <tr>
                                             <th>Fasilitas</th>
-                                            <th style="text-align: right;">Jumlah</th>
+                                            <th style="text-align: right;">Jumlah Peminjaman</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @forelse($ringkasanFasilitas as $fasilitas => $count)
                                         <tr>
-                                            <td class="fw-semibold">Aula Utama</td>
-                                            <td style="text-align: right;" class="text-secondary fw-semibold">18</td>
+                                            <td class="fw-semibold">{{ $fasilitas }}</td>
+                                            <td style="text-align: right;" class="text-secondary fw-semibold">{{ $count }}</td>
                                         </tr>
+                                        @empty
                                         <tr>
-                                            <td class="fw-semibold">Ruang Rapat SBUM</td>
-                                            <td style="text-align: right;" class="text-secondary fw-semibold">11</td>
+                                            <td colspan="2" class="text-center text-secondary py-3">Belum ada data fasilitas yang dipinjam.</td>
                                         </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Lab Komputer 1</td>
-                                            <td style="text-align: right;" class="text-secondary fw-semibold">9</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-semibold">Projector Epson</td>
-                                            <td style="text-align: right;" class="text-secondary fw-semibold">7</td>
-                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>

@@ -322,8 +322,11 @@ class AuthMahasiswaController extends Controller
         $rooms = \App\Models\Ruangan::available()->get();
         $items = \App\Models\Barang::where('stok_tersedia', '>', 0)->get();
 
-        // Allowed responsible staff using the local scope
-        $staff = User::penanggungJawab()->with('roles')->get();
+        // Allowed responsible staff - only Dosen can be academic sponsor
+        $staff = User::whereHas('roles', function ($q) {
+            $q->where('role.nama_role', 'Dosen')
+              ->orWhere('role.id_role', 2);
+        })->with('roles')->get();
 
         $selectedFacilityId = $request->query('facility_id');
 
@@ -513,6 +516,37 @@ class AuthMahasiswaController extends Controller
         }
 
         return view('mahasiswa.notifikasi');
+    }
+
+    public function riwayat()
+    {
+        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
+            abort(403, 'Akses hanya untuk mahasiswa.');
+        }
+
+        $peminjaman = \App\Models\Peminjaman::with(['ruangan', 'barang', 'dosen'])
+            ->where('user_id', auth()->id())
+            ->orderBy('id_peminjaman', 'desc')
+            ->get();
+
+        return view('mahasiswa.riwayat', compact('peminjaman'));
+    }
+
+    public function eksporPdf($id)
+    {
+        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
+            abort(403, 'Akses hanya untuk mahasiswa.');
+        }
+
+        $peminjaman = \App\Models\Peminjaman::with(['user', 'ruangan', 'barang', 'dosen', 'verifikasi.verifikator'])
+            ->where('user_id', auth()->id())
+            ->where('id_peminjaman', $id)
+            ->firstOrFail();
+
+        // Load view into PDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('mahasiswa.pdf_bukti', compact('peminjaman'));
+        
+        return $pdf->download('Bukti_Peminjaman_' . $peminjaman->id_peminjaman . '.pdf');
     }
 
     public function logout(Request $request)

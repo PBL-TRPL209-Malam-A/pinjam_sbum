@@ -531,6 +531,10 @@
                     <span class="side-icon"></span>
                     <span>Pengembalian</span>
                 </a>
+                <a href="{{ route('mahasiswa.riwayat') }}" class="side-link {{ request()->routeIs('mahasiswa.riwayat') ? 'active' : '' }}">
+                    <span class="side-icon"></span>
+                    <span>Riwayat Peminjaman</span>
+                </a>
                 <a href="{{ route('mahasiswa.notifikasi') }}" class="side-link">
                     <span class="side-icon"></span>
                     <span>Notifikasi</span>

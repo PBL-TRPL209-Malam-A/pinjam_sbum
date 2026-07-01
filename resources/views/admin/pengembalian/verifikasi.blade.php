@@ -452,7 +452,10 @@
             check3.removeAttribute('required');
         }
 
-        document.getElementById('decisionForm') || document.querySelector('form').submit();
+        var form = document.getElementById('decisionForm') || document.querySelector('form');
+        if (form) {
+            form.submit();
+        }
     }
 
     function openDetailModal(event, id, kategori) {

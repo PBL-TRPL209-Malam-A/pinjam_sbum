@@ -70,40 +70,34 @@
     <div class="card-body p-4 p-lg-5">
         <h2 class="fs-5 fw-semibold mb-2 text-main">Pantau kegiatan peminjaman fasilitas</h2>
         <p class="mb-0 text-secondary text-wrap">
-            Pamdal melihat jadwal kegiatan, mengawasi pelaksanaan, lalu mencatat temuan lapangan.
+            Pamdal melihat jadwal kegiatan hari ini, mengawasi pelaksanaan, lalu mencatat temuan lapangan.
         </p>
     </div>
 </div>
 
 <div class="row g-4">
-    <!-- Left Column: Schedules list & checklist -->
+    <!-- Left Column: Schedules list -->
     <div class="col-lg-6">
         <div class="mb-3 fw-semibold text-secondary">Jadwal Hari Ini</div>
 
-        @forelse($peminjaman as $item)
-        <div class="schedule-item-card">
-            <h4 class="fs-5 fw-bold text-main mb-1">{{ $item->nama_kegiatan }}</h4>
-            <div class="text-secondary small mb-1">{{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : 'Aula Utama Polibatam' }}</div>
-            <div class="text-muted small">{{ $item->tanggal_pengajuan ? $item->tanggal_pengajuan->format('d M Y') : '12 Apr 2026' }} - 08.00 - 12.00</div>
-        </div>
-        @empty
-        <!-- Fallback mock cards matching Image 1 exactly -->
-        <div class="schedule-item-card">
-            <h4 class="fs-5 fw-bold text-main mb-1">Seminar Mahasiswa Baru</h4>
-            <div class="text-secondary small mb-1">Aula Utama Polibatam</div>
-            <div class="text-muted small">12 Apr 2026 - 08.00 - 12.00</div>
-        </div>
-        <div class="schedule-item-card">
-            <h4 class="fs-5 fw-bold text-main mb-1">Workshop UI/UX TRPL</h4>
-            <div class="text-secondary small mb-1">Lab Komputer 1</div>
-            <div class="text-muted small">12 Apr 2026 - 13.00 - 15.00</div>
-        </div>
-        @endforelse
+        @if($peminjaman->isEmpty())
+            <div class="text-center p-4" style="background:#fffdfa; border: 1px solid var(--line); border-radius:1.25rem;">
+                <p class="text-secondary mb-0">Tidak ada jadwal kegiatan yang perlu diawasi hari ini.</p>
+            </div>
+        @else
+            @foreach($peminjaman as $item)
+            <div class="schedule-item-card" style="cursor: pointer;" onclick="selectSchedule({{ $item->id_peminjaman }}, '{{ $item->nama_kegiatan }}')">
+                <h4 class="fs-5 fw-bold text-main mb-1">{{ $item->nama_kegiatan }}</h4>
+                <div class="text-secondary small mb-1">{{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : (count($item->barang) > 0 ? $item->barang->first()->nama_barang : 'Fasilitas') }}</div>
+                <div class="text-muted small">{{ $item->tanggal_pengajuan ? $item->tanggal_pengajuan->format('d M Y') : '-' }} - {{ $item->jam_mulai ? substr($item->jam_mulai, 0, 5) : '08:00' }} - {{ $item->jam_selesai ? substr($item->jam_selesai, 0, 5) : '12:00' }}</div>
+            </div>
+            @endforeach
+        @endif
 
-        <div class="mb-3 mt-4 fw-semibold text-secondary">Status Pengawasan</div>
+        <div class="mb-3 mt-4 fw-semibold text-secondary">Panduan Pengawasan</div>
         <div class="checklist-box">
             <div class="mb-3">
-                <span class="status-badge-controlled">Kegiatan Terkendali</span>
+                <span class="status-badge-controlled">Parameter Aman</span>
             </div>
             <ul class="checklist-bullet">
                 <li>Peserta masuk sesuai kapasitas</li>
@@ -119,11 +113,38 @@
         <div class="notes-box d-flex flex-column justify-content-between">
             <form action="{{ route('pamdal.monitoring.store') }}" method="POST" id="monitoringForm">
                 @csrf
-                <input type="hidden" name="status_pengawasan" value="terkendali">
-                <textarea name="catatan" class="form-control mb-4" rows="8" style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.95rem; line-height: 1.6; resize: none;">Kegiatan berjalan sesuai jadwal, penggunaan ruangan tertib, dan tidak ada pelanggaran.</textarea>
-                <button type="submit" class="btn btn-main w-100" style="height: 48px; border-radius: 0.75rem;">Simpan Catatan</button>
+                <input type="hidden" name="peminjaman_id" id="peminjaman_id" value="">
+                
+                <div class="mb-3">
+                    <label class="form-label text-main fw-semibold">Pilih Kegiatan dari Jadwal di Kiri</label>
+                    <input type="text" id="selected_kegiatan" class="form-control" readonly placeholder="Belum ada kegiatan yang dipilih" style="background-color: #f7f3eb; border-color: #dfd4c8; border-radius: 0.75rem;">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-main fw-semibold">Status Pengawasan</label>
+                    <select name="status_pengawasan" class="form-select" required style="border-radius: 0.75rem; border-color: #dfd4c8;">
+                        <option value="Aman Terkendali">Aman Terkendali</option>
+                        <option value="Ada Kendala">Ada Kendala</option>
+                    </select>
+                </div>
+                
+                <label class="form-label text-main fw-semibold">Catatan Lapangan</label>
+                <textarea name="catatan" class="form-control mb-4" rows="6" required style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.95rem; line-height: 1.6; resize: none;" placeholder="Tuliskan temuan lapangan..."></textarea>
+                <button type="submit" class="btn btn-main w-100" style="height: 48px; border-radius: 0.75rem;" id="submitBtn" disabled>Simpan Catatan</button>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    function selectSchedule(id, name) {
+        document.getElementById('peminjaman_id').value = id;
+        document.getElementById('selected_kegiatan').value = name;
+        document.getElementById('submitBtn').disabled = false;
+        
+        // Visual cue (optional)
+        document.querySelectorAll('.schedule-item-card').forEach(card => card.style.borderColor = 'var(--line)');
+        event.currentTarget.style.borderColor = 'var(--primary-main)';
+    }
+</script>
 @endsection

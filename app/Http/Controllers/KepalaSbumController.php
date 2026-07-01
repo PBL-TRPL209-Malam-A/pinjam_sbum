@@ -200,7 +200,35 @@ class KepalaSbumController extends Controller
             ]);
         }
 
-        return view('kepalasbum.laporan', compact('peminjaman', 'pengembalian'));
+        // Statistik Laporan
+        $totalPeminjaman = $peminjaman->count();
+        $disetujui = $peminjaman->whereIn('status', ['menunggu_pic', 'siap_digunakan', 'sedang_digunakan', 'selesai'])->count();
+        $ditolak = $peminjaman->where('status', 'ditolak')->count();
+
+        $fasilitasCount = [];
+        foreach ($peminjaman as $p) {
+            if ($p->ruangan->isNotEmpty()) {
+                $nama = $p->ruangan->first()->nama_ruangan;
+                $fasilitasCount[$nama] = ($fasilitasCount[$nama] ?? 0) + 1;
+            }
+            if ($p->barang->isNotEmpty()) {
+                $nama = $p->barang->first()->nama_barang;
+                $fasilitasCount[$nama] = ($fasilitasCount[$nama] ?? 0) + 1;
+            }
+        }
+
+        arsort($fasilitasCount);
+        $ruangTerbanyak = key($fasilitasCount) ?: 'Belum Ada';
+        $ruangTerbanyakCount = current($fasilitasCount) ?: 0;
+        
+        $ringkasanFasilitas = array_slice($fasilitasCount, 0, 10, true);
+
+        return view('kepalasbum.laporan', compact(
+            'peminjaman', 'pengembalian', 
+            'totalPeminjaman', 'disetujui', 'ditolak', 
+            'ruangTerbanyak', 'ruangTerbanyakCount', 
+            'ringkasanFasilitas'
+        ));
     }
 
     public function laporanPengembalian()
@@ -230,7 +258,25 @@ class KepalaSbumController extends Controller
             ]);
         }
 
-        return view('kepalasbum.laporan_pengembalian', compact('pengembalian'));
+        $totalPengembalian = $pengembalian->count();
+        $kondisiBaik = 0;
+        $tindakLanjut = 0;
+        $terlambat = 0;
+
+        foreach ($pengembalian as $p) {
+            $kondisi = strtolower($p->kondisi_kembali);
+            if ($kondisi == 'baik') {
+                $kondisiBaik++;
+            } elseif (in_array($kondisi, ['hilang', 'rusak', 'terlambat'])) {
+                $terlambat++;
+            } else {
+                $tindakLanjut++;
+            }
+        }
+ 
+        return view('kepalasbum.laporan_pengembalian', compact(
+            'pengembalian', 'totalPengembalian', 'kondisiBaik', 'tindakLanjut', 'terlambat'
+        ));
     }
 
     public function dashboard()

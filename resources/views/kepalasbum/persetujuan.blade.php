@@ -316,7 +316,7 @@
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3">
                         <div>
                             <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="fw-bold text-secondary">SBUM-2026-0{{ 180 + $p->id_peminjaman }}</span>
+                                <span class="fw-bold text-secondary">SBUM-2026-{{ str_pad($p->id_peminjaman, 4, '0', STR_PAD_LEFT) }}</span>
                                 <span class="badge-pending-final">Menunggu Final</span>
                             </div>
                             <h3 class="fs-5 fw-bold mb-2">{{ $p->nama_kegiatan }}</h3>

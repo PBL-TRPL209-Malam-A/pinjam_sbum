@@ -370,25 +370,25 @@
                     <div class="col-md-3 col-6">
                         <div class="stat-card">
                             <div class="stat-label">Total Pengembalian</div>
-                            <div class="stat-val">49</div>
+                            <div class="stat-val">{{ $totalPengembalian ?? 0 }}</div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6">
                         <div class="stat-card">
                             <div class="stat-label">Kondisi Baik</div>
-                            <div class="stat-val">43</div>
+                            <div class="stat-val">{{ $kondisiBaik ?? 0 }}</div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6">
                         <div class="stat-card">
                             <div class="stat-label">Perlu Tindak Lanjut</div>
-                            <div class="stat-val">4</div>
+                            <div class="stat-val">{{ $tindakLanjut ?? 0 }}</div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6">
                         <div class="stat-card">
                             <div class="stat-label">Terlambat</div>
-                            <div class="stat-val">2</div>
+                            <div class="stat-val">{{ $terlambat ?? 0 }}</div>
                         </div>
                     </div>
                 </div>
@@ -406,26 +406,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- Let's construct mockup rows first to exactly match the screen, then dynamic ones if exist --}}
-                            <tr>
-                                <td class="fw-semibold">Aula Utama</td>
-                                <td>Moch Azmi</td>
-                                <td>12 Apr 2026</td>
-                                <td style="text-align: right; padding-right: 1.5rem;"><span class="badge-condition-good">Baik</span></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-semibold">Projector Epson</td>
-                                <td>Grexia</td>
-                                <td>14 Apr 2026</td>
-                                <td style="text-align: right; padding-right: 1.5rem;"><span class="badge-condition-check">Perlu Pemeriksaan</span></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-semibold">Sound System</td>
-                                <td>Danudenta</td>
-                                <td>15 Apr 2026</td>
-                                <td style="text-align: right; padding-right: 1.5rem;"><span class="badge-condition-late">Terlambat</span></td>
-                            </tr>
-
                             @foreach($pengembalian as $p)
                             <tr>
                                 <td class="fw-semibold">

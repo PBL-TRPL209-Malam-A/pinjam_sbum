@@ -7,3 +7,5 @@ $kernel->bootstrap();
 
 echo "Peminjaman Records:\n";
 print_r(App\Models\Peminjaman::with(['ruangan', 'barang'])->take(5)->get()->toArray());
+
+
