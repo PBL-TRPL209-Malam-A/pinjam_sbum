@@ -224,12 +224,21 @@
                                 <div class="info-value" style="color: var(--text-main); font-weight: 600;">{{ $selectedItem->dosen->nama_lengkap ?? '-' }}</div>
                             </div>
                         </div>
+                        @if($selectedItem->ruangan->count() > 0)
                         <div class="col-md-6">
                             <div class="info-row">
                                 <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Jumlah Peserta</div>
                                 <div class="info-value" style="color: var(--text-main); font-weight: 600;">{{ $selectedItem->jumlah_peserta ?? '0' }} Orang</div>
                             </div>
                         </div>
+                        @elseif($selectedItem->barang->count() > 0)
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Jumlah Barang</div>
+                                <div class="info-value" style="color: var(--text-main); font-weight: 600;">{{ $selectedItem->barang->first()->pivot->jumlah ?? 1 }} Buah</div>
+                            </div>
+                        </div>
+                        @endif
                         <div class="col-md-12">
                             <div class="info-row">
                                 <div class="info-label" style="color: var(--text-muted); font-size: 0.85rem;">Deskripsi Acara</div>
@@ -241,6 +250,7 @@
                     <hr class="my-4" style="border-top: 1px solid var(--line);">
 
                     <div class="mb-3 fw-semibold text-secondary text-start">Checklist Kesiapan</div>
+                    @if($selectedItem->ruangan->count() > 0)
                     <div class="checklist-item text-start">
                         <input class="form-check-input mt-0" type="checkbox" id="check1" required>
                         <label class="form-check-label text-main fw-semibold ms-2" for="check1">Ruangan bersih dan siap pakai</label>
@@ -253,6 +263,20 @@
                         <input class="form-check-input mt-0" type="checkbox" id="check3" required>
                         <label class="form-check-label text-main fw-semibold ms-2" for="check3">Kursi, meja, dan akses ruangan lengkap</label>
                     </div>
+                    @elseif($selectedItem->barang->count() > 0)
+                    <div class="checklist-item text-start">
+                        <input class="form-check-input mt-0" type="checkbox" id="check1" required>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check1">Kondisi fisik barang baik dan tidak cacat</label>
+                    </div>
+                    <div class="checklist-item text-start">
+                        <input class="form-check-input mt-0" type="checkbox" id="check2" required>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check2">Fungsionalitas barang berjalan dengan normal</label>
+                    </div>
+                    <div class="checklist-item text-start">
+                        <input class="form-check-input mt-0" type="checkbox" id="check3" required>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check3">Aksesoris / kelengkapan barang sudah lengkap (jika ada)</label>
+                    </div>
+                    @endif
 
                     <div class="mt-4 text-start">
                         <label class="form-label text-secondary small fw-semibold">Catatan PIC</label>

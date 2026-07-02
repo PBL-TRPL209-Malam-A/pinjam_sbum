@@ -342,7 +342,7 @@
                                 </button>
                             </div>
                         </div>
-                        <button class="btn btn-dark-action d-inline-flex align-items-center justify-content-center" onclick="alert('Laporan berhasil diunduh (Mockup)')">Unduh PDF</button>
+                        <a href="{{ route('kepalasbum.laporan.export') }}" class="btn btn-dark-action d-inline-flex align-items-center justify-content-center">Unduh Excel</a>
                     </div>
                 </div>
 

@@ -204,6 +204,16 @@
                                 </div>
                             </div>
                         </div>
+                        @if($selectedItem->jenis_peminjaman === 'barang')
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <div class="info-label">Jumlah Barang</div>
+                                <div class="info-value">
+                                    {{ count($selectedItem->barang) > 0 ? ($selectedItem->barang->first()->pivot->jumlah ?? 1) : 1 }} Buah
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         <div class="col-md-6">
                             <div class="info-row">
                                 <div class="info-label">Tanggal Pengembalian</div>

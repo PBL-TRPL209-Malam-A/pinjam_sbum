@@ -13,6 +13,7 @@ class Peminjaman extends Model
     protected $fillable = [
         'user_id',
         'dosen_id',
+        'pic_id',
         'nama_kegiatan',
         'jumlah_peserta',
         'jenis_peminjaman',
@@ -34,6 +35,16 @@ class Peminjaman extends Model
         $barangNames = $this->barang->pluck('nama_barang')->toArray();
         $all = array_merge($ruanganNames, $barangNames);
         return count($all) > 0 ? implode(', ', $all) : '-';
+    }
+
+    public function getNamaFasilitasWithTypeAttribute()
+    {
+        if ($this->ruangan->count() > 0) {
+            return $this->ruangan->first()->nama_ruangan . ' (Ruangan)';
+        } elseif ($this->barang->count() > 0) {
+            return $this->barang->first()->nama_barang . ' (Barang Inventaris)';
+        }
+        return 'Fasilitas';
     }
 
     public function getTanggalMulaiAttribute()
@@ -87,6 +98,11 @@ class Peminjaman extends Model
     public function dosen()
     {
         return $this->belongsTo(User::class, 'dosen_id', 'id_user');
+    }
+
+    public function pic()
+    {
+        return $this->belongsTo(User::class, 'pic_id', 'id_user');
     }
 
     public function detailRuangan()

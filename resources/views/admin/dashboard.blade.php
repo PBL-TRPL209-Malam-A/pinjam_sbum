@@ -137,7 +137,7 @@
                     <div class="fw-semibold text-main">SBUM-2026-{{ str_pad($item->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · {{ $item->nama_kegiatan }}</div>
                     <div class="text-secondary small mt-1">
                         {{ $item->user->nama_lengkap ?? '-' }} · 
-                        {{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : (count($item->barang) > 0 ? $item->barang->first()->nama_barang : 'Fasilitas') }} · 
+                        {{ $item->nama_fasilitas_with_type }} · 
                         {{ $item->tanggal_pengajuan ? $item->tanggal_pengajuan->format('d M Y') : now()->format('d M Y') }}
                     </div>
                 </div>
@@ -150,23 +150,9 @@
                 </div>
             </div>
         @empty
-            <!-- Fallbacks to match mockup exactly if no DB data -->
             <div class="list-item-card">
-                <div>
-                    <div class="fw-semibold text-main">SBUM-2026-0148 · Seminar Mahasiswa Baru</div>
-                    <div class="text-secondary small mt-1">Moch Azmi · Aula Utama · 12 Apr 2026</div>
-                </div>
-                <div>
-                    <span class="badge-warning-soft">Menunggu Admin</span>
-                </div>
-            </div>
-            <div class="list-item-card">
-                <div>
-                    <div class="fw-semibold text-main">SBUM-2026-0149 · Workshop UI/UX</div>
-                    <div class="text-secondary small mt-1">Ayudia · Lab Komputer 1 · 13 Apr 2026</div>
-                </div>
-                <div>
-                    <span class="badge-danger-soft">Bentrok</span>
+                <div class="text-center w-100 py-3 text-secondary">
+                    Tidak ada pengajuan terbaru.
                 </div>
             </div>
         @endforelse
@@ -186,24 +172,24 @@
     <div class="col-lg-5">
         <div class="mb-3 fw-semibold text-secondary">Kalender Hari Ini</div>
         <div class="card border-0 rounded-4 p-4 mb-4" style="background: #fffdfa; border: 1px solid var(--line) !important;">
-            <div class="mb-4">
-                <div class="text-secondary small fw-semibold">08.00 - 12.00</div>
-                <div class="fw-semibold text-main mt-1">Aula Utama · Seminar Mahasiswa Baru</div>
-            </div>
-            <div>
-                <div class="text-secondary small fw-semibold">13.00 - 15.00</div>
-                <div class="fw-semibold text-main mt-1">Lab Komputer 1 · Workshop UI/UX</div>
-            </div>
+            @forelse($jadwalHariIni as $jadwal)
+                <div class="mb-3">
+                    <div class="text-secondary small fw-semibold">{{ \Carbon\Carbon::parse($jadwal->waktu_mulai ?? '08:00')->format('H.i') }} - {{ \Carbon\Carbon::parse($jadwal->waktu_selesai ?? '12:00')->format('H.i') }}</div>
+                    <div class="fw-semibold text-main mt-1">{{ $jadwal->nama_fasilitas_with_type }} · {{ $jadwal->nama_kegiatan }}</div>
+                </div>
+            @empty
+                <div class="text-secondary text-center py-2">Tidak ada jadwal hari ini.</div>
+            @endforelse
         </div>
 
         <div class="mb-3 fw-semibold text-secondary">Alert Operasional</div>
         <div class="alert border-0 rounded-4 p-3 d-flex align-items-center mb-3" style="background-color: #fdf1d3; color: #7d6006;">
             <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-            <span class="fw-semibold small">3 jadwal terindikasi bentrok</span>
+            <span class="fw-semibold small">{{ $totalJadwalBentrok }} jadwal terindikasi bentrok</span>
         </div>
         <div class="alert border-0 rounded-4 p-3 d-flex align-items-center" style="background-color: #edf2ea; color: #466454;">
             <i class="bi bi-check-circle-fill me-2 fs-5"></i>
-            <span class="fw-semibold small">5 pengembalian siap diverifikasi</span>
+            <span class="fw-semibold small">{{ $returnPending }} pengembalian siap diverifikasi</span>
         </div>
     </div>
 </div>

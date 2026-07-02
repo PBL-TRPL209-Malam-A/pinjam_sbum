@@ -507,7 +507,7 @@
     <div class="dash-shell">
         <aside class="dash-sidebar">
             <div class="brand-box">
-                <img src="{{ asset('assets/images/logo-sbum-icon.png') }}" alt="SBUM" class="brand-logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Logo_Politeknik_Negeri_Batam.png" alt="SBUM" class="brand-logo">
             </div>
 
             <nav class="side-menu">
@@ -586,30 +586,41 @@
 
                 <div>
                     <div class="mini-title">Jadwal Terdekat</div>
+                    @if($jadwalTerdekat)
                     <div class="schedule-card">
-                        <div class="schedule-name">Aula Utama Polibatam</div>
-                        <div class="schedule-time">12 Apr 2026 · 08.00 - 12.00</div>
+                        <div class="schedule-name">
+                            {{ $jadwalTerdekat->jenis_peminjaman === 'ruangan' ? ($jadwalTerdekat->ruangan->first()->nama_ruangan ?? 'Ruangan') : ($jadwalTerdekat->barang->first()->nama_barang ?? 'Barang') }}
+                        </div>
+                        <div class="schedule-time">
+                            {{ \Carbon\Carbon::parse($jadwalTerdekat->tanggal_pengajuan)->translatedFormat('d M Y') }} · 
+                            {{ \Carbon\Carbon::parse($jadwalTerdekat->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwalTerdekat->jam_selesai)->format('H:i') }}
+                        </div>
                         <span class="status-pill approved">Disetujui</span>
                     </div>
+                    @else
+                    <div class="schedule-card text-center text-muted" style="background: transparent; border: 1px dashed #dfe7dc;">
+                        Belum ada jadwal terdekat.
+                    </div>
+                    @endif
                 </div>
             </div>
 
             <div class="stats-row">
                 <div class="stat-box">
                     <div class="stat-label">Pengajuan Aktif</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value">{{ $pengajuanAktif }}</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-label">Menunggu Persetujuan</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value">{{ $menungguPersetujuan }}</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-label">Riwayat Selesai</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value">{{ $riwayatSelesai }}</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-label">Notifikasi Baru</div>
-                    <div class="stat-value">0</div>
+                    <div class="stat-value">{{ $notifikasiBaru }}</div>
                 </div>
             </div>
 
@@ -618,20 +629,28 @@
                     <div class="mini-title">Aksi Cepat</div>
                     <div class="quick-grid">
                         <div class="quick-card">
-                            <div class="quick-title">Ajukan Peminjaman</div>
-                            <div class="quick-desc">Buat pengajuan baru</div>
+                            <a href="{{ route('mahasiswa.pengajuan') }}" style="text-decoration: none;">
+                                <div class="quick-title">Ajukan Peminjaman</div>
+                                <div class="quick-desc">Buat pengajuan baru</div>
+                            </a>
                         </div>
                         <div class="quick-card">
-                            <div class="quick-title">Cek Ketersediaan</div>
-                            <div class="quick-desc">Lihat slot fasilitas</div>
+                            <a href="{{ route('mahasiswa.jadwal') }}" style="text-decoration: none;">
+                                <div class="quick-title">Cek Ketersediaan</div>
+                                <div class="quick-desc">Lihat slot fasilitas</div>
+                            </a>
                         </div>
                         <div class="quick-card">
-                            <div class="quick-title">Status Pengajuan</div>
-                            <div class="quick-desc">Pantau progres verifikasi</div>
+                            <a href="{{ route('mahasiswa.riwayat') }}" style="text-decoration: none;">
+                                <div class="quick-title">Status Pengajuan</div>
+                                <div class="quick-desc">Pantau progres verifikasi</div>
+                            </a>
                         </div>
                         <div class="quick-card">
-                            <div class="quick-title">Ajukan Pengembalian</div>
-                            <div class="quick-desc">Submit return fasilitas</div>
+                            <a href="{{ route('mahasiswa.pengembalian') }}" style="text-decoration: none;">
+                                <div class="quick-title">Ajukan Pengembalian</div>
+                                <div class="quick-desc">Submit return fasilitas</div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -639,47 +658,60 @@
                 <div>
                     <div class="mini-title">Status Pengajuan Terbaru</div>
                     <div class="status-list">
+                        @forelse($pengajuanTerbaru as $pengajuan)
                         <div class="status-card">
                             <div class="status-top">
                                 <div>
-                                    <div class="status-code">SBUM-2026-0148 · Aula Utama Polibatam</div>
-                                    <div class="status-name">Seminar Mahasiswa Baru · 12 Apr 2026</div>
+                                    <div class="status-code">
+                                        SBUM-2026-{{ str_pad($pengajuan->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · 
+                                        {{ $pengajuan->jenis_peminjaman === 'ruangan' ? ($pengajuan->ruangan->first()->nama_ruangan ?? 'Ruangan') : ($pengajuan->barang->first()->nama_barang ?? 'Barang') }}
+                                    </div>
+                                    <div class="status-name">{{ $pengajuan->nama_kegiatan }} · {{ \Carbon\Carbon::parse($pengajuan->tanggal_pengajuan)->translatedFormat('d M Y') }}</div>
                                 </div>
-                                <span class="status-pill pending">Menunggu Admin</span>
+                                @php
+                                    $statusClass = 'pending';
+                                    $statusText = 'Menunggu';
+                                    if(in_array($pengajuan->status, ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala_sbum', 'menunggu_pic'])) {
+                                        $statusClass = 'pending';
+                                        if($pengajuan->status == 'menunggu_dosen') $statusText = 'Menunggu Dosen';
+                                        elseif($pengajuan->status == 'menunggu_admin') $statusText = 'Menunggu Admin';
+                                        elseif($pengajuan->status == 'menunggu_kepala_sbum') $statusText = 'Menunggu Ka. SBUM';
+                                        elseif($pengajuan->status == 'menunggu_pic') $statusText = 'Menunggu PIC';
+                                    } elseif($pengajuan->status == 'disetujui' || $pengajuan->status == 'selesai') {
+                                        $statusClass = 'approved';
+                                        $statusText = 'Disetujui';
+                                    } elseif($pengajuan->status == 'ditolak') {
+                                        $statusClass = 'rejected';
+                                        $statusText = 'Ditolak';
+                                    } elseif($pengajuan->status == 'batal') {
+                                        $statusClass = 'rejected';
+                                        $statusText = 'Dibatalkan';
+                                    }
+                                @endphp
+                                <span class="status-pill {{ $statusClass }}">{{ $statusText }}</span>
                             </div>
 
                             <div class="progress-row">
                                 <div class="progress-line active"></div>
-                                <div class="progress-line active"></div>
-                                <div class="progress-line"></div>
+                                <div class="progress-line {{ in_array($pengajuan->status, ['menunggu_admin', 'menunggu_kepala_sbum', 'menunggu_pic', 'disetujui']) ? 'active' : '' }}"></div>
+                                <div class="progress-line {{ in_array($pengajuan->status, ['menunggu_kepala_sbum', 'menunggu_pic', 'disetujui']) ? 'active' : '' }}"></div>
                             </div>
-                            <div class="progress-labels">
+                            <div class="progress-labels" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 6px; font-size: 13px; color: #7a847e;">
                                 <span>Diajukan</span>
                                 <span>Dosen</span>
                                 <span>Admin</span>
                             </div>
                         </div>
-
-                        <div class="status-card">
-                            <div class="status-top">
-                                <div>
-                                    <div class="status-code">SBUM-2026-0136 · LCD Projector Epson</div>
-                                    <div class="status-name">Presentasi Kelas · 10 Apr 2026</div>
-                                </div>
-                                <span class="status-pill approved">Disetujui</span>
-                            </div>
-
-                            <div class="progress-row">
-                                <div class="progress-line active"></div>
-                                <div class="progress-line active"></div>
-                                <div class="progress-line active"></div>
-                            </div>
-                        </div>
-
+                        @empty
                         <div class="note-card">
+                            <p class="note-text text-center py-3">Belum ada data pengajuan terbaru.</p>
+                        </div>
+                        @endforelse
+
+                        <div class="note-card mt-3">
                             <div class="note-title">Catatan Dashboard</div>
                             <p class="note-text">
-                                Versi ini lebih fokus ke aksi cepat, jadwal terdekat, dan status pengajuan agar mahasiswa lebih cepat memahami apa yang harus dilakukan.
+                                Dashboard ini memantau aktivitas peminjaman dan ketersediaan fasilitas Anda secara real-time.
                             </p>
                         </div>
                     </div>

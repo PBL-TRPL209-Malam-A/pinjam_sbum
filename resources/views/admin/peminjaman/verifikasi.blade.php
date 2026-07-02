@@ -128,7 +128,7 @@
                         <div>
                             <div class="fw-bold text-main">SBUM-2026-{{ str_pad($item->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · {{ $item->nama_kegiatan }}</div>                            <div class="text-secondary small mt-1">
                                 Peminjam: {{ $item->user->nama_lengkap ?? 'Mahasiswa' }} · 
-                                {{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : (count($item->barang) > 0 ? $item->barang->first()->nama_barang : 'Fasilitas') }}
+                                {{ $item->nama_fasilitas_with_type }}
                             </div>
                             <div class="text-muted small mt-2">
                                 Sudah diverifikasi dosen · {{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}
@@ -194,10 +194,17 @@
                                         {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}
                                     </span>
                                 </div>
+                                @if($item->ruangan->count() > 0)
                                 <div class="mb-3">
                                     <span class="text-muted small d-block">Jumlah Peserta</span>
                                     <span class="fw-semibold text-main">{{ $item->jumlah_peserta ?? '0' }} Orang</span>
                                 </div>
+                                @elseif($item->barang->count() > 0)
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Jumlah Barang</span>
+                                    <span class="fw-semibold text-main">{{ $item->barang->first()->pivot->jumlah ?? 1 }} Buah</span>
+                                </div>
+                                @endif
                                 <div class="mb-3">
                                     <span class="text-muted small d-block">Keterangan / Deskripsi Acara</span>
                                     <span class="fw-semibold text-main">{{ $item->keterangan ?: 'Tidak ada keterangan tambahan.' }}</span>

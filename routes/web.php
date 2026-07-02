@@ -84,7 +84,9 @@ Route::middleware(['auth', 'role:kepalasbum'])->group(function () {
     Route::get('/kepalasbum/persetujuan', [\App\Http\Controllers\KepalaSbumController::class, 'persetujuanIndex'])->name('kepalasbum.persetujuan');
     Route::put('/kepalasbum/persetujuan/{id}', [\App\Http\Controllers\KepalaSbumController::class, 'verifikasi'])->name('kepalasbum.verifikasi');
     Route::get('/kepalasbum/laporan', [\App\Http\Controllers\KepalaSbumController::class, 'laporanIndex'])->name('kepalasbum.laporan');
+    Route::get('/kepalasbum/laporan/export-excel', [\App\Http\Controllers\KepalaSbumController::class, 'exportPeminjamanExcel'])->name('kepalasbum.laporan.export');
     Route::get('/kepalasbum/laporan-pengembalian', [\App\Http\Controllers\KepalaSbumController::class, 'laporanPengembalian'])->name('kepalasbum.laporan-pengembalian');
+    Route::get('/kepalasbum/laporan-pengembalian/export-excel', [\App\Http\Controllers\KepalaSbumController::class, 'exportPengembalianExcel'])->name('kepalasbum.laporan-pengembalian.export');
     Route::get('/kepalasbum/profil', [\App\Http\Controllers\KepalaSbumController::class, 'profil'])->name('kepalasbum.profil');
 });
 

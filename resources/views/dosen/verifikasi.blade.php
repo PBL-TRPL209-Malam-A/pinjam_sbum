@@ -118,7 +118,7 @@
                 </div>
                 <div class="mb-3">
                     <div class="text-secondary small fw-semibold">Ruangan / Fasilitas:</div>
-                    <div class="text-main fw-semibold">{{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : (count($item->barang) > 0 ? $item->barang->first()->nama_barang : 'Fasilitas') }}</div>
+                    <div class="text-main fw-semibold">{{ $item->nama_fasilitas_with_type }}</div>
                 </div>
                 <div class="mb-4">
                     <div class="text-secondary small fw-semibold">Tanggal & Waktu:</div>
@@ -159,8 +159,19 @@
                         </div>
                         <div class="mb-3">
                             <span class="text-muted small d-block">Fasilitas</span>
-                            <span class="fw-semibold text-main">{{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : (count($item->barang) > 0 ? $item->barang->first()->nama_barang : 'Fasilitas') }}</span>
+                            <span class="fw-semibold text-main">{{ $item->nama_fasilitas_with_type }}</span>
                         </div>
+                        @if($item->ruangan->count() > 0)
+                        <div class="mb-3">
+                            <span class="text-muted small d-block">Jumlah Peserta</span>
+                            <span class="fw-semibold text-main">{{ $item->jumlah_peserta ?? '0' }} Orang</span>
+                        </div>
+                        @elseif($item->barang->count() > 0)
+                        <div class="mb-3">
+                            <span class="text-muted small d-block">Jumlah Barang</span>
+                            <span class="fw-semibold text-main">{{ $item->barang->first()->pivot->jumlah ?? 1 }} Buah</span>
+                        </div>
+                        @endif
                         <div class="mb-3">
                             <span class="text-muted small d-block">Waktu</span>
                             <span class="fw-semibold text-main">{{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}</span>

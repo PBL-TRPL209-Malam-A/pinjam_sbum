@@ -333,6 +333,9 @@
                     <a href="{{ route('mahasiswa.pengembalian') }}" class="sidebar-link">
                         <span class="sidebar-dot"></span><span>Pengembalian</span>
                     </a>
+                    <a href="{{ route('mahasiswa.riwayat') }}" class="sidebar-link {{ request()->routeIs('mahasiswa.riwayat') ? 'active' : '' }}">
+                        <span class="sidebar-dot"></span><span>Riwayat Peminjaman</span>
+                    </a>
                     <a href="{{ route('mahasiswa.notifikasi') }}" class="sidebar-link active">
                         <span class="sidebar-dot"></span><span>Notifikasi</span>
                     </a>
@@ -388,95 +391,59 @@
                         <div class="section-title-small">Daftar Notifikasi</div>
 
                         <div class="d-grid gap-3">
-                            <div class="notif-card">
-                                <div class="notif-icon success">
-                                    <i class="bi bi-check-circle-fill"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
-                                        <div>
-                                            <div class="notif-title">Pengajuan disetujui</div>
-                                            <div class="notif-text">
-                                                Pengajuan peminjaman <strong>Aula Utama Polibatam</strong> untuk kegiatan Seminar Mahasiswa Baru telah disetujui oleh admin.
-                                            </div>
-                                        </div>
-                                        <span class="notif-badge success">Disetujui</span>
+                            @forelse($notifikasi as $notif)
+                                @php
+                                    $iconClass = 'info';
+                                    $icon = 'bi-info-circle-fill';
+                                    $title = 'Pemberitahuan';
+                                    $text = 'Status pengajuan Anda telah diperbarui menjadi: ' . str_replace('_', ' ', $notif->status);
+                                    
+                                    if(in_array($notif->status, ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala_sbum', 'menunggu_pic'])) {
+                                        $iconClass = 'warning';
+                                        $icon = 'bi-hourglass-split';
+                                        $title = 'Menunggu verifikasi';
+                                        $text = 'Pengajuan untuk <strong>' . ($notif->jenis_peminjaman === 'ruangan' ? ($notif->ruangan->first()->nama_ruangan ?? 'Ruangan') : ($notif->barang->first()->nama_barang ?? 'Barang')) . '</strong> masih menunggu proses verifikasi.';
+                                    } elseif($notif->status === 'disetujui') {
+                                        $iconClass = 'success';
+                                        $icon = 'bi-check-circle-fill';
+                                        $title = 'Pengajuan disetujui';
+                                        $text = 'Pengajuan peminjaman <strong>' . ($notif->jenis_peminjaman === 'ruangan' ? ($notif->ruangan->first()->nama_ruangan ?? 'Ruangan') : ($notif->barang->first()->nama_barang ?? 'Barang')) . '</strong> untuk kegiatan ' . $notif->nama_kegiatan . ' telah disetujui.';
+                                    } elseif($notif->status === 'ditolak') {
+                                        $iconClass = 'danger';
+                                        $icon = 'bi-x-circle-fill';
+                                        $title = 'Pengajuan ditolak';
+                                        $text = 'Pengajuan <strong>' . ($notif->jenis_peminjaman === 'ruangan' ? ($notif->ruangan->first()->nama_ruangan ?? 'Ruangan') : ($notif->barang->first()->nama_barang ?? 'Barang')) . '</strong> ditolak.';
+                                    } elseif($notif->status === 'selesai' || $notif->status === 'dikembalikan') {
+                                        $iconClass = 'success';
+                                        $icon = 'bi-arrow-repeat';
+                                        $title = 'Pengembalian Selesai';
+                                        $text = 'Fasilitas <strong>' . ($notif->jenis_peminjaman === 'ruangan' ? ($notif->ruangan->first()->nama_ruangan ?? 'Ruangan') : ($notif->barang->first()->nama_barang ?? 'Barang')) . '</strong> telah selesai dikembalikan.';
+                                    }
+                                @endphp
+                                <div class="notif-card">
+                                    <div class="notif-icon {{ $iconClass }}">
+                                        <i class="bi {{ $icon }}"></i>
                                     </div>
-                                    <div class="notif-time">10 menit lalu</div>
-                                </div>
-                            </div>
-
-                            <div class="notif-card">
-                                <div class="notif-icon warning">
-                                    <i class="bi bi-hourglass-split"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
-                                        <div>
-                                            <div class="notif-title">Menunggu verifikasi dosen</div>
-                                            <div class="notif-text">
-                                                Pengajuan <strong>Ruang Seminar</strong> masih menunggu persetujuan dosen pembimbing sebelum diteruskan ke admin.
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+                                            <div>
+                                                <div class="notif-title">{{ $title }}</div>
+                                                <div class="notif-text">
+                                                    {!! $text !!}
+                                                </div>
                                             </div>
+                                            <span class="notif-badge {{ $iconClass }}">{{ ucfirst($iconClass) }}</span>
                                         </div>
-                                        <span class="notif-badge warning">Menunggu</span>
+                                        <div class="notif-time">{{ \Carbon\Carbon::parse($notif->tanggal_pengajuan)->diffForHumans() }}</div>
                                     </div>
-                                    <div class="notif-time">35 menit lalu</div>
                                 </div>
-                            </div>
-
-                            <div class="notif-card">
-                                <div class="notif-icon info">
-                                    <i class="bi bi-calendar-event-fill"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
-                                        <div>
-                                            <div class="notif-title">Jadwal penggunaan besok</div>
-                                            <div class="notif-text">
-                                                Kamu memiliki jadwal penggunaan fasilitas <strong>Laboratorium Komputer 1</strong> besok pukul <strong>08.00 - 10.00 WIB</strong>.
-                                            </div>
-                                        </div>
-                                        <span class="notif-badge info">Jadwal</span>
+                            @empty
+                                <div class="notif-card">
+                                    <div class="flex-grow-1 text-center py-4 text-muted">
+                                        Tidak ada notifikasi terbaru.
                                     </div>
-                                    <div class="notif-time">1 jam lalu</div>
                                 </div>
-                            </div>
-
-                            <div class="notif-card">
-                                <div class="notif-icon danger">
-                                    <i class="bi bi-x-circle-fill"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
-                                        <div>
-                                            <div class="notif-title">Pengajuan ditolak</div>
-                                            <div class="notif-text">
-                                                Pengajuan <strong>Lapangan Serbaguna</strong> ditolak karena jadwal bentrok dengan kegiatan kampus lain.
-                                            </div>
-                                        </div>
-                                        <span class="notif-badge danger">Ditolak</span>
-                                    </div>
-                                    <div class="notif-time">Kemarin, 16.20</div>
-                                </div>
-                            </div>
-
-                            <div class="notif-card">
-                                <div class="notif-icon success">
-                                    <i class="bi bi-arrow-repeat"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
-                                        <div>
-                                            <div class="notif-title">Pengembalian berhasil diverifikasi</div>
-                                            <div class="notif-text">
-                                                Pengembalian fasilitas <strong>LCD Projector Epson</strong> telah diverifikasi dan status peminjaman dinyatakan selesai.
-                                            </div>
-                                        </div>
-                                        <span class="notif-badge success">Selesai</span>
-                                    </div>
-                                    <div class="notif-time">2 hari lalu</div>
-                                </div>
-                            </div>
+                            @endforelse
                         </div>
                     </div>
 
@@ -488,25 +455,25 @@
                                 <div class="col-6">
                                     <div class="summary-box">
                                         <div class="text-secondary">Belum Dibaca</div>
-                                        <div class="summary-number">4</div>
+                                        <div class="summary-number">{{ $belumDibaca }}</div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="summary-box">
                                         <div class="text-secondary">Hari Ini</div>
-                                        <div class="summary-number">3</div>
+                                        <div class="summary-number">{{ $hariIni }}</div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="summary-box">
                                         <div class="text-secondary">Persetujuan</div>
-                                        <div class="summary-number">5</div>
+                                        <div class="summary-number">{{ $persetujuan }}</div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="summary-box">
                                         <div class="text-secondary">Jadwal</div>
-                                        <div class="summary-number">2</div>
+                                        <div class="summary-number">{{ $jadwal }}</div>
                                     </div>
                                 </div>
                             </div>

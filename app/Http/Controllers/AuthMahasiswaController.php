@@ -120,7 +120,51 @@ class AuthMahasiswaController extends Controller
             abort(403, 'Akses hanya untuk mahasiswa.');
         }
 
-        return view('mahasiswa.dashboard');
+        $userId = auth()->id();
+
+        // 1. Stats
+        $pengajuanAktif = \App\Models\Peminjaman::where('user_id', $userId)
+            ->whereNotIn('status', ['ditolak', 'dikembalikan', 'batal', 'selesai'])
+            ->count();
+        
+        $menungguPersetujuan = \App\Models\Peminjaman::where('user_id', $userId)
+            ->whereIn('status', ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala_sbum', 'menunggu_pic'])
+            ->count();
+
+        $riwayatSelesai = \App\Models\Peminjaman::where('user_id', $userId)
+            ->whereIn('status', ['dikembalikan', 'selesai', 'ditolak', 'batal'])
+            ->count();
+
+        // Using recent updates as 'notifications'
+        $notifikasiBaru = \App\Models\Peminjaman::where('user_id', $userId)
+            ->whereIn('status', ['disetujui', 'ditolak'])
+            ->where('tanggal_pengajuan', '>=', now()->subDays(3)->toDateString())
+            ->count();
+
+        // 2. Jadwal Terdekat
+        $jadwalTerdekat = \App\Models\Peminjaman::with(['ruangan', 'barang'])
+            ->where('user_id', $userId)
+            ->where('status', 'disetujui')
+            ->whereDate('tanggal_pengajuan', '>=', now()->toDateString())
+            ->orderBy('tanggal_pengajuan', 'asc')
+            ->orderBy('jam_mulai', 'asc')
+            ->first();
+
+        // 3. Status Pengajuan Terbaru
+        $pengajuanTerbaru = \App\Models\Peminjaman::with(['ruangan', 'barang'])
+            ->where('user_id', $userId)
+            ->orderBy('id_peminjaman', 'desc')
+            ->take(3)
+            ->get();
+
+        return view('mahasiswa.dashboard', compact(
+            'pengajuanAktif', 
+            'menungguPersetujuan', 
+            'riwayatSelesai', 
+            'notifikasiBaru',
+            'jadwalTerdekat',
+            'pengajuanTerbaru'
+        ));
     }
 
     public function fasilitas(Request $request)
@@ -328,9 +372,15 @@ class AuthMahasiswaController extends Controller
               ->orWhere('role.id_role', 2);
         })->with('roles')->get();
 
+        // Allowed PICs
+        $pics = User::whereHas('roles', function ($q) {
+            $q->where('role.nama_role', 'PIC Fasilitas')
+              ->orWhere('role.id_role', 5);
+        })->with('roles')->get();
+
         $selectedFacilityId = $request->query('facility_id');
 
-        return view('mahasiswa.pengajuan', compact('rooms', 'items', 'staff', 'selectedFacilityId'));
+        return view('mahasiswa.pengajuan', compact('rooms', 'items', 'staff', 'pics', 'selectedFacilityId'));
     }
 
     public function pengajuanStore(\App\Http\Requests\BookingStoreRequest $request)
@@ -363,6 +413,7 @@ class AuthMahasiswaController extends Controller
             $peminjaman = \App\Models\Peminjaman::create([
                 'user_id' => auth()->id(),
                 'dosen_id' => $request->input('dosen_id'),
+                'pic_id' => $request->input('pic_id'),
                 'nama_kegiatan' => $request->input('nama_kegiatan'),
                 'jumlah_peserta' => $request->input('jumlah_peserta'),
                 'jenis_peminjaman' => strtolower($type) === 'ruangan' ? 'ruangan' : 'barang',
@@ -382,7 +433,7 @@ class AuthMahasiswaController extends Controller
                 DB::table('detail_peminjaman_barang')->insert([
                     'peminjaman_id' => $peminjaman->id_peminjaman,
                     'barang_id' => $id,
-                    'jumlah' => 1,
+                    'jumlah' => $request->input('jumlah_barang') ?: 1,
                 ]);
             }
  
@@ -515,7 +566,19 @@ class AuthMahasiswaController extends Controller
             abort(403, 'Akses hanya untuk mahasiswa.');
         }
 
-        return view('mahasiswa.notifikasi');
+        $notifikasi = \App\Models\Peminjaman::with(['ruangan', 'barang'])
+            ->where('user_id', auth()->id())
+            ->orderBy('id_peminjaman', 'desc')
+            ->take(20)
+            ->get();
+
+        $belumDibaca = $notifikasi->where('tanggal_pengajuan', '>=', now()->subDays(2)->toDateString())->count();
+        $hariIni = $notifikasi->where('tanggal_pengajuan', '>=', now()->toDateString())->count();
+
+        $persetujuan = $notifikasi->whereIn('status', ['disetujui', 'ditolak'])->count();
+        $jadwal = $notifikasi->where('status', 'disetujui')->where('tanggal_pengajuan', '>=', now()->toDateString())->count();
+
+        return view('mahasiswa.notifikasi', compact('notifikasi', 'belumDibaca', 'hariIni', 'persetujuan', 'jadwal'));
     }
 
     public function riwayat()

@@ -29,8 +29,10 @@ class BookingStoreRequest extends FormRequest
             'tanggal' => 'required|date|after_or_equal:today',
             'jam_mulai' => 'required|string',
             'jam_selesai' => 'required|string',
-            'jumlah_peserta' => 'required|integer|min:1',
+            'jumlah_peserta' => 'nullable|integer|min:1',
+            'jumlah_barang' => 'nullable|integer|min:1',
             'dosen_id' => 'required|integer|exists:user,id_user',
+            'pic_id' => 'required|integer|exists:user,id_user',
             'keterangan' => 'nullable|string',
         ];
     }
@@ -126,8 +128,9 @@ class BookingStoreRequest extends FormRequest
                         })
                         ->sum('jumlah');
  
-                    if ($allocatedQty + 1 > $barang->stok_tersedia) {
-                        $validator->errors()->add('facility_id', 'Kamu tidak bisa melakukan peminjaman dikarenakan jadwal sudah dipinjam atau meminjam ruangan melebihi batas operasional.');
+                    $requestedQty = $this->input('jumlah_barang') ?: 1;
+                    if ($allocatedQty + $requestedQty > $barang->stok_tersedia) {
+                        $validator->errors()->add('facility_id', "Stok barang tidak mencukupi untuk jumlah yang diminta pada jam {$hourStr}. Sisa stok: " . max(0, $barang->stok_tersedia - $allocatedQty));
                         return;
                     }
                 }

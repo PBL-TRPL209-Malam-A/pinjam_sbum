@@ -32,7 +32,7 @@
     .landing-shell {
         position: relative;
         isolation: isolate;
-        background: rgba(244, 240, 234, 0.90);
+        background: transparent;
         border-radius: 26px;
         overflow: hidden;
         max-width: 1400px;
@@ -45,15 +45,14 @@
         position: absolute;
         inset: 0;
         z-index: 0;
-        background:
+        background: 
             linear-gradient(
-                rgba(246, 241, 233, 0.84),
-                rgba(246, 241, 233, 0.92)
+                rgba(31, 95, 77, 0.75),
+                rgba(24, 75, 60, 0.88)
             ),
-            url('{{ asset('images/gedungpoli.jpg') }}');
+            url('{{ asset('images/gedungpoli.jpg') }}') center center no-repeat;
+        background-color: #1f5f4d; /* fallback color */
         background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
         opacity: 1;
     }
 
@@ -191,12 +190,13 @@
         font-weight: 800;
         margin: 1rem 0 0.95rem;
         max-width: 650px;
+        color: #ffffff;
     }
 
     .hero-desc {
         font-size: 1.02rem;
         line-height: 1.8;
-        color: #5f6e67;
+        color: rgba(255, 255, 255, 0.9);
         max-width: 610px;
     }
 

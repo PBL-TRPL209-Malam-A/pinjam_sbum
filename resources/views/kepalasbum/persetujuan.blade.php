@@ -379,10 +379,17 @@
                                      <span class="text-muted small d-block">Tanggal & Waktu</span>
                                      <span class="fw-semibold text-main">{{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $p->jam_mulai ? str_replace(':', '.', substr($p->jam_mulai, 0, 5)) : '08.00' }} - {{ $p->jam_selesai ? str_replace(':', '.', substr($p->jam_selesai, 0, 5)) : '12.00' }}</span>
                                  </div>
+                                @if($p->ruangan->count() > 0)
                                 <div class="mb-3">
                                     <span class="text-muted small d-block">Jumlah Peserta</span>
                                     <span class="fw-semibold text-main">{{ $p->jumlah_peserta ?? 0 }} orang</span>
                                 </div>
+                                @elseif($p->barang->count() > 0)
+                                <div class="mb-3">
+                                    <span class="text-muted small d-block">Jumlah Barang</span>
+                                    <span class="fw-semibold text-main">{{ $p->barang->first()->pivot->jumlah ?? 1 }} Buah</span>
+                                </div>
+                                @endif
                                 <div class="mb-3">
                                     <span class="text-muted small d-block">Keterangan Acara</span>
                                     <span class="fw-semibold text-main">{{ $p->keterangan ?: 'Tidak ada keterangan tambahan.' }}</span>

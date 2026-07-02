@@ -246,6 +246,9 @@
                     <a href="{{ route('mahasiswa.pengembalian') }}" class="sidebar-link">
                         <span class="sidebar-dot"></span><span>Pengembalian</span>
                     </a>
+                    <a href="{{ route('mahasiswa.riwayat') }}" class="sidebar-link {{ request()->routeIs('mahasiswa.riwayat') ? 'active' : '' }}">
+                        <span class="sidebar-dot"></span><span>Riwayat Peminjaman</span>
+                    </a>
                     <a href="{{ route('mahasiswa.notifikasi') }}" class="sidebar-link">
                         <span class="sidebar-dot"></span><span>Notifikasi</span>
                     </a>

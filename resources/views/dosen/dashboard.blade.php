@@ -127,7 +127,7 @@
                     <div class="fw-semibold text-main">SBUM-2026-{{ str_pad($item->id_peminjaman, 4, '0', STR_PAD_LEFT) }} - {{ $item->nama_kegiatan }}</div>
                     <div class="text-secondary small mt-1">
                         {{ $item->user->nama_lengkap ?? '-' }} · 
-                        {{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : (count($item->barang) > 0 ? $item->barang->first()->nama_barang : 'Fasilitas') }} · 
+                        {{ $item->nama_fasilitas_with_type }} · 
                         {{ $item->tanggal_pengajuan ? $item->tanggal_pengajuan->format('d M Y') : now()->format('d M Y') }}
                     </div>
                 </div>

@@ -74,6 +74,9 @@
                     <a href="{{ route('mahasiswa.pengembalian') }}" class="sidebar-link">
                         <span class="sidebar-dot"></span><span>Pengembalian</span>
                     </a>
+                    <a href="{{ route('mahasiswa.riwayat') }}" class="sidebar-link {{ request()->routeIs('mahasiswa.riwayat') ? 'active' : '' }}">
+                        <span class="sidebar-dot"></span><span>Riwayat Peminjaman</span>
+                    </a>
                     <a href="{{ route('mahasiswa.notifikasi') }}" class="sidebar-link">
                         <span class="sidebar-dot"></span><span>Notifikasi</span>
                     </a>
@@ -195,18 +198,33 @@
                                     </div>
                                 </div>
 
-                                <div class="row g-3">
-                                    <div class="col-md-6">
+                                <div class="row g-4 mb-4">
+                                    <div class="col-md-3">
                                         <label class="form-label text-secondary fw-semibold">Jumlah Peserta</label>
                                         <input type="number" name="jumlah_peserta" class="form-control soft-input" min="1" value="{{ old('jumlah_peserta') ?? '180' }}" required>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3" id="container_jumlah_barang" style="display: none;">
+                                        <label class="form-label text-secondary fw-semibold">Jumlah Barang</label>
+                                        <input type="number" name="jumlah_barang" id="input_jumlah_barang" class="form-control soft-input" min="1" value="{{ old('jumlah_barang') ?? '1' }}">
+                                    </div>
+                                    <div class="col-md-3">
                                         <label class="form-label text-secondary fw-semibold">Penanggung Jawab</label>
                                         <select name="dosen_id" class="form-select soft-input" required>
-                                            <option value="">-- Pilih Dosen / PIC Penanggung Jawab --</option>
+                                            <option value="">-- Pilih Dosen PJ --</option>
                                             @foreach($staff as $member)
                                                 <option value="{{ $member->id_user }}" {{ old('dosen_id') == $member->id_user ? 'selected' : '' }}>
                                                     {{ $member->nama_lengkap }} ({{ $member->roles->pluck('nama_role')->first() ?? 'Staf' }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label text-secondary fw-semibold">PIC Fasilitas</label>
+                                        <select name="pic_id" class="form-select soft-input" required>
+                                            <option value="">-- Pilih PIC --</option>
+                                            @foreach($pics as $pic)
+                                                <option value="{{ $pic->id_user }}" {{ old('pic_id') == $pic->id_user ? 'selected' : '' }}>
+                                                    {{ $pic->nama_lengkap }} ({{ $pic->roles->pluck('nama_role')->first() ?? 'PIC' }})
                                                 </option>
                                             @endforeach
                                         </select>
@@ -330,10 +348,18 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateSummary() {
         if (facilitySelect && summaryFacility) {
             const selectedOpt = facilitySelect.options[facilitySelect.selectedIndex];
+            const jBarangContainer = document.getElementById('container_jumlah_barang');
             if (selectedOpt && selectedOpt.value) {
                 summaryFacility.textContent = selectedOpt.text.split('(')[0].trim();
+                
+                if (selectedOpt.value.toLowerCase().startsWith('inventaris')) {
+                    if (jBarangContainer) jBarangContainer.style.display = 'block';
+                } else {
+                    if (jBarangContainer) jBarangContainer.style.display = 'none';
+                }
             } else {
                 summaryFacility.textContent = '-- Pilih Fasilitas --';
+                if (jBarangContainer) jBarangContainer.style.display = 'none';
             }
         }
         

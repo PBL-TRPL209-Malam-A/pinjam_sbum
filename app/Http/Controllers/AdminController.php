@@ -30,13 +30,20 @@ class AdminController extends Controller
             ->latest('id_peminjaman')
             ->take(5)
             ->get();
+
+        $jadwalHariIni = Peminjaman::with(['ruangan', 'barang'])
+            ->whereDate('tanggal_pengajuan', now()->toDateString())
+            ->whereIn('status', ['siap_digunakan', 'sedang_digunakan', 'disetujui'])
+            ->take(5)
+            ->get();
  
         return view('admin.dashboard', compact(
             'totalPengajuanBaru',
             'menungguVerifikasi',
             'totalJadwalBentrok',
             'returnPending',
-            'recentPeminjaman'
+            'recentPeminjaman',
+            'jadwalHariIni'
         ));
     }
  

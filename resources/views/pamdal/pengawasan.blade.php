@@ -88,7 +88,7 @@
             @foreach($peminjaman as $item)
             <div class="schedule-item-card" style="cursor: pointer;" onclick="selectSchedule({{ $item->id_peminjaman }}, '{{ $item->nama_kegiatan }}')">
                 <h4 class="fs-5 fw-bold text-main mb-1">{{ $item->nama_kegiatan }}</h4>
-                <div class="text-secondary small mb-1">{{ count($item->ruangan) > 0 ? $item->ruangan->first()->nama_ruangan : (count($item->barang) > 0 ? $item->barang->first()->nama_barang : 'Fasilitas') }}</div>
+                <div class="text-secondary small mb-1">{{ $item->nama_fasilitas_with_type }}</div>
                 <div class="text-muted small">{{ $item->tanggal_pengajuan ? $item->tanggal_pengajuan->format('d M Y') : '-' }} - {{ $item->jam_mulai ? substr($item->jam_mulai, 0, 5) : '08:00' }} - {{ $item->jam_selesai ? substr($item->jam_selesai, 0, 5) : '12:00' }}</div>
             </div>
             @endforeach

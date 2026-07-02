@@ -160,8 +160,7 @@
             <!-- Sidebar Panel -->
             <aside class="col-lg-3 col-xl-2 sidebar-panel p-3 p-lg-4 d-flex flex-column">
                 <div class="logo-box mb-4">
-                    <img src="{{ asset('assets/images/logo-sbum-icon.png') }}" onerror="this.src='https://placehold.co/48x48/5d7d6b/white?text=SBUM'" alt="SBUM">
-                    <div class="logo-text">SBUM</div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Logo_Politeknik_Negeri_Batam.png" alt="SBUM">
                 </div>
 
                 <nav class="nav flex-column gap-1">

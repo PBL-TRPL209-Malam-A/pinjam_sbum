@@ -295,4 +295,124 @@ class KepalaSbumController extends Controller
     {
         return view('kepalasbum.profil');
     }
+
+    public function exportPeminjamanExcel()
+    {
+        $peminjaman = Peminjaman::with(['user', 'ruangan', 'barang'])->get();
+        
+        header("Content-type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=Laporan_Peminjaman.xls");
+        
+        echo "<table border='1'>";
+        echo "<tr>
+                <th>No</th>
+                <th>ID Peminjaman</th>
+                <th>Nama Peminjam</th>
+                <th>Fasilitas</th>
+                <th>Tanggal Pengajuan</th>
+                <th>Tujuan</th>
+                <th>Status</th>
+              </tr>";
+        
+        $no = 1;
+        foreach($peminjaman as $p) {
+            $nama_peminjam = $p->user ? $p->user->nama_lengkap : '-';
+            $fasilitas = $p->nama_fasilitas;
+            $tanggal = $p->tanggal_pengajuan ? $p->tanggal_pengajuan->format('d M Y') : '-';
+            $tujuan = $p->tujuan_peminjaman;
+            $status = ucfirst(str_replace('_', ' ', $p->status));
+            
+            echo "<tr>
+                    <td>$no</td>
+                    <td>PJM-{$p->id_peminjaman}</td>
+                    <td>$nama_peminjam</td>
+                    <td>$fasilitas</td>
+                    <td>$tanggal</td>
+                    <td>$tujuan</td>
+                    <td>$status</td>
+                  </tr>";
+            $no++;
+        }
+        
+        echo "</table>";
+        exit;
+    }
+
+    public function exportPengembalianExcel()
+    {
+        $ruangan = \App\Models\PengembalianRuangan::with(['peminjaman.user', 'peminjaman.ruangan'])->get();
+        $barang = \App\Models\PengembalianBarang::with(['peminjaman.user', 'peminjaman.barang'])->get();
+        
+        $pengembalian = collect();
+        
+        foreach ($ruangan as $r) {
+            $pengembalian->push((object)[
+                'id_pengembalian' => $r->id_pengembalian_ruangan,
+                'peminjaman' => $r->peminjaman,
+                'tanggal_kembali' => $r->tanggal_pengembalian,
+                'kondisi_kembali' => $r->detail->first()->kondisi_ruangan ?? 'baik',
+                'status_pengembalian' => $r->peminjaman->status === 'selesai' ? 'dikonfirmasi_admin' : 'pending',
+            ]);
+        }
+        
+        foreach ($barang as $b) {
+            $pengembalian->push((object)[
+                'id_pengembalian' => $b->id_pengembalian_barang,
+                'peminjaman' => $b->peminjaman,
+                'tanggal_kembali' => $b->tanggal_pengembalian,
+                'kondisi_kembali' => $b->detail->first()->kondisi_barang ?? 'baik',
+                'status_pengembalian' => $b->peminjaman->status === 'selesai' ? 'dikonfirmasi_admin' : 'pending',
+            ]);
+        }
+        
+        $pengembalian = $pengembalian->sortByDesc('tanggal_kembali');
+
+        header("Content-type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=Laporan_Pengembalian.xls");
+        
+        echo "<table border='1'>";
+        echo "<tr>
+                <th>No</th>
+                <th>ID Pengembalian</th>
+                <th>ID Peminjaman</th>
+                <th>Nama Peminjam</th>
+                <th>Fasilitas</th>
+                <th>Tanggal Kembali</th>
+                <th>Kondisi</th>
+                <th>Status</th>
+              </tr>";
+              
+        $no = 1;
+        foreach($pengembalian as $p) {
+            $id_pengembalian = "KMB-" . $p->id_pengembalian;
+            $id_peminjaman = "PJM-" . $p->peminjaman->id_peminjaman;
+            $nama_peminjam = $p->peminjaman->user ? $p->peminjaman->user->nama_lengkap : '-';
+            $fasilitas = $p->peminjaman->nama_fasilitas;
+            
+            // Format tanggal safely
+            $tanggal = '-';
+            if (is_string($p->tanggal_kembali)) {
+                $tanggal = date('d M Y', strtotime($p->tanggal_kembali));
+            } elseif ($p->tanggal_kembali instanceof \Carbon\Carbon || $p->tanggal_kembali instanceof \DateTime) {
+                $tanggal = $p->tanggal_kembali->format('d M Y');
+            }
+            
+            $kondisi = ucfirst($p->kondisi_kembali);
+            $status = ucfirst(str_replace('_', ' ', $p->status_pengembalian));
+            
+            echo "<tr>
+                    <td>$no</td>
+                    <td>$id_pengembalian</td>
+                    <td>$id_peminjaman</td>
+                    <td>$nama_peminjam</td>
+                    <td>$fasilitas</td>
+                    <td>$tanggal</td>
+                    <td>$kondisi</td>
+                    <td>$status</td>
+                  </tr>";
+            $no++;
+        }
+        echo "</table>";
+        exit;
+    }
 }

@@ -370,6 +370,16 @@
                                 </span>
                             </div>
                         </div>
+                        @if($item->kategori === 'barang')
+                        <div class="col-md-6">
+                            <div class="info-row d-flex flex-column align-items-start mb-0">
+                                <span class="text-secondary small fw-semibold" style="font-size: 0.8rem; color: var(--text-muted);">Jumlah Barang</span>
+                                <span class="fw-bold text-main">
+                                    {{ count($pjm->barang) > 0 ? ($pjm->barang->first()->pivot->jumlah ?? 1) : 1 }} Buah
+                                </span>
+                            </div>
+                        </div>
+                        @endif
                         <div class="col-md-6">
                             <div class="info-row d-flex flex-column align-items-start mb-0">
                                 <span class="text-secondary small fw-semibold" style="font-size: 0.8rem; color: var(--text-muted);">Tanggal Pengembalian</span>
