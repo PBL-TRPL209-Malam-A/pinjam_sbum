@@ -1,9 +1,9 @@
-@extends('layout.admin')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Kelola Barang Inventaris')
-@section('page_heading', 'Admin SBUM')
 
-@section('admin_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -99,29 +99,29 @@
 <!-- Controls Bar -->
 <div class="card border-0 rounded-4 p-3 mb-4" style="background: #fffdfa; border: 1px solid var(--line) !important;">
     <div class="d-flex flex-wrap gap-3">
-        <button class="btn btn-main" data-bs-toggle="modal" data-bs-target="#tambahInventarisModal">Tambah Inventaris</button>
+        <button class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" data-bs-toggle="modal" data-bs-target="#tambahInventarisModal">Tambah Inventaris</button>
     </div>
 </div>
 
 <!-- Table Area -->
 <div class="mb-3 fw-semibold text-secondary">Tabel Inventaris</div>
 <div class="custom-table mb-4">
-    <table class="table table-borderless mb-0">
+    <table class="w-full text-left border-collapse">
         <thead>
             <tr>
-                <th>Barang</th>
-                <th>Foto</th>
-                <th>Keterangan</th>
-                <th>Stok</th>
-                <th>PIC Barang</th>
-                <th>Aksi</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Barang</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Foto</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Keterangan</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Stok</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">PIC Barang</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Aksi</th>
             </tr>
         </thead>
         <tbody>
             @forelse($barang as $b)
             <tr>
                 <td class="fw-semibold">{{ $b->nama_barang }}</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($b->foto_barang)
                         <img src="{{ asset($b->foto_barang) }}" alt="{{ $b->nama_barang }}" class="img-fluid rounded-3" style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;">
                     @else
@@ -130,10 +130,10 @@
                         </div>
                     @endif
                 </td>
-                <td>{{ $b->keterangan ?: 'Gudang SBUM' }}</td>
-                <td>{{ $b->stok_tersedia }} unit</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $b->keterangan ?: 'Gudang SBUM' }}</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $b->stok_tersedia }} unit</td>
                 <td class="fw-semibold">{{ $b->pic ? $b->pic->nama_lengkap : '-' }}</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="action-btn-group">
                         <button class="btn btn-ubah" data-bs-toggle="modal" data-bs-target="#editInventarisModal{{ $b->id_barang }}">Ubah</button>
                         <form action="{{ route('admin.inventaris.destroy', $b->id_barang) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus barang ini?');">
@@ -195,7 +195,7 @@
                             </div>
                             <div class="modal-footer border-0 pt-0">
                                 <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                                <button type="submit" class="btn btn-main" style="border-radius:0.75rem;">Simpan Perubahan</button>
+                                <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Perubahan</button>
                             </div>
                         </form>
                     </div>
@@ -205,15 +205,15 @@
             <!-- Realistic fallback content matching Image 3 -->
             <tr>
                 <td class="fw-semibold">LCD Projector Epson</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">
                         Tidak ada foto
                     </div>
                 </td>
-                <td>Gudang SBUM</td>
-                <td>4 unit</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Gudang SBUM</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">4 unit</td>
                 <td class="fw-semibold">-</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="action-btn-group">
                         <button class="btn btn-ubah">Ubah</button>
                         <button class="btn btn-hapus">Hapus</button>
@@ -222,15 +222,15 @@
             </tr>
             <tr>
                 <td class="fw-semibold">Sound System</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">
                         Tidak ada foto
                     </div>
                 </td>
-                <td>Unit Audio</td>
-                <td>2 set</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Unit Audio</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">2 set</td>
                 <td class="fw-semibold">-</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="action-btn-group">
                         <button class="btn btn-ubah">Ubah</button>
                         <button class="btn btn-hapus">Hapus</button>
@@ -239,15 +239,15 @@
             </tr>
             <tr>
                 <td class="fw-semibold">Kursi Lipat</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">
                         Tidak ada foto
                     </div>
                 </td>
-                <td>Gudang Sarpras</td>
-                <td>60 unit</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Gudang Sarpras</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">60 unit</td>
                 <td class="fw-semibold">-</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="action-btn-group">
                         <button class="btn btn-ubah">Ubah</button>
                         <button class="btn btn-hapus">Hapus</button>
@@ -303,7 +303,7 @@
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                    <button type="submit" class="btn btn-main" style="border-radius:0.75rem;">Simpan Inventaris</button>
+                    <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Inventaris</button>
                 </div>
             </form>
         </div>

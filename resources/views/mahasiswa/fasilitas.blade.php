@@ -1,479 +1,213 @@
-@extends('layout.app')
+@extends('layout.app_tailwind')
+
+
 
 @section('content')
-<style>
-    :root{
-        --page-bg: #f5f2ec;
-        --panel-bg: #fcfbf8;
-        --soft-bg: #eef4ee;
-        --line: #e7ddd1;
-        --text-main: #33403b;
-        --text-muted: #7b8681;
-        --primary-soft: #e5efe6;
-        --primary-main: #5d7d6b;
-        --primary-dark: #496454;
-        --warning-soft: #f4e7c9;
-    }
+            <form action="{{ route('mahasiswa.fasilitas') }}" method="GET">
+                <div class="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-6">
+                    <div>
+                        <div class="text-[#7b8681] text-[20px] mb-1">Mahasiswa</div>
+                        <h1 class="text-[24px] font-medium m-0">Mahasiswa · Daftar Fasilitas</h1>
+                    </div>
 
-    body{
-        background: var(--page-bg);
-        color: var(--text-main);
-    }
-
-    .fasilitas-shell{
-        background: var(--panel-bg);
-        border: 1px solid var(--line);
-        border-radius: 2rem;
-        overflow: hidden;
-        min-height: calc(100vh - 3rem);
-    }
-
-    .sidebar-panel{
-        min-height: 100%;
-        border-right: 1px solid var(--line);
-        background: rgba(255,255,255,.25);
-    }
-
-    .logo-box img{
-        width: 110px;
-        height: auto;
-        object-fit: contain;
-    }
-
-    .sidebar-link{
-        color: #55615b;
-        border-radius: 1rem;
-        padding: .95rem 1rem;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: .75rem;
-        transition: .2s ease;
-    }
-
-    .sidebar-link:hover{
-        background: #f3f6f3;
-        color: var(--primary-dark);
-    }
-
-    .sidebar-link.active{
-        background: #edf3ee;
-        color: var(--primary-dark);
-        font-weight: 600;
-    }
-
-    .sidebar-dot{
-        width: 1.35rem;
-        height: 1.35rem;
-        border-radius: 50%;
-        background: #dfe7df;
-        flex-shrink: 0;
-    }
-
-    .page-caption{
-        color: var(--text-muted);
-        font-size: 1.25rem;
-        margin-bottom: 1.2rem;
-    }
-
-    .page-heading{
-        font-size: 1.5rem;
-        font-weight: 500;
-        margin-bottom: 0;
-    }
-
-    .search-input{
-        height: 3rem;
-        border-radius: 1rem;
-        border: 1px solid #ddd2c5;
-        background: #fffdfa;
-    }
-
-    .search-dot{
-        width: 2.25rem;
-        height: 2.25rem;
-        background: #cfdacd;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    .intro-card{
-        background: #edf2ea;
-        border: 1px solid #dfe7dc;
-        border-radius: 1.75rem;
-    }
-
-    .section-label{
-        font-size: 1rem;
-        font-weight: 600;
-        color: #5c6761;
-        margin-bottom: 1rem;
-    }
-
-    .filter-select{
-        height: 3rem;
-        border-radius: .95rem;
-        border-color: #dfd4c8;
-        background-color: #fffdfa;
-        color: #727d77;
-    }
-
-    .btn-apply{
-        background: var(--primary-main);
-        border: 0;
-        border-radius: .95rem;
-        height: 3rem;
-        font-weight: 600;
-    }
-
-    .btn-apply:hover{
-        background: var(--primary-dark);
-    }
-
-    .facility-card{
-        border: 1px solid #e0d7cb;
-        border-radius: 1.5rem;
-        background: #fffdfa;
-    }
-
-    .facility-thumb{
-        height: 8rem;
-        border-radius: 1.15rem;
-    }
-
-    .thumb-1{ background:#dfe8df; }
-    .thumb-2{ background:#e7ddd3; }
-    .thumb-3{ background:#dfe1ea; }
-    .thumb-4{ background:#e5dfec; }
-
-    .facility-title{
-        font-size: 1.05rem;
-        color: #4c5752;
-    }
-
-    .facility-meta{
-        color: #5f6963;
-        font-size: .95rem;
-    }
-
-    .badge-soft-success{
-        background: #dcebd7;
-        color: #557b58;
-        border: 1px solid #b7d2b6;
-        font-weight: 600;
-        border-radius: 999px;
-        padding: .55rem 1.15rem;
-    }
-
-    .badge-soft-warning{
-        background: var(--warning-soft);
-        color: #92723c;
-        border: 1px solid #e3c98b;
-        font-weight: 600;
-        border-radius: 999px;
-        padding: .55rem 1.15rem;
-    }
-
-    @media (max-width: 991.98px){
-        .sidebar-panel{
-            border-right: 0;
-            border-bottom: 1px solid var(--line);
-        }
-    }
-
-    .btn-detail{
-        background: #eef4ee;
-        color: var(--primary-dark);
-        border: 1px solid #c8d8c8;
-        font-weight: 600;
-        font-size: 0.85rem;
-        border-radius: 999px;
-        padding: .55rem 1.15rem;
-        transition: all 0.2s ease;
-    }
-
-    .btn-detail:hover{
-        background: var(--primary-main);
-        color: #fff;
-        border-color: var(--primary-main);
-    }
-
-    .btn-ajukan {
-        background: var(--primary-main);
-        color: #fff;
-        border: 1px solid var(--primary-main);
-        font-weight: 600;
-        font-size: 0.85rem;
-        border-radius: 999px;
-        padding: .55rem 1.15rem;
-        text-decoration: none;
-        display: inline-block;
-        transition: all 0.2s ease;
-    }
-
-    .btn-ajukan:hover {
-        background: var(--primary-dark);
-        border-color: var(--primary-dark);
-        color: #fff;
-    }
-</style>
-
-<div class="container-fluid py-3 py-lg-4 px-2 px-lg-4">
-    <div class="fasilitas-shell">
-        <div class="row g-0">
-            <aside class="col-lg-3 col-xl-2 sidebar-panel p-3 p-lg-4">
-                <div class="logo-box mb-4">
-                    <img src="{{ asset('assets/images/logo-sbum-icon.png') }}" alt="SBUM">
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <input type="text" name="search" class="h-12 px-4 rounded-2xl border border-[#ddd2c5] bg-[#fffdfa] focus:outline-none focus:border-[#466454] w-full md:w-64 transition" placeholder="Cari data" value="{{ request('search') }}">
+                        <button type="submit" class="w-12 h-12 bg-[#cfdacd] rounded-full flex items-center justify-center shrink-0 hover:bg-[#c2cec0] transition" title="Cari">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#33403b" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
-                <nav class="nav flex-column gap-2">
-                    <a href="{{ route('mahasiswa.dashboard') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span>
-                        <span>Dashboard</span>
-                    </a>
-
-                    <a href="{{ route('mahasiswa.fasilitas') }}" class="sidebar-link active">
-                        <span class="sidebar-dot"></span>
-                        <span>Fasilitas</span>
-                    </a>
-
-                    <a href="{{ route('mahasiswa.jadwal') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span>
-                        <span>Jadwal</span>
-                    </a>
-
-                    <a href="{{ route('mahasiswa.pengajuan') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span>
-                        <span>Pengajuan Saya</span>
-                    </a>
-
-                    <a href="{{ route('mahasiswa.pengembalian') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span>
-                        <span>Pengembalian</span>
-                    </a>
-
-                    <a href="{{ route('mahasiswa.riwayat') }}" class="sidebar-link {{ request()->routeIs('mahasiswa.riwayat') ? 'active' : '' }}">
-                        <span class="sidebar-dot"></span><span>Riwayat Peminjaman</span>
-                    </a>
-                    <a href="{{ route('mahasiswa.notifikasi') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span>
-                        <span>Notifikasi</span>
-                    </a>
-
-                    <a href="{{ route ('mahasiswa.profil')}}" class="sidebar-link">
-                        <span class="sidebar-dot"></span>
-                        <span>Profil</span>
-                    </a>
-                </nav>
-
-                <div class="mt-auto pt-5 pt-lg-4">
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-link text-decoration-none text-muted px-0">Logout</button>
-                    </form>
+                <div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[28px] p-6 lg:p-8 mb-6 relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h2 class="text-xl font-semibold mb-2">Lihat daftar fasilitas yang tersedia</h2>
+                        <p class="mb-0 text-[#5f6963]">
+                            Mahasiswa membuka menu fasilitas dan sistem menampilkan ruangan serta barang inventaris yang bisa dipinjam.
+                        </p>
+                    </div>
+                    <!-- Decorative shapes -->
+                    <div class="absolute -right-8 -top-8 w-40 h-40 bg-white/40 rounded-full blur-2xl"></div>
+                    <div class="absolute right-20 -bottom-10 w-32 h-32 bg-[#d6e5d6]/60 rounded-full blur-xl"></div>
                 </div>
-            </aside>
 
-            <main class="col-lg-9 col-xl-10 p-3 p-md-4 p-xl-4">
-                <form action="{{ route('mahasiswa.fasilitas') }}" method="GET">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
-                        <div>
-                            <div class="page-caption">Mahasiswa</div>
-                            <h1 class="page-heading">Mahasiswa · Daftar Fasilitas</h1>
-                        </div>
+                <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                    <!-- Filter Column -->
+                    <div class="xl:col-span-1">
+                        <div class="text-[16px] font-semibold text-[#5c6761] mb-4">Filter</div>
 
-                        <div class="d-flex align-items-center gap-3 w-100 w-md-auto">
-                            <input type="text" name="search" class="form-control search-input" placeholder="Cari data" value="{{ request('search') }}">
-                            <button type="submit" class="border-0 search-dot" style="display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s;" title="Cari">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#33403b" class="bi bi-search" viewBox="0 0 16 16">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                                </svg>
+                        <div class="flex flex-col gap-4">
+                            <select name="category" class="h-12 px-4 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] text-[#727d77] focus:outline-none focus:border-[#466454] transition">
+                                <option value="Semua" {{ request('category') == 'Semua' ? 'selected' : '' }}>Kategori: Semua</option>
+                                <option value="Ruangan" {{ request('category') == 'Ruangan' ? 'selected' : '' }}>Ruangan</option>
+                                <option value="Inventaris" {{ request('category') == 'Inventaris' ? 'selected' : '' }}>Inventaris</option>
+                            </select>
+
+                            <select name="location" class="h-12 px-4 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] text-[#727d77] focus:outline-none focus:border-[#466454] transition">
+                                <option value="Semua Gedung" {{ request('location') == 'Semua Gedung' ? 'selected' : '' }}>Lokasi: Semua Gedung</option>
+                                @foreach($buildings as $building)
+                                    <option value="{{ $building }}" {{ request('location') == $building ? 'selected' : '' }}>{{ $building }}</option>
+                                @endforeach
+                            </select>
+
+                            <select name="status" class="h-12 px-4 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] text-[#727d77] focus:outline-none focus:border-[#466454] transition">
+                                <option value="Semua" {{ request('status') == 'Semua' ? 'selected' : '' }}>Status: Semua</option>
+                                <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                                <option value="tidak tersedia" {{ request('status') == 'tidak tersedia' ? 'selected' : '' }}>Tidak Tersedia</option>
+                                <option value="maintenance" {{ request('status') == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                            </select>
+
+                            <button type="submit" class="h-12 bg-[#5d7d6b] hover:bg-[#496454] text-white font-semibold rounded-2xl transition border-0 cursor-pointer">
+                                Terapkan
                             </button>
                         </div>
                     </div>
 
-                    <div class="card intro-card shadow-none mb-4">
-                        <div class="card-body p-4 p-lg-5">
-                            <h2 class="fs-5 fw-semibold mb-3">Lihat daftar fasilitas yang tersedia</h2>
-                            <p class="mb-0 text-secondary">
-                                Mahasiswa membuka menu fasilitas dan sistem menampilkan ruangan serta barang inventaris yang bisa dipinjam.
-                            </p>
-                        </div>
-                    </div>
+                    <!-- Facility List -->
+                    <div class="xl:col-span-3">
+                        <div class="text-[16px] font-semibold text-[#5c6761] mb-4">Daftar Fasilitas</div>
 
-                    <div class="row g-4">
-                        <div class="col-xl-3">
-                            <div class="section-label">Filter</div>
-
-                            <div class="d-grid gap-3">
-                                <select name="category" class="form-select filter-select">
-                                    <option value="Semua" {{ request('category') == 'Semua' ? 'selected' : '' }}>Kategori: Semua</option>
-                                    <option value="Ruangan" {{ request('category') == 'Ruangan' ? 'selected' : '' }}>Ruangan</option>
-                                    <option value="Inventaris" {{ request('category') == 'Inventaris' ? 'selected' : '' }}>Inventaris</option>
-                                </select>
-
-                                <select name="location" class="form-select filter-select">
-                                    <option value="Semua Gedung" {{ request('location') == 'Semua Gedung' ? 'selected' : '' }}>Lokasi: Semua Gedung</option>
-                                    @foreach($buildings as $building)
-                                        <option value="{{ $building }}" {{ request('location') == $building ? 'selected' : '' }}>{{ $building }}</option>
-                                    @endforeach
-                                </select>
-
-                                <select name="status" class="form-select filter-select">
-                                    <option value="Semua" {{ request('status') == 'Semua' ? 'selected' : '' }}>Status: Semua</option>
-                                    <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
-                                    <option value="tidak tersedia" {{ request('status') == 'tidak tersedia' ? 'selected' : '' }}>Tidak Tersedia</option>
-                                    <option value="maintenance" {{ request('status') == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
-                                </select>
-
-                                <button type="submit" class="btn btn-apply text-white">Terapkan</button>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-9">
-                            <div class="section-label">Daftar Fasilitas</div>
-
-                            <div class="row g-4">
-                                @forelse($facilities as $item)
-                                    <div class="col-md-6">
-                                        <div class="card facility-card shadow-none h-100">
-                                            <div class="card-body p-3 p-lg-4 d-flex flex-column justify-content-between" style="min-height: 320px;">
-                                                <div>
-                                                    @if($item->foto && file_exists(public_path($item->foto)))
-                                                        <img src="{{ asset($item->foto) }}" alt="{{ $item->nama }}" class="facility-thumb w-100 object-fit-cover mb-4">
-                                                    @else
-                                                        <div class="facility-thumb {{ $item->kategori === 'Ruangan' ? 'thumb-1' : 'thumb-2' }} mb-4 d-flex align-items-center justify-content-center text-muted fw-semibold">
-                                                            <span>{{ $item->kategori }}</span>
-                                                        </div>
-                                                    @endif
-                                                    <h3 class="facility-title mb-3 fw-bold">{{ $item->nama }}</h3>
-                                                </div>
-                                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
-                                                    <div class="facility-meta">
-                                                        <span class="fw-semibold text-dark">{{ $item->kategori }}</span> · {{ $item->detail_meta }}
-                                                        @if($item->kategori === 'Ruangan' && $item->lokasi)
-                                                            <br><small class="text-muted"><i class="bi bi-geo-alt"></i> {{ $item->lokasi }}</small>
-                                                        @endif
-                                                    </div>
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <a href="{{ route('mahasiswa.pengajuan', ['facility_id' => $item->kategori . '-' . $item->id]) }}" class="btn-ajukan text-white">Ajukan Peminjaman</a>
-                                                        <button type="button" class="btn btn-sm btn-detail" data-id="{{ $item->id }}" data-category="{{ $item->kategori }}">Detail</button>
-                                                        @if(strtolower($item->status) === 'tersedia')
-                                                            <span class="badge-soft-success">Tersedia</span>
-                                                        @elseif(strtolower($item->status) === 'terbatas')
-                                                            <span class="badge-soft-warning">Terbatas</span>
-                                                        @elseif(strtolower($item->status) === 'maintenance')
-                                                            <span class="badge-soft-warning" style="background: #fdf2e2; color: #b7791f; border-color: #fbd38d;">Maintenance</span>
-                                                        @else
-                                                            <span class="badge-soft-warning" style="background: #fde8e8; color: #c53030; border-color: #feb2b2;">Tidak Tersedia</span>
-                                                        @endif
-                                                    </div>
-                                                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            @forelse($facilities as $item)
+                                <div class="border border-[#e0d7cb] rounded-[24px] bg-[#fffdfa] p-4 lg:p-5 flex flex-col justify-between h-full min-h-[320px] transition hover:shadow-md hover:border-[#cfdacd]">
+                                    <div>
+                                        @if($item->foto && file_exists(public_path($item->foto)))
+                                            <img src="{{ asset($item->foto) }}" alt="{{ $item->nama }}" class="h-32 w-full object-cover rounded-[18px] mb-4">
+                                        @else
+                                            <div class="h-32 w-full rounded-[18px] mb-4 flex items-center justify-center text-[#727d77] font-semibold {{ $item->kategori === 'Ruangan' ? 'bg-[#dfe8df]' : 'bg-[#e7ddd3]' }}">
+                                                <span>{{ $item->kategori }}</span>
                                             </div>
+                                        @endif
+                                        <h3 class="text-[17px] text-[#4c5752] font-bold mb-3">{{ $item->nama }}</h3>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mt-auto">
+                                        <div class="text-[#5f6963] text-[15px]">
+                                            <span class="font-semibold text-[#33403b]">{{ $item->kategori }}</span> &middot; {{ $item->detail_meta }}
+                                            @if($item->kategori === 'Ruangan' && $item->lokasi)
+                                                <br><small class="text-[#7b8681]"><i class="bi bi-geo-alt"></i> {{ $item->lokasi }}</small>
+                                            @endif
+                                        </div>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <a href="{{ route('mahasiswa.pengajuan', ['facility_id' => $item->kategori . '-' . $item->id]) }}" class="bg-[#5d7d6b] hover:bg-[#496454] text-white font-semibold text-[13.5px] rounded-full px-4 py-2 transition no-underline text-center">
+                                                Ajukan Peminjaman
+                                            </a>
+                                            <button type="button" class="btn-detail bg-[#eef4ee] hover:bg-[#5d7d6b] hover:text-white text-[#496454] border border-[#c8d8c8] hover:border-[#5d7d6b] font-semibold text-[13.5px] rounded-full px-4 py-2 transition cursor-pointer" data-id="{{ $item->id }}" data-category="{{ $item->kategori }}">
+                                                Detail
+                                            </button>
+                                            @if(strtolower($item->status) === 'tersedia')
+                                                <span class="bg-[#dcebd7] text-[#557b58] border border-[#b7d2b6] font-semibold rounded-full px-4 py-2 text-[13.5px]">Tersedia</span>
+                                            @elseif(strtolower($item->status) === 'terbatas')
+                                                <span class="bg-[#f4e7c9] text-[#92723c] border border-[#e3c98b] font-semibold rounded-full px-4 py-2 text-[13.5px]">Terbatas</span>
+                                            @elseif(strtolower($item->status) === 'maintenance')
+                                                <span class="bg-[#fdf2e2] text-[#b7791f] border border-[#fbd38d] font-semibold rounded-full px-4 py-2 text-[13.5px]">Maintenance</span>
+                                            @else
+                                                <span class="bg-[#fde8e8] text-[#c53030] border border-[#feb2b2] font-semibold rounded-full px-4 py-2 text-[13.5px]">Tidak Tersedia</span>
+                                            @endif
                                         </div>
                                     </div>
-                                @empty
-                                    <div class="col-12 text-center py-5">
-                                        <div class="text-muted fs-5">Fasilitas atau barang tidak ditemukan.</div>
-                                    </div>
-                                @endforelse
-                            </div>
-
-                            @if($facilities->hasPages())
-                                <div class="d-flex justify-content-center mt-4">
-                                    {{ $facilities->appends(request()->query())->links('pagination::bootstrap-5') }}
                                 </div>
-                            @endif
+                            @empty
+                                <div class="md:col-span-2 text-center py-10">
+                                    <div class="text-[#7b8681] text-lg">Fasilitas atau barang tidak ditemukan.</div>
+                                </div>
+                            @endforelse
                         </div>
+
+                        @if($facilities->hasPages())
+                            <div class="flex justify-center mt-6">
+                                {{ $facilities->appends(request()->query())->links('pagination::bootstrap-5') }}
+                            </div>
+                        @endif
                     </div>
-                </form>
-            </main>
-        </div>
+                </div>
+            </form>
+        </main>
     </div>
 </div>
 
 <!-- Modal Detail Fasilitas -->
 <div class="modal fade" id="facilityDetailModal" tabindex="-1" aria-labelledby="facilityDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content" style="border-radius: 1.5rem; border: 1px solid #e0d7cb; background: #fcfbf8;">
-            <div class="modal-header border-bottom-0 pb-0" style="padding: 1.5rem 1.5rem 0 1.5rem;">
-                <h5 class="modal-title fw-bold text-dark fs-4" id="facilityDetailModalLabel">Detail Fasilitas</h5>
+        <div class="modal-content border border-[#e0d7cb] bg-[#fcfbf8] rounded-[24px]">
+            <div class="modal-header border-b-0 pb-0 pt-6 px-6">
+                <h5 class="modal-title font-bold text-[#33403b] text-xl" id="facilityDetailModalLabel">Detail Fasilitas</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" style="padding: 1.5rem;">
-                <div id="modalLoading" class="text-center py-5">
+            <div class="modal-body p-6">
+                <div id="modalLoading" class="text-center py-10">
                     <div class="spinner-border text-success" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <p class="mt-2 text-muted">Memuat data...</p>
+                    <p class="mt-2 text-[#7b8681]">Memuat data...</p>
                 </div>
                 <div id="modalContent" class="d-none">
-                    <div class="row g-4">
-                        <div class="col-md-5 text-center text-md-start">
-                            <img id="detailFoto" src="" alt="" class="img-fluid rounded-4 object-fit-cover w-100 mb-3" style="max-height: 250px; display: none;">
-                            <div id="detailFotoFallback" class="rounded-4 w-100 mb-3 d-flex align-items-center justify-content-center text-muted fw-semibold" style="height: 200px; background:#dfe8df;">
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="w-full md:w-5/12 text-center md:text-left">
+                            <img id="detailFoto" src="" alt="" class="rounded-2xl object-cover w-full mb-4" style="max-height: 250px; display: none;">
+                            <div id="detailFotoFallback" class="rounded-2xl w-full mb-4 flex items-center justify-center text-[#7b8681] font-semibold" style="height: 200px; background:#dfe8df;">
                                 <span id="detailKategoriFallback"></span>
                             </div>
-                            <div class="p-3 rounded-4 text-start" style="background: #edf2ea; border: 1px solid #dfe7dc;">
-                                <h6 class="fw-bold mb-2 text-dark" style="font-size: 0.95rem;">Informasi PIC</h6>
-                                <p class="mb-1 text-secondary" style="font-size: 0.9rem;">
-                                    <i class="bi bi-person me-2"></i>Nama: <strong class="text-dark" id="detailPic"></strong>
+                            <div class="p-4 rounded-2xl bg-[#edf2ea] border border-[#dfe7dc] text-left">
+                                <h6 class="font-bold mb-2 text-[#33403b] text-[15px]">Informasi PIC</h6>
+                                <p class="mb-1 text-[#5f6963] text-[14px]">
+                                    <i class="bi bi-person mr-2"></i>Nama: <strong class="text-[#33403b]" id="detailPic"></strong>
                                 </p>
                             </div>
                         </div>
-                        <div class="col-md-7">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="badge" id="detailKategoriBadge" style="background: #dcebd7; color: #557b58; font-weight: 600;"></span>
-                                <span class="badge text-white" id="detailStatusBadge"></span>
+                        <div class="w-full md:w-7/12">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="badge bg-[#dcebd7] text-[#557b58] font-semibold py-1.5 px-3 rounded-full" id="detailKategoriBadge"></span>
+                                <span class="badge text-white py-1.5 px-3 rounded-full" id="detailStatusBadge"></span>
                             </div>
-                            <h4 class="fw-bold text-dark mb-3" id="detailNama"></h4>
+                            <h4 class="font-bold text-[#33403b] text-2xl mb-4" id="detailNama"></h4>
                             
-                            <table class="table table-borderless align-middle mb-4" style="font-size: 0.95rem;">
+                            <table class="w-full text-left mb-6 text-[15px]">
                                 <tbody>
-                                    <tr id="rowKode">
-                                        <td class="text-muted py-1" style="width: 35%;">Kode</td>
-                                        <td class="py-1"><strong id="detailKode" class="text-dark"></strong></td>
+                                    <tr id="rowKode" class="border-b border-[#e7ddd1]/50">
+                                        <td class="text-[#7b8681] py-2 w-1/3">Kode</td>
+                                        <td class="py-2"><strong id="detailKode" class="text-[#33403b]"></strong></td>
                                     </tr>
-                                    <tr id="rowGedung">
-                                        <td class="text-muted py-1">Gedung</td>
-                                        <td class="py-1"><strong id="detailGedung" class="text-dark"></strong></td>
+                                    <tr id="rowGedung" class="border-b border-[#e7ddd1]/50">
+                                        <td class="text-[#7b8681] py-2">Gedung</td>
+                                        <td class="py-2"><strong id="detailGedung" class="text-[#33403b]"></strong></td>
                                     </tr>
-                                    <tr id="rowLantai">
-                                        <td class="text-muted py-1">Lantai</td>
-                                        <td class="py-1"><strong id="detailLantai" class="text-dark"></strong></td>
+                                    <tr id="rowLantai" class="border-b border-[#e7ddd1]/50">
+                                        <td class="text-[#7b8681] py-2">Lantai</td>
+                                        <td class="py-2"><strong id="detailLantai" class="text-[#33403b]"></strong></td>
                                     </tr>
-                                    <tr id="rowKapasitas">
-                                        <td class="text-muted py-1">Kapasitas</td>
-                                        <td class="py-1"><strong id="detailKapasitas" class="text-dark"></strong></td>
+                                    <tr id="rowKapasitas" class="border-b border-[#e7ddd1]/50">
+                                        <td class="text-[#7b8681] py-2">Kapasitas</td>
+                                        <td class="py-2"><strong id="detailKapasitas" class="text-[#33403b]"></strong></td>
                                     </tr>
-                                    <tr id="rowStok">
-                                        <td class="text-muted py-1">Stok Tersedia</td>
-                                        <td class="py-1"><strong id="detailStok" class="text-dark"></strong></td>
+                                    <tr id="rowStok" class="border-b border-[#e7ddd1]/50">
+                                        <td class="text-[#7b8681] py-2">Stok Tersedia</td>
+                                        <td class="py-2"><strong id="detailStok" class="text-[#33403b]"></strong></td>
                                     </tr>
-                                    <tr id="rowStokTotal">
-                                        <td class="text-muted py-1">Stok Total</td>
-                                        <td class="py-1"><strong id="detailStokTotal" class="text-dark"></strong></td>
+                                    <tr id="rowStokTotal" class="border-b border-[#e7ddd1]/50">
+                                        <td class="text-[#7b8681] py-2">Stok Total</td>
+                                        <td class="py-2"><strong id="detailStokTotal" class="text-[#33403b]"></strong></td>
                                     </tr>
                                 </tbody>
                             </table>
                             
-                            <div class="mb-4">
-                                <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;">Deskripsi / Keterangan</h6>
-                                <div class="p-3 rounded-3 bg-white" style="border: 1px solid #e7ddd1; font-size: 0.9rem; color: #55615b;" id="detailDeskripsi"></div>
+                            <div class="mb-6">
+                                <h6 class="font-bold text-[#33403b] text-[15px] mb-2">Deskripsi / Keterangan</h6>
+                                <div class="p-4 rounded-xl bg-white border border-[#e7ddd1] text-[14px] text-[#55615b]" id="detailDeskripsi"></div>
                             </div>
                             
-                            <div id="sectionFasilitasPendukung" class="mb-2">
-                                <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;">Fasilitas Pendukung</h6>
-                                <div class="table-responsive">
-                                    <table class="table table-sm table-striped table-hover border" style="font-size: 0.875rem;">
-                                        <thead class="table-light">
+                            <div id="sectionFasilitasPendukung" class="mb-3">
+                                <h6 class="font-bold text-[#33403b] text-[15px] mb-2">Fasilitas Pendukung</h6>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-[14px] border border-[#e7ddd1] rounded-lg overflow-hidden">
+                                        <thead class="bg-[#f3f6f3] text-[#5c6761]">
                                             <tr>
-                                                <th class="px-3">Nama Fasilitas</th>
-                                                <th class="text-center" style="width: 20%;">Jumlah</th>
-                                                <th>Keterangan</th>
+                                                <th class="py-2 px-3">Nama Fasilitas</th>
+                                                <th class="py-2 px-3 text-center w-1/4">Jumlah</th>
+                                                <th class="py-2 px-3">Keterangan</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="detailFasilitasList">
+                                        <tbody id="detailFasilitasList" class="divide-y divide-[#e7ddd1]">
                                             <!-- Facilities list will be appended here -->
                                         </tbody>
                                     </table>
@@ -550,24 +284,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         const statusLower = item.status.toLowerCase();
                         if (statusLower === 'tersedia') {
                             statusBadge.textContent = 'Tersedia';
+                            statusBadge.className = 'badge text-[#557b58] font-semibold py-1.5 px-3 rounded-full border border-[#b7d2b6]';
                             statusBadge.style.background = '#dcebd7';
-                            statusBadge.style.color = '#557b58';
-                            statusBadge.style.border = '1px solid #b7d2b6';
                         } else if (statusLower === 'terbatas') {
                             statusBadge.textContent = 'Terbatas';
-                            statusBadge.style.background = 'var(--warning-soft)';
-                            statusBadge.style.color = '#92723c';
-                            statusBadge.style.border = '1px solid #e3c98b';
+                            statusBadge.className = 'badge text-[#92723c] font-semibold py-1.5 px-3 rounded-full border border-[#e3c98b]';
+                            statusBadge.style.background = '#f4e7c9';
                         } else if (statusLower === 'maintenance') {
                             statusBadge.textContent = 'Maintenance';
+                            statusBadge.className = 'badge text-[#b7791f] font-semibold py-1.5 px-3 rounded-full border border-[#fbd38d]';
                             statusBadge.style.background = '#fdf2e2';
-                            statusBadge.style.color = '#b7791f';
-                            statusBadge.style.border = '1px solid #fbd38d';
                         } else {
                             statusBadge.textContent = 'Tidak Tersedia';
+                            statusBadge.className = 'badge text-[#c53030] font-semibold py-1.5 px-3 rounded-full border border-[#feb2b2]';
                             statusBadge.style.background = '#fde8e8';
-                            statusBadge.style.color = '#c53030';
-                            statusBadge.style.border = '1px solid #feb2b2';
                         }
 
                         // Conditional layouts for Room vs Inventory
@@ -591,15 +321,15 @@ document.addEventListener('DOMContentLoaded', function () {
                                 item.fasilitas_pendukung.forEach(f => {
                                     const tr = document.createElement('tr');
                                     tr.innerHTML = `
-                                        <td class="px-3 text-dark fw-medium">${f.nama}</td>
-                                        <td class="text-center">${f.jumlah}</td>
-                                        <td class="text-secondary">${f.keterangan}</td>
+                                        <td class="py-2 px-3 text-[#33403b] font-medium">${f.nama}</td>
+                                        <td class="py-2 px-3 text-center">${f.jumlah}</td>
+                                        <td class="py-2 px-3 text-[#5f6963]">${f.keterangan}</td>
                                     `;
                                     fasilitasTbody.appendChild(tr);
                                 });
                             } else {
                                 const tr = document.createElement('tr');
-                                tr.innerHTML = `<td colspan="3" class="text-center text-muted py-3">Tidak ada fasilitas pendukung terdaftar.</td>`;
+                                tr.innerHTML = `<td colspan="3" class="text-center text-[#7b8681] py-3">Tidak ada fasilitas pendukung terdaftar.</td>`;
                                 fasilitasTbody.appendChild(tr);
                             }
                         } else {
@@ -632,5 +362,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-</div>
 @endsection

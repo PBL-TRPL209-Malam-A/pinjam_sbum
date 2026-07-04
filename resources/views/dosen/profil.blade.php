@@ -1,9 +1,9 @@
-@extends('layout.dosen')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Dosen')
-@section('page_heading', 'Profil Dosen')
 
-@section('dosen_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -87,12 +87,12 @@
 
 <!-- Banner Card -->
 <div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Kelola biodata dan akun dosen</h2>
+    <div class="p-6 lg:p-8">
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Kelola biodata dan akun dosen</h2>
         <p class="mb-4 text-secondary">
             Halaman ini menampilkan informasi profil, data operasional, kontak, dan ringkasan aktivitas verifikasi dosen.
         </p>
-        <button class="btn btn-main" data-bs-toggle="modal" data-bs-target="#editProfilModal">Edit Profil</button>
+        <button class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" data-bs-toggle="modal" data-bs-target="#editProfilModal">Edit Profil</button>
     </div>
 </div>
 
@@ -174,26 +174,26 @@
         <div class="row g-3">
             <div class="col-6">
                 <div class="stat-box">
-                    <div class="stat-label">Menunggu Verifikasi</div>
-                    <div class="stat-num">6</div>
+                    <div class="text-xs font-medium text-[#7d8781] leading-tight">Menunggu Verifikasi</div>
+                    <div class="text-3xl font-bold text-[#466454]">6</div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="stat-box">
-                    <div class="stat-label">Disetujui</div>
-                    <div class="stat-num">12</div>
+                    <div class="text-xs font-medium text-[#7d8781] leading-tight">Disetujui</div>
+                    <div class="text-3xl font-bold text-[#466454]">12</div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="stat-box">
-                    <div class="stat-label">Ditolak</div>
-                    <div class="stat-num">3</div>
+                    <div class="text-xs font-medium text-[#7d8781] leading-tight">Ditolak</div>
+                    <div class="text-3xl font-bold text-[#466454]">3</div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="stat-box">
-                    <div class="stat-label">Total Kelas</div>
-                    <div class="stat-num">4</div>
+                    <div class="text-xs font-medium text-[#7d8781] leading-tight">Total Kelas</div>
+                    <div class="text-3xl font-bold text-[#466454]">4</div>
                 </div>
             </div>
         </div>
@@ -231,7 +231,7 @@
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                    <button type="submit" class="btn btn-main" style="border-radius:0.75rem;">Simpan Perubahan</button>
+                    <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Perubahan</button>
                 </div>
             </form>
         </div>

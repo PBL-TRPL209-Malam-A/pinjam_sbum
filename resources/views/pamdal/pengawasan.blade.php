@@ -1,9 +1,9 @@
-@extends('layout.pamdal')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Pamdal - Pengawasan Kegiatan')
-@section('page_heading', 'Dashboard')
 
-@section('pamdal_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -67,9 +67,9 @@
 
 <!-- Banner Card -->
 <div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Pantau kegiatan peminjaman fasilitas</h2>
-        <p class="mb-0 text-secondary text-wrap">
+    <div class="p-6 lg:p-8">
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Pantau kegiatan peminjaman fasilitas</h2>
+        <p class="text-[#7d8781] max-w-2xl">
             Pamdal melihat jadwal kegiatan hari ini, mengawasi pelaksanaan, lalu mencatat temuan lapangan.
         </p>
     </div>
@@ -82,7 +82,7 @@
 
         @if($peminjaman->isEmpty())
             <div class="text-center p-4" style="background:#fffdfa; border: 1px solid var(--line); border-radius:1.25rem;">
-                <p class="text-secondary mb-0">Tidak ada jadwal kegiatan yang perlu diawasi hari ini.</p>
+                <p class="text-[#7d8781]">Tidak ada jadwal kegiatan yang perlu diawasi hari ini.</p>
             </div>
         @else
             @foreach($peminjaman as $item)
@@ -94,7 +94,7 @@
             @endforeach
         @endif
 
-        <div class="mb-3 mt-4 fw-semibold text-secondary">Panduan Pengawasan</div>
+        <div class="mb-4 mt-8 font-semibold text-[#7d8781]">Panduan Pengawasan</div>
         <div class="checklist-box">
             <div class="mb-3">
                 <span class="status-badge-controlled">Parameter Aman</span>
@@ -130,7 +130,7 @@
                 
                 <label class="form-label text-main fw-semibold">Catatan Lapangan</label>
                 <textarea name="catatan" class="form-control mb-4" rows="6" required style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.95rem; line-height: 1.6; resize: none;" placeholder="Tuliskan temuan lapangan..."></textarea>
-                <button type="submit" class="btn btn-main w-100" style="height: 48px; border-radius: 0.75rem;" id="submitBtn" disabled>Simpan Catatan</button>
+                <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="height: 48px; border-radius: 0.75rem;" id="submitBtn" disabled>Simpan Catatan</button>
             </form>
         </div>
     </div>

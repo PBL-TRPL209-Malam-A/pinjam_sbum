@@ -138,10 +138,8 @@
     <!-- Kop Surat -->
     <table class="header-table">
         <tr>
-            <td style="width: 15%; text-align: left;">
-                <div style="font-weight: bold; font-size: 24px; color: #587a68; border: 3px solid #587a68; padding: 5px; text-align: center; display: inline-block; width: 60px;">
-                    SBUM
-                </div>
+            <td style="width: 15%; text-align: left; vertical-align: middle;">
+                <img src="{{ public_path('images/logo-polibatam.png') }}" alt="Logo Polibatam" style="width: 80px; height: auto;">
             </td>
             <td class="header-title" style="width: 85%;">
                 <h2>Sistem Booking & Peminjaman Fasilitas</h2>

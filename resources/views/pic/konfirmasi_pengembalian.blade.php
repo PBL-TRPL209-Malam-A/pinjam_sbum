@@ -1,9 +1,9 @@
-@extends('layout.pic')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'PIC · Verifikasi Pengembalian Fasilitas')
-@section('page_heading', 'Dashboard')
 
-@section('pic_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -72,9 +72,9 @@
 
 <!-- Banner Card -->
 <div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Konfirmasi pengembalian fasilitas</h2>
-        <p class="mb-0 text-secondary text-wrap">
+    <div class="p-6 lg:p-8">
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Konfirmasi pengembalian fasilitas</h2>
+        <p class="text-[#7d8781] max-w-2xl">
             PIC memeriksa kondisi ruangan dan perlengkapan pasca-pakai, lalu mengonfirmasi status selesai.
         </p>
     </div>
@@ -145,7 +145,7 @@
                                 Pengembalian: {{ $returnDate ? \Carbon\Carbon::parse($returnDate)->translatedFormat('d M Y') : '-' }} · {{ $returnTime ? substr($returnTime, 0, 5) : '12.00' }}
                             </div>
                         </div>
-                        <span class="badge-verifikasi-soft">Menunggu Verifikasi</span>
+                        <span class="inline-block bg-[#fcf1d3] text-[#7d6006] text-[13px] font-semibold px-4 py-1.5 rounded-full">Menunggu Verifikasi</span>
                     </div>
                 </div>
             @empty
@@ -241,7 +241,7 @@
                         <div class="info-label mb-2">Foto Kondisi Fasilitas</div>
                         @if($fotoPath)
                             @php
-                                $fotoUrl = str_starts_with($fotoPath, 'storage/') ? asset($fotoPath) : asset('storage/' . $fotoPath);
+                                $fotoUrl = asset($fotoPath);
                             @endphp
                             <div class="mb-3">
                                 <img src="{{ $fotoUrl }}" alt="Bukti Foto Kondisi" class="rounded-4 border" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="zoomImage(this)">
@@ -253,7 +253,7 @@
                         <div class="info-label mb-2">Dokumen Administrasi</div>
                         @if($dokumenPath)
                             @php
-                                $dokumenUrl = str_starts_with($dokumenPath, 'storage/') ? asset($dokumenPath) : asset('storage/' . $dokumenPath);
+                            $dokumenUrl = asset($dokumenPath);
                             @endphp
                             <div>
                                 <a href="{{ $dokumenUrl }}" download class="btn btn-upload-photo" style="background-color: var(--soft-bg); border-color: var(--line); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border-radius: 0.75rem; text-decoration: none; padding: 0.5rem 1.5rem; width: auto; font-size: 0.9rem;">

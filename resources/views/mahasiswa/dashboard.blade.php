@@ -1,723 +1,193 @@
-@extends('layout.app')
+@extends('layout.app_tailwind')
+
+
 
 @section('content')
-<style>
-    :root {
-        --bg-page: #f5f2ec;
-        --bg-panel: #fcfbf8;
-        --bg-soft: #eef4ee;
-        --bg-soft-2: #f4f7f4;
-        --line: #e6ddd2;
-        --text: #33403b;
-        --muted: #7b8681;
-        --primary: #587a68;
-        --primary-dark: #466454;
-        --success-soft: #dfeedd;
-        --warning-soft: #f3e7c8;
-    }
-
-    body {
-        margin: 0;
-        background: var(--bg-page);
-        font-family: Arial, Helvetica, sans-serif;
-        color: var(--text);
-    }
-
-    .dash-wrap {
-        min-height: 100vh;
-        padding: 24px;
-        background: var(--bg-page);
-    }
-
-    .dash-shell {
-        max-width: 1440px;
-        margin: 0 auto;
-        background: var(--bg-panel);
-        border: 1px solid var(--line);
-        border-radius: 32px;
-        overflow: hidden;
-        display: grid;
-        grid-template-columns: 270px 1fr;
-        min-height: calc(100vh - 48px);
-    }
-
-    .dash-sidebar {
-        border-right: 1px solid var(--line);
-        padding: 22px 18px;
-        display: flex;
-        flex-direction: column;
-        background: rgba(255,255,255,.25);
-    }
-
-    .brand-box {
-        padding: 6px 8px 20px;
-    }
-
-    .brand-logo {
-        width: 110px;
-        max-width: 100%;
-        height: auto;
-        object-fit: contain;
-    }
-
-    .side-menu {
-        display: grid;
-        gap: 10px;
-        margin-top: 12px;
-    }
-
-    .side-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 14px 14px;
-        border-radius: 16px;
-        color: #54615b;
-        text-decoration: none;
-        font-size: 15px;
-        transition: .2s ease;
-    }
-
-    .side-link:hover {
-        background: #f3f7f3;
-        color: var(--primary-dark);
-    }
-
-    .side-link.active {
-        background: #edf3ee;
-        color: var(--primary-dark);
-        font-weight: 700;
-    }
-
-    .side-icon {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background: #dfe9e1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        flex-shrink: 0;
-    }
-
-    .logout-box {
-        margin-top: auto;
-        padding: 14px;
-    }
-
-    .logout-btn {
-        background: transparent;
-        border: 0;
-        color: #5b635f;
-        padding: 0;
-        font-size: 16px;
-    }
-
-    .dash-main {
-        padding: 26px 24px 28px;
-    }
-
-    .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 16px;
-        margin-bottom: 22px;
-    }
-
-    .page-title {
-        font-size: 19px;
-        color: #7d8781;
-        margin-bottom: 22px;
-    }
-
-    .page-subtitle {
-        font-size: 28px;
-        font-weight: 400;
-        margin: 0 0 24px;
-        color: var(--text);
-    }
-
-    .search-box {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-    }
-
-    .search-input {
-        width: 250px;
-        height: 48px;
-        border: 1px solid #ddd2c5;
-        border-radius: 16px;
-        padding: 0 18px;
-        outline: none;
-        background: #fffdfa;
-        color: var(--text);
-    }
-
-    .search-dot {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: #ccd8cc;
-        flex-shrink: 0;
-    }
-
-    .content-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 290px;
-        gap: 28px;
-    }
-
-    .welcome-card {
-        background: #edf2ea;
-        border: 1px solid #dfe7dc;
-        border-radius: 28px;
-        padding: 30px 34px;
-        min-height: 176px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .welcome-title {
-        font-size: 31px;
-        font-weight: 800;
-        margin-bottom: 10px;
-    }
-
-    .welcome-text {
-        color: #55635d;
-        line-height: 1.8;
-        max-width: 700px;
-        margin-bottom: 24px;
-    }
-
-    .hero-actions {
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-    }
-
-    .btn-main,
-    .btn-soft {
-        min-width: 190px;
-        height: 50px;
-        border-radius: 16px;
-        font-weight: 700;
-        border: 1px solid #d8cfc2;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-    }
-
-    .btn-main {
-        background: var(--primary);
-        color: #fff;
-        border-color: transparent;
-    }
-
-    .btn-main:hover {
-        background: var(--primary-dark);
-        color: #fff;
-    }
-
-    .btn-soft {
-        background: #fffdfa;
-        color: #6b756f;
-    }
-
-    .btn-soft:hover {
-        background: #f8f4ee;
-        color: #4f5954;
-    }
-
-    .mini-title {
-        font-size: 15px;
-        font-weight: 700;
-        margin: 4px 0 14px;
-        color: #52605a;
-    }
-
-    .schedule-card,
-    .status-card,
-    .note-card,
-    .quick-card {
-        background: #fffdfa;
-        border: 1px solid #e0d7cb;
-        border-radius: 22px;
-    }
-
-    .schedule-card {
-        padding: 22px 22px 18px;
-    }
-
-    .schedule-name {
-        font-size: 16px;
-        font-weight: 400;
-        margin-bottom: 12px;
-        color: #5a615e;
-    }
-
-    .schedule-time {
-        font-size: 15px;
-        color: #4d5953;
-        margin-bottom: 14px;
-    }
-
-    .status-pill {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 116px;
-        padding: 9px 18px;
-        border-radius: 999px;
-        font-size: 14px;
-        font-weight: 700;
-        border: 1px solid transparent;
-    }
-
-    .status-pill.approved {
-        background: #dcebd7;
-        color: #557b58;
-        border-color: #b7d2b6;
-    }
-
-    .status-pill.pending {
-        background: var(--warning-soft);
-        color: #92723c;
-        border-color: #e3c98b;
-    }
-
-    .stats-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 18px;
-        margin: 26px 0 32px;
-    }
-
-    .stat-box {
-        padding: 10px 4px;
-    }
-
-    .stat-label {
-        font-size: 15px;
-        color: #8a948e;
-        margin-bottom: 8px;
-    }
-
-    .stat-value {
-        font-size: 64px;
-        line-height: 1;
-        font-weight: 400;
-        color: #31413a;
-    }
-
-    .bottom-grid {
-        display: grid;
-        grid-template-columns: 420px minmax(0, 1fr);
-        gap: 34px;
-    }
-
-    .quick-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-    }
-
-    .quick-card {
-        padding: 28px 26px;
-        min-height: 116px;
-    }
-
-    .quick-title {
-        font-size: 16px;
-        color: #5e6762;
-        margin-bottom: 12px;
-    }
-
-    .quick-desc {
-        font-size: 15px;
-        color: #8a928d;
-        line-height: 1.6;
-    }
-
-    .status-list {
-        display: grid;
-        gap: 18px;
-    }
-
-    .status-card {
-        padding: 20px 22px;
-    }
-
-    .status-top {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        align-items: center;
-        margin-bottom: 12px;
-    }
-
-    .status-code {
-        font-size: 16px;
-        color: #707975;
-        margin-bottom: 10px;
-    }
-
-    .status-name {
-        font-size: 15px;
-        color: #4e5953;
-        margin-bottom: 8px;
-    }
-
-    .progress-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
-        align-items: center;
-        margin-top: 8px;
-    }
-
-    .progress-line {
-        height: 8px;
-        border-radius: 999px;
-        background: #d9d4cc;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .progress-line.active::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: #557a67;
-    }
-
-    .progress-labels {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
-        margin-top: 6px;
-        font-size: 13px;
-        color: #7a847e;
-    }
-
-    .note-card {
-        padding: 18px 22px;
-    }
-
-    .note-title {
-        font-size: 16px;
-        color: #5e6662;
-        margin-bottom: 8px;
-    }
-
-    .note-text {
-        color: #7c8580;
-        line-height: 1.5;
-        margin: 0;
-    }
-
-    .hello-name {
-        font-weight: 700;
-    }
-
-    @media (max-width: 1200px) {
-        .content-grid,
-        .bottom-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .stats-row {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .search-input {
-            width: 220px;
-        }
-    }
-
-    @media (max-width: 991.98px) {
-        .dash-shell {
-            grid-template-columns: 1fr;
-        }
-
-        .dash-sidebar {
-            border-right: 0;
-            border-bottom: 1px solid var(--line);
-        }
-
-        .logout-box {
-            margin-top: 12px;
-        }
-    }
-
-    @media (max-width: 767.98px) {
-        .dash-wrap {
-            padding: 10px;
-        }
-
-        .dash-main {
-            padding: 18px 16px 22px;
-        }
-
-        .topbar {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .search-box {
-            width: 100%;
-        }
-
-        .search-input {
-            width: 100%;
-        }
-
-        .stats-row,
-        .quick-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .status-top {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .welcome-card {
-            padding: 24px 20px;
-        }
-
-        .btn-main,
-        .btn-soft {
-            width: 100%;
-            min-width: 0;
-        }
-
-        .hero-actions {
-            flex-direction: column;
-        }
-    }
-</style>
-
-<div class="dash-wrap">
-    <div class="dash-shell">
-        <aside class="dash-sidebar">
-            <div class="brand-box">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Logo_Politeknik_Negeri_Batam.png" alt="SBUM" class="brand-logo">
-            </div>
-
-            <nav class="side-menu">
-                <a href="#" class="side-link active">
-                    <span class="side-icon"></span>
-                    <span>Dashboard</span>
-                </a>
-                <a href="{{ route('mahasiswa.fasilitas') }}" class="side-link">
-                    <span class="side-icon"></span>
-                    <span>Fasilitas</span>
-                </a>
-                <a href="{{ route('mahasiswa.jadwal') }}" class="side-link">
-                    <span class="side-icon"></span>
-                    <span>Jadwal</span>
-                </a>
-                <a href="{{ route('mahasiswa.pengajuan') }}" class="side-link">
-                    <span class="side-icon"></span>
-                    <span>Pengajuan Saya</span>
-                </a>
-                <a href="{{ route('mahasiswa.pengembalian') }}" class="side-link">
-                    <span class="side-icon"></span>
-                    <span>Pengembalian</span>
-                </a>
-                <a href="{{ route('mahasiswa.riwayat') }}" class="side-link {{ request()->routeIs('mahasiswa.riwayat') ? 'active' : '' }}">
-                    <span class="side-icon"></span>
-                    <span>Riwayat Peminjaman</span>
-                </a>
-                <a href="{{ route('mahasiswa.notifikasi') }}" class="side-link">
-                    <span class="side-icon"></span>
-                    <span>Notifikasi</span>
-                </a>
-                <a href="{{ route ('mahasiswa.profil')}}" class="side-link">
-                    <span class="side-icon"></span>
-                    <span>Profil</span>
-                </a>
-            </nav>
-
-            <div class="logout-box">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="logout-btn">Logout</button>
-                </form>
-            </div>
-        </aside>
-
-        <main class="dash-main">
             @if(session('success'))
-                <div class="alert alert-success rounded-4 border-0 mb-4">
+                <div class="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-2xl mb-6">
                     {{ session('success') }}
                 </div>
             @endif
 
-            <div class="topbar">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
                 <div>
-                    <div class="page-title">Mahasiswa</div>
-                    <h1 class="page-subtitle">Dashboard Mahasiswa</h1>
+                    <div class="text-[19px] text-[#7d8781] mb-1">Mahasiswa</div>
+                    <h1 class="text-[28px] font-normal m-0 text-[#33403b]">Dashboard Mahasiswa</h1>
                 </div>
 
-                <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Cari fasilitas atau ID">
-                    <div class="search-dot"></div>
+                <div class="flex items-center gap-3.5 w-full md:w-auto relative">
+                    <i class="bi bi-search absolute left-4 text-[#a5a5a5]"></i>
+                    <input type="text" class="w-full md:w-[250px] h-[48px] border border-[#ddd2c5] rounded-2xl pl-10 pr-4 outline-none bg-[#fffdfa] text-[#33403b] focus:ring-2 focus:ring-[#587a68]/20 transition" placeholder="Cari fasilitas atau ID">
+                    <div class="w-[38px] h-[38px] rounded-full bg-[#ccd8cc] shrink-0 flex items-center justify-center text-white cursor-pointer hover:bg-[#b5c4b5] transition shadow-sm">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
                 </div>
             </div>
 
-            <div class="content-grid">
-                <div class="welcome-card">
-                    <div class="welcome-title">Halo, <span class="hello-name">{{ auth()->user()->nama_lengkap }}</span> 👋</div>
-                    <div class="welcome-text">
+            <div class="grid grid-cols-1 xl:grid-cols-[1fr_290px] gap-7">
+                <div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[28px] p-6 md:p-[30px] min-h-[176px] flex flex-col justify-center relative overflow-hidden shadow-sm">
+                    <!-- Decorative element for glassmorphism / modern vibe -->
+                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/40 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -bottom-10 right-20 w-32 h-32 bg-[#587a68]/10 rounded-full blur-2xl pointer-events-none"></div>
+                    
+                    <div class="text-[24px] md:text-[31px] font-extrabold mb-2 text-[#33403b] relative z-10">Halo, <span class="text-[#587a68]">{{ auth()->user()->nama_lengkap }}</span> 👋</div>
+                    <div class="text-[#55635d] leading-[1.8] max-w-[700px] mb-6 relative z-10">
                         Kelola peminjaman ruangan dan fasilitas kampus dari satu dashboard yang sederhana dan mudah dipantau.
                     </div>
-                    <div class="hero-actions">
-                        <a href="#" class="btn-main">Ajukan Peminjaman</a>
-                        <a href="#" class="btn-soft">Lihat Jadwal</a>
+                    <div class="flex gap-3.5 flex-col md:flex-row relative z-10">
+                        <a href="{{ route('mahasiswa.pengajuan') }}" class="min-w-[190px] h-[50px] rounded-2xl font-bold bg-[#587a68] text-white flex items-center justify-center no-underline hover:bg-[#466454] transition shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                            <i class="bi bi-plus-lg mr-2"></i> Ajukan Peminjaman
+                        </a>
+                        <a href="{{ route('mahasiswa.jadwal') }}" class="min-w-[190px] h-[50px] rounded-2xl font-bold border border-[#d8cfc2] bg-[#fffdfa] text-[#6b756f] flex items-center justify-center no-underline hover:bg-[#f8f4ee] hover:text-[#4f5954] transition shadow-sm hover:shadow">
+                            <i class="bi bi-calendar-week mr-2"></i> Lihat Jadwal
+                        </a>
                     </div>
                 </div>
 
                 <div>
-                    <div class="mini-title">Jadwal Terdekat</div>
+                    <div class="text-[15px] font-bold mt-1 mb-3.5 text-[#52605a]">Jadwal Terdekat</div>
                     @if($jadwalTerdekat)
-                    <div class="schedule-card">
-                        <div class="schedule-name">
+                    <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-[22px] shadow-sm hover:shadow-md transition">
+                        <div class="text-[16px] mb-3 text-[#5a615e] font-medium flex items-center gap-2">
+                            <i class="bi bi-geo-alt text-[#587a68]"></i>
                             {{ $jadwalTerdekat->jenis_peminjaman === 'ruangan' ? ($jadwalTerdekat->ruangan->first()->nama_ruangan ?? 'Ruangan') : ($jadwalTerdekat->barang->first()->nama_barang ?? 'Barang') }}
                         </div>
-                        <div class="schedule-time">
+                        <div class="text-[15px] text-[#4d5953] mb-3.5 flex items-center gap-2">
+                            <i class="bi bi-clock"></i>
                             {{ \Carbon\Carbon::parse($jadwalTerdekat->tanggal_pengajuan)->translatedFormat('d M Y') }} · 
                             {{ \Carbon\Carbon::parse($jadwalTerdekat->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwalTerdekat->jam_selesai)->format('H:i') }}
                         </div>
-                        <span class="status-pill approved">Disetujui</span>
+                        <span class="inline-flex items-center justify-center min-w-[116px] px-4 py-2 rounded-full text-[14px] font-bold bg-[#dcebd7] text-[#557b58] border border-[#b7d2b6]">
+                            Disetujui
+                        </span>
                     </div>
                     @else
-                    <div class="schedule-card text-center text-muted" style="background: transparent; border: 1px dashed #dfe7dc;">
+                    <div class="bg-transparent border border-dashed border-[#dfe7dc] rounded-[22px] p-[22px] text-center text-gray-500">
                         Belum ada jadwal terdekat.
                     </div>
                     @endif
                 </div>
             </div>
 
-            <div class="stats-row">
-                <div class="stat-box">
-                    <div class="stat-label">Pengajuan Aktif</div>
-                    <div class="stat-value">{{ $pengajuanAktif }}</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[18px] my-8">
+                <div class="py-2.5 px-4 bg-white/50 backdrop-blur-sm border border-[#e6ddd2] rounded-2xl hover:-translate-y-1 transition duration-300">
+                    <div class="text-[15px] text-[#8a948e] mb-2 font-medium">Pengajuan Aktif</div>
+                    <div class="text-[48px] md:text-[64px] leading-none text-[#31413a] font-light">{{ $pengajuanAktif }}</div>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-label">Menunggu Persetujuan</div>
-                    <div class="stat-value">{{ $menungguPersetujuan }}</div>
+                <div class="py-2.5 px-4 bg-white/50 backdrop-blur-sm border border-[#e6ddd2] rounded-2xl hover:-translate-y-1 transition duration-300">
+                    <div class="text-[15px] text-[#8a948e] mb-2 font-medium">Menunggu Persetujuan</div>
+                    <div class="text-[48px] md:text-[64px] leading-none text-[#31413a] font-light">{{ $menungguPersetujuan }}</div>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-label">Riwayat Selesai</div>
-                    <div class="stat-value">{{ $riwayatSelesai }}</div>
+                <div class="py-2.5 px-4 bg-white/50 backdrop-blur-sm border border-[#e6ddd2] rounded-2xl hover:-translate-y-1 transition duration-300">
+                    <div class="text-[15px] text-[#8a948e] mb-2 font-medium">Riwayat Selesai</div>
+                    <div class="text-[48px] md:text-[64px] leading-none text-[#31413a] font-light">{{ $riwayatSelesai }}</div>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-label">Notifikasi Baru</div>
-                    <div class="stat-value">{{ $notifikasiBaru }}</div>
+                <div class="py-2.5 px-4 bg-white/50 backdrop-blur-sm border border-[#e6ddd2] rounded-2xl hover:-translate-y-1 transition duration-300">
+                    <div class="text-[15px] text-[#8a948e] mb-2 font-medium">Notifikasi Baru</div>
+                    <div class="text-[48px] md:text-[64px] leading-none text-[#31413a] font-light">{{ $notifikasiBaru }}</div>
                 </div>
             </div>
 
-            <div class="bottom-grid">
+            <div class="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-[34px]">
                 <div>
-                    <div class="mini-title">Aksi Cepat</div>
-                    <div class="quick-grid">
-                        <div class="quick-card">
-                            <a href="{{ route('mahasiswa.pengajuan') }}" style="text-decoration: none;">
-                                <div class="quick-title">Ajukan Peminjaman</div>
-                                <div class="quick-desc">Buat pengajuan baru</div>
+                    <div class="text-[15px] font-bold mt-1 mb-3.5 text-[#52605a]">Aksi Cepat</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-[18px]">
+                        <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-6 md:p-7 min-h-[116px] hover:shadow-md transition cursor-pointer group hover:-translate-y-1">
+                            <a href="{{ route('mahasiswa.pengajuan') }}" class="no-underline block h-full">
+                                <div class="text-[16px] text-[#5e6762] mb-3 group-hover:text-[#587a68] transition flex items-center gap-2 font-semibold">
+                                    <i class="bi bi-plus-circle"></i> Ajukan Peminjaman
+                                </div>
+                                <div class="text-[14px] text-[#8a928d] leading-[1.6]">Buat pengajuan baru</div>
                             </a>
                         </div>
-                        <div class="quick-card">
-                            <a href="{{ route('mahasiswa.jadwal') }}" style="text-decoration: none;">
-                                <div class="quick-title">Cek Ketersediaan</div>
-                                <div class="quick-desc">Lihat slot fasilitas</div>
+                        <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-6 md:p-7 min-h-[116px] hover:shadow-md transition cursor-pointer group hover:-translate-y-1">
+                            <a href="{{ route('mahasiswa.jadwal') }}" class="no-underline block h-full">
+                                <div class="text-[16px] text-[#5e6762] mb-3 group-hover:text-[#587a68] transition flex items-center gap-2 font-semibold">
+                                    <i class="bi bi-search"></i> Cek Ketersediaan
+                                </div>
+                                <div class="text-[14px] text-[#8a928d] leading-[1.6]">Lihat slot fasilitas</div>
                             </a>
                         </div>
-                        <div class="quick-card">
-                            <a href="{{ route('mahasiswa.riwayat') }}" style="text-decoration: none;">
-                                <div class="quick-title">Status Pengajuan</div>
-                                <div class="quick-desc">Pantau progres verifikasi</div>
+                        <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-6 md:p-7 min-h-[116px] hover:shadow-md transition cursor-pointer group hover:-translate-y-1">
+                            <a href="{{ route('mahasiswa.riwayat') }}" class="no-underline block h-full">
+                                <div class="text-[16px] text-[#5e6762] mb-3 group-hover:text-[#587a68] transition flex items-center gap-2 font-semibold">
+                                    <i class="bi bi-clock-history"></i> Status Pengajuan
+                                </div>
+                                <div class="text-[14px] text-[#8a928d] leading-[1.6]">Pantau progres verifikasi</div>
                             </a>
                         </div>
-                        <div class="quick-card">
-                            <a href="{{ route('mahasiswa.pengembalian') }}" style="text-decoration: none;">
-                                <div class="quick-title">Ajukan Pengembalian</div>
-                                <div class="quick-desc">Submit return fasilitas</div>
+                        <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-6 md:p-7 min-h-[116px] hover:shadow-md transition cursor-pointer group hover:-translate-y-1">
+                            <a href="{{ route('mahasiswa.pengembalian') }}" class="no-underline block h-full">
+                                <div class="text-[16px] text-[#5e6762] mb-3 group-hover:text-[#587a68] transition flex items-center gap-2 font-semibold">
+                                    <i class="bi bi-arrow-return-left"></i> Ajukan Pengembalian
+                                </div>
+                                <div class="text-[14px] text-[#8a928d] leading-[1.6]">Submit return fasilitas</div>
                             </a>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <div class="mini-title">Status Pengajuan Terbaru</div>
-                    <div class="status-list">
+                    <div class="text-[15px] font-bold mt-1 mb-3.5 text-[#52605a]">Status Pengajuan Terbaru</div>
+                    <div class="grid gap-[18px]">
                         @forelse($pengajuanTerbaru as $pengajuan)
-                        <div class="status-card">
-                            <div class="status-top">
+                        <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-5 md:p-[22px] hover:shadow-sm transition">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-3">
                                 <div>
-                                    <div class="status-code">
-                                        SBUM-2026-{{ str_pad($pengajuan->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · 
+                                    <div class="text-[16px] text-[#707975] mb-2 font-medium">
+                                        SBUM-2026-{{ str_pad($pengajuan->id_peminjaman, 4, '0', STR_PAD_LEFT) }} <span class="mx-1">•</span> 
                                         {{ $pengajuan->jenis_peminjaman === 'ruangan' ? ($pengajuan->ruangan->first()->nama_ruangan ?? 'Ruangan') : ($pengajuan->barang->first()->nama_barang ?? 'Barang') }}
                                     </div>
-                                    <div class="status-name">{{ $pengajuan->nama_kegiatan }} · {{ \Carbon\Carbon::parse($pengajuan->tanggal_pengajuan)->translatedFormat('d M Y') }}</div>
+                                    <div class="text-[15px] text-[#4e5953]">{{ $pengajuan->nama_kegiatan }} <span class="mx-1">•</span> {{ \Carbon\Carbon::parse($pengajuan->tanggal_pengajuan)->translatedFormat('d M Y') }}</div>
                                 </div>
                                 @php
-                                    $statusClass = 'pending';
+                                    $statusClass = 'bg-[#f3e7c8] text-[#92723c] border-[#e3c98b]';
                                     $statusText = 'Menunggu';
                                     if(in_array($pengajuan->status, ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala_sbum', 'menunggu_pic'])) {
-                                        $statusClass = 'pending';
                                         if($pengajuan->status == 'menunggu_dosen') $statusText = 'Menunggu Dosen';
                                         elseif($pengajuan->status == 'menunggu_admin') $statusText = 'Menunggu Admin';
                                         elseif($pengajuan->status == 'menunggu_kepala_sbum') $statusText = 'Menunggu Ka. SBUM';
                                         elseif($pengajuan->status == 'menunggu_pic') $statusText = 'Menunggu PIC';
                                     } elseif($pengajuan->status == 'disetujui' || $pengajuan->status == 'selesai') {
-                                        $statusClass = 'approved';
+                                        $statusClass = 'bg-[#dcebd7] text-[#557b58] border-[#b7d2b6]';
                                         $statusText = 'Disetujui';
-                                    } elseif($pengajuan->status == 'ditolak') {
-                                        $statusClass = 'rejected';
-                                        $statusText = 'Ditolak';
-                                    } elseif($pengajuan->status == 'batal') {
-                                        $statusClass = 'rejected';
-                                        $statusText = 'Dibatalkan';
+                                    } elseif($pengajuan->status == 'ditolak' || $pengajuan->status == 'batal') {
+                                        $statusClass = 'bg-red-100 text-red-700 border-red-200';
+                                        $statusText = $pengajuan->status == 'batal' ? 'Dibatalkan' : 'Ditolak';
                                     }
                                 @endphp
-                                <span class="status-pill {{ $statusClass }}">{{ $statusText }}</span>
+                                <span class="inline-flex items-center justify-center px-4 py-2 rounded-full text-[13px] font-bold border {{ $statusClass }}">
+                                    {{ $statusText }}
+                                </span>
                             </div>
 
-                            <div class="progress-row">
-                                <div class="progress-line active"></div>
-                                <div class="progress-line {{ in_array($pengajuan->status, ['menunggu_admin', 'menunggu_kepala_sbum', 'menunggu_pic', 'disetujui']) ? 'active' : '' }}"></div>
-                                <div class="progress-line {{ in_array($pengajuan->status, ['menunggu_kepala_sbum', 'menunggu_pic', 'disetujui']) ? 'active' : '' }}"></div>
+                            <!-- Modern Progress Bar with Tailwind -->
+                            <div class="grid grid-cols-3 gap-3.5 items-center mt-4">
+                                <div class="h-2 rounded-full relative overflow-hidden bg-[#557a67]"></div>
+                                <div class="h-2 rounded-full relative overflow-hidden {{ in_array($pengajuan->status, ['menunggu_admin', 'menunggu_kepala_sbum', 'menunggu_pic', 'disetujui', 'selesai']) ? 'bg-[#557a67]' : 'bg-[#d9d4cc]' }}"></div>
+                                <div class="h-2 rounded-full relative overflow-hidden {{ in_array($pengajuan->status, ['menunggu_kepala_sbum', 'menunggu_pic', 'disetujui', 'selesai']) ? 'bg-[#557a67]' : 'bg-[#d9d4cc]' }}"></div>
                             </div>
-                            <div class="progress-labels" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 6px; font-size: 13px; color: #7a847e;">
+                            <div class="grid grid-cols-3 gap-3.5 mt-2 text-[12px] md:text-[13px] font-medium text-[#7a847e]">
                                 <span>Diajukan</span>
-                                <span>Dosen</span>
-                                <span>Admin</span>
+                                <span class="text-center">Dosen</span>
+                                <span class="text-right">Admin</span>
                             </div>
                         </div>
                         @empty
-                        <div class="note-card">
-                            <p class="note-text text-center py-3">Belum ada data pengajuan terbaru.</p>
+                        <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-[22px] flex items-center justify-center min-h-[120px]">
+                            <p class="text-[#7c8580] m-0">Belum ada data pengajuan terbaru.</p>
                         </div>
                         @endforelse
 
-                        <div class="note-card mt-3">
-                            <div class="note-title">Catatan Dashboard</div>
-                            <p class="note-text">
-                                Dashboard ini memantau aktivitas peminjaman dan ketersediaan fasilitas Anda secara real-time.
+                        <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-5 mt-2 bg-gradient-to-r from-[#fffdfa] to-[#f5f9f6]">
+                            <div class="text-[16px] text-[#5e6662] mb-2 font-bold flex items-center gap-2">
+                                <i class="bi bi-info-circle text-[#587a68]"></i> Catatan Dashboard
+                            </div>
+                            <p class="text-[#7c8580] leading-relaxed m-0 text-[14px]">
+                                Dashboard ini memantau aktivitas peminjaman dan ketersediaan fasilitas Anda secara <span class="font-bold">real-time</span>.
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
-</div>
 @endsection

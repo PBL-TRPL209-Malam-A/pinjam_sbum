@@ -1,9 +1,9 @@
-@extends('layout.admin')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Kelola Data Fasilitas')
-@section('page_heading', 'Admin SBUM')
 
-@section('admin_content')
+
+
+@section('content')
 <style>
     /* ... Style CSS Anda tetap sama seperti sebelumnya (dipertahankan semuanya) ... */
     .banner-card { background-color: #edf2ea; border: 1px solid #dfe7dc; border-radius: 1.5rem; }
@@ -59,7 +59,7 @@
 
 <div class="card border-0 rounded-4 p-3 mb-4" style="background: #fffdfa; border: 1px solid var(--line) !important;">
     <div class="d-flex flex-wrap gap-3 align-items-center">
-        <button class="btn btn-main" data-bs-toggle="modal" data-bs-target="#tambahFasilitasModal">Tambah Fasilitas</button>
+        <button class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" data-bs-toggle="modal" data-bs-target="#tambahFasilitasModal">Tambah Fasilitas</button>
         <select class="btn-soft-filter" id="statusFilter" style="appearance: none; -webkit-appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 fill=%22%235f6963%22 viewBox=%220 0 16 16%22><path d=%22M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z%22/></svg>'); background-repeat: no-repeat; background-position: right 1.25rem center; background-size: 10px; cursor: pointer;">
             <option value="all">Status Keaktifan (Semua)</option>
             <option value="Aktif">Aktif</option>
@@ -71,25 +71,25 @@
 
 <div class="mb-3 fw-semibold text-secondary">Tabel Fasilitas</div>
 <div class="custom-table mb-4">
-    <table class="table table-borderless mb-0">
+    <table class="w-full text-left border-collapse">
         <thead>
             <tr>
-                <th>Nama</th>
-                <th>Kode Ruangan</th>
-                <th>Foto</th>
-                <th>Kategori</th>
-                <th>Kapasitas</th>
-                <th>PIC Ruangan</th>
-                <th>Status</th>
-                <th>Aksi</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Nama</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kode Ruangan</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Foto</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kategori</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kapasitas</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">PIC Ruangan</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Status</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Aksi</th>
             </tr>
         </thead>
         <tbody>
             @forelse($ruangan as $r)
             <tr>
                 <td class="fw-semibold">{{ $r->nama_ruangan }}</td>
-                <td><code>{{ $r->kode_ruangan }}</code></td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><code>{{ $r->kode_ruangan }}</code></td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($r->foto_ruangan)
                         <img src="{{ asset($r->foto_ruangan) }}" alt="{{ $r->nama_ruangan }}" class="img-fluid rounded-3" style="width: 150px; height: 150px; object-fit: cover; max-width: 100%;">
                     @else
@@ -98,10 +98,10 @@
                         </div>
                     @endif
                 </td>
-                <td>Ruangan</td>
-                <td>{{ $r->kapasitas ?? 'N/A' }} orang</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Ruangan</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $r->kapasitas ?? 'N/A' }} orang</td>
                 <td class="fw-semibold">{{ $r->pic ? $r->pic->nama_lengkap : '-' }}</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($r->status_ruangan == 'tersedia')
                         <span class="badge-aktif">Aktif</span>
                     @elseif($r->status_ruangan == 'maintenance')
@@ -110,7 +110,7 @@
                         <span class="badge-nonaktif">Tidak Aktif</span>
                     @endif
                 </td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="action-btn-group">
                         <button class="btn btn-detail" data-bs-toggle="modal" data-bs-target="#detailFasilitasModal{{ $r->id_ruangan }}">Detail</button>
                         <button class="btn btn-ubah" data-bs-toggle="modal" data-bs-target="#editFasilitasModal{{ $r->id_ruangan }}">Ubah</button>
@@ -125,15 +125,15 @@
             @empty
             <tr>
                 <td class="fw-semibold">Aula Utama Polibatam</td>
-                <td><code>kode-ruangan</code></td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><code>kode-ruangan</code></td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">Tidak ada foto</div>
                 </td>
-                <td>Ruangan</td>
-                <td>250 orang</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Ruangan</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">250 orang</td>
                 <td class="fw-semibold">-</td>
-                <td><span class="badge-aktif">Aktif</span></td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><span class="badge-aktif">Aktif</span></td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="action-btn-group">
                         <button class="btn btn-ubah">Ubah</button>
                         <button class="btn btn-hapus">Hapus</button>
@@ -229,7 +229,7 @@
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                    <button type="submit" class="btn btn-main" style="border-radius:0.75rem;">Simpan Fasilitas</button>
+                    <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Fasilitas</button>
                 </div>
             </form>
         </div>
@@ -327,7 +327,7 @@
                     </div>
                     <div class="modal-footer border-0 pt-0">
                         <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                        <button type="submit" class="btn btn-main" style="border-radius:0.75rem;">Simpan Perubahan</button>
+                        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
@@ -403,7 +403,7 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-main" data-bs-dismiss="modal" style="border-radius:0.75rem; min-width: 100px;">Tutup</button>
+                    <button type="button" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" data-bs-dismiss="modal" style="border-radius:0.75rem; min-width: 100px;">Tutup</button>
                 </div>
             </div>
         </div>

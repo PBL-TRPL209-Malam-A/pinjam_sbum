@@ -171,12 +171,47 @@ class KepalaSbumController extends Controller
     }
 
     // F-019, F-020: Laporan
-    public function laporanIndex()
+    public function laporanIndex(\Illuminate\Http\Request $request)
     {
-        $peminjaman = Peminjaman::with(['user', 'ruangan', 'barang'])->get();
+        $query = Peminjaman::with(['user', 'ruangan', 'barang']);
+
+        if ($request->filled('periode')) {
+            $yearMonth = explode('-', $request->periode);
+            if (count($yearMonth) == 2) {
+                $query->whereYear('tanggal_pengajuan', $yearMonth[0])
+                      ->whereMonth('tanggal_pengajuan', $yearMonth[1]);
+            }
+        }
+
+        if ($request->filled('jenis')) {
+            $query->where('jenis_peminjaman', $request->jenis);
+        }
+
+        $peminjaman = $query->get();
         
-        $ruangan = \App\Models\PengembalianRuangan::with(['peminjaman.user', 'peminjaman.ruangan'])->get();
-        $barang = \App\Models\PengembalianBarang::with(['peminjaman.user', 'peminjaman.barang'])->get();
+        $ruanganQuery = \App\Models\PengembalianRuangan::with(['peminjaman.user', 'peminjaman.ruangan']);
+        $barangQuery = \App\Models\PengembalianBarang::with(['peminjaman.user', 'peminjaman.barang']);
+
+        if ($request->filled('periode')) {
+            $yearMonth = explode('-', $request->periode);
+            if (count($yearMonth) == 2) {
+                $ruanganQuery->whereYear('tanggal_pengembalian', $yearMonth[0])
+                             ->whereMonth('tanggal_pengembalian', $yearMonth[1]);
+                $barangQuery->whereYear('tanggal', $yearMonth[0])
+                            ->whereMonth('tanggal', $yearMonth[1]);
+            }
+        }
+
+        if ($request->filled('jenis')) {
+            if ($request->jenis === 'barang') {
+                $ruanganQuery->whereRaw('1 = 0'); // Return empty for ruangan if jenis is barang
+            } elseif ($request->jenis === 'ruangan') {
+                $barangQuery->whereRaw('1 = 0'); // Return empty for barang if jenis is ruangan
+            }
+        }
+
+        $ruangan = $ruanganQuery->get();
+        $barang = $barangQuery->get();
 
         $pengembalian = collect();
 
@@ -231,10 +266,31 @@ class KepalaSbumController extends Controller
         ));
     }
 
-    public function laporanPengembalian()
+    public function laporanPengembalian(\Illuminate\Http\Request $request)
     {
-        $ruangan = \App\Models\PengembalianRuangan::with(['peminjaman.user', 'peminjaman.ruangan'])->get();
-        $barang = \App\Models\PengembalianBarang::with(['peminjaman.user', 'peminjaman.barang'])->get();
+        $ruanganQuery = \App\Models\PengembalianRuangan::with(['peminjaman.user', 'peminjaman.ruangan']);
+        $barangQuery = \App\Models\PengembalianBarang::with(['peminjaman.user', 'peminjaman.barang']);
+
+        if ($request->filled('periode')) {
+            $yearMonth = explode('-', $request->periode);
+            if (count($yearMonth) == 2) {
+                $ruanganQuery->whereYear('tanggal_pengembalian', $yearMonth[0])
+                             ->whereMonth('tanggal_pengembalian', $yearMonth[1]);
+                $barangQuery->whereYear('tanggal', $yearMonth[0])
+                            ->whereMonth('tanggal', $yearMonth[1]);
+            }
+        }
+
+        if ($request->filled('jenis')) {
+            if ($request->jenis === 'barang') {
+                $ruanganQuery->whereRaw('1 = 0');
+            } elseif ($request->jenis === 'ruangan') {
+                $barangQuery->whereRaw('1 = 0');
+            }
+        }
+
+        $ruangan = $ruanganQuery->get();
+        $barang = $barangQuery->get();
 
         $pengembalian = collect();
 
@@ -296,9 +352,23 @@ class KepalaSbumController extends Controller
         return view('kepalasbum.profil');
     }
 
-    public function exportPeminjamanExcel()
+    public function exportPeminjamanExcel(\Illuminate\Http\Request $request)
     {
-        $peminjaman = Peminjaman::with(['user', 'ruangan', 'barang'])->get();
+        $query = Peminjaman::with(['user', 'ruangan', 'barang']);
+
+        if ($request->filled('periode')) {
+            $yearMonth = explode('-', $request->periode);
+            if (count($yearMonth) == 2) {
+                $query->whereYear('tanggal_pengajuan', $yearMonth[0])
+                      ->whereMonth('tanggal_pengajuan', $yearMonth[1]);
+            }
+        }
+
+        if ($request->filled('jenis')) {
+            $query->where('jenis_peminjaman', $request->jenis);
+        }
+
+        $peminjaman = $query->get();
         
         header("Content-type: application/vnd.ms-excel");
         header("Content-Disposition: attachment; filename=Laporan_Peminjaman.xls");
@@ -338,10 +408,31 @@ class KepalaSbumController extends Controller
         exit;
     }
 
-    public function exportPengembalianExcel()
+    public function exportPengembalianExcel(\Illuminate\Http\Request $request)
     {
-        $ruangan = \App\Models\PengembalianRuangan::with(['peminjaman.user', 'peminjaman.ruangan'])->get();
-        $barang = \App\Models\PengembalianBarang::with(['peminjaman.user', 'peminjaman.barang'])->get();
+        $ruanganQuery = \App\Models\PengembalianRuangan::with(['peminjaman.user', 'peminjaman.ruangan']);
+        $barangQuery = \App\Models\PengembalianBarang::with(['peminjaman.user', 'peminjaman.barang']);
+
+        if ($request->filled('periode')) {
+            $yearMonth = explode('-', $request->periode);
+            if (count($yearMonth) == 2) {
+                $ruanganQuery->whereYear('tanggal_pengembalian', $yearMonth[0])
+                             ->whereMonth('tanggal_pengembalian', $yearMonth[1]);
+                $barangQuery->whereYear('tanggal', $yearMonth[0])
+                            ->whereMonth('tanggal', $yearMonth[1]);
+            }
+        }
+
+        if ($request->filled('jenis')) {
+            if ($request->jenis === 'barang') {
+                $ruanganQuery->whereRaw('1 = 0');
+            } elseif ($request->jenis === 'ruangan') {
+                $barangQuery->whereRaw('1 = 0');
+            }
+        }
+
+        $ruangan = $ruanganQuery->get();
+        $barang = $barangQuery->get();
         
         $pengembalian = collect();
         

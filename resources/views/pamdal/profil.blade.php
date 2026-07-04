@@ -1,9 +1,9 @@
-@extends('layout.pamdal')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Pamdal')
-@section('page_heading', 'Profil Pamdal')
 
-@section('pamdal_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -87,12 +87,12 @@
 
 <!-- Banner Card -->
 <div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Kelola biodata dan akun Pamdal</h2>
+    <div class="p-6 lg:p-8">
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Kelola biodata dan akun Pamdal</h2>
         <p class="mb-4 text-secondary">
             Halaman ini menampilkan informasi profil, data operasional, kontak, dan ringkasan aktivitas pengawasan keamanan dan ketertiban.
         </p>
-        <button class="btn btn-main" data-bs-toggle="modal" data-bs-target="#editProfilModal">Edit Profil</button>
+        <button class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" data-bs-toggle="modal" data-bs-target="#editProfilModal">Edit Profil</button>
     </div>
 </div>
 
@@ -174,26 +174,26 @@
         <div class="row g-3">
             <div class="col-6">
                 <div class="stat-box">
-                    <div class="stat-label">Hari Kerja</div>
-                    <div class="stat-num">24</div>
+                    <div class="text-xs font-medium text-[#7d8781] leading-tight">Hari Kerja</div>
+                    <div class="text-3xl font-bold text-[#466454]">24</div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="stat-box">
-                    <div class="stat-label">Pengawasan Selesai</div>
-                    <div class="stat-num">14</div>
+                    <div class="text-xs font-medium text-[#7d8781] leading-tight">Pengawasan Selesai</div>
+                    <div class="text-3xl font-bold text-[#466454]">14</div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="stat-box">
-                    <div class="stat-label">Kendala</div>
-                    <div class="stat-num">2</div>
+                    <div class="text-xs font-medium text-[#7d8781] leading-tight">Kendala</div>
+                    <div class="text-3xl font-bold text-[#466454]">2</div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="stat-box">
-                    <div class="stat-label">Total Log</div>
-                    <div class="stat-num">16</div>
+                    <div class="text-xs font-medium text-[#7d8781] leading-tight">Total Log</div>
+                    <div class="text-3xl font-bold text-[#466454]">16</div>
                 </div>
             </div>
         </div>
@@ -231,7 +231,7 @@
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                    <button type="submit" class="btn btn-main" style="border-radius:0.75rem;">Simpan Perubahan</button>
+                    <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Perubahan</button>
                 </div>
             </form>
         </div>

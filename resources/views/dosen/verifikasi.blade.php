@@ -1,9 +1,9 @@
-@extends('layout.dosen')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Dashboard')
-@section('page_heading', 'Verifikasi Peminjaman')
 
-@section('dosen_content')
+
+
+@section('content')
 <style>
     .banner-dosen {
         background-color: #edf2ea;
@@ -82,16 +82,16 @@
         <p class="text-secondary small mb-3">
             Tinjau permohonan mahasiswa, verifikasi kelayakan kegiatan, lalu lanjutkan ke keputusan.
         </p>
-        <button class="btn btn-main">Buka Antrian</button>
+        <button class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block">Buka Antrian</button>
     </div>
     <div class="d-flex gap-3">
-        <div class="stat-pill">
-            <div class="stat-num">{{ $menungguVerifikasi }}</div>
-            <div class="stat-label">Perlu<br>Review</div>
+        <div class="bg-white border border-[#e6ddd2] rounded-2xl px-6 py-3 flex items-center gap-4 min-w-[140px]">
+            <div class="text-3xl font-bold text-[#466454]">{{ $menungguVerifikasi }}</div>
+            <div class="text-xs font-medium text-[#7d8781] leading-tight">Perlu<br>Review</div>
         </div>
-        <div class="stat-pill">
-            <div class="stat-num">{{ $ditolakRevisi }}</div>
-            <div class="stat-label">Butuh<br>Revisi</div>
+        <div class="bg-white border border-[#e6ddd2] rounded-2xl px-6 py-3 flex items-center gap-4 min-w-[140px]">
+            <div class="text-3xl font-bold text-[#466454]">{{ $ditolakRevisi }}</div>
+            <div class="text-xs font-medium text-[#7d8781] leading-tight">Butuh<br>Revisi</div>
         </div>
     </div>
 </div>
@@ -101,19 +101,19 @@
 <div class="row g-4 mb-4">
     @forelse($peminjaman as $item)
     <div class="col-md-6">
-        <div class="req-card">
+        <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 flex flex-col justify-between h-full hover:-translate-y-1 transition duration-300">
             <div>
                 <div class="req-header">
                     <div>
                         <h4 class="fs-5 fw-bold text-main mb-0">{{ $item->user->nama_lengkap ?? 'Mahasiswa' }}</h4>
-                        <div class="text-secondary small">{{ $item->user->nim ?? '-' }} · Kegiatan</div>
+                        <div class="text-[#7d8781] text-sm">{{ $item->user->nim ?? '-' }} · Kegiatan</div>
                     </div>
                     @if($item->status == 'menunggu_dosen')
                         <span class="badge-menunggu">Menunggu Verifikasi</span>
                     @elseif($item->status == 'revisi')
                         <span class="badge-revisi">Butuh Revisi</span>
                     @else
-                        <span class="badge-pending-soft" style="background-color: #f7f6f2; color: #55615b; font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.85rem; border-radius: 2rem;">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
+                        <span class="inline-block bg-[#f3f4f6] text-[#4b5563] text-[13px] font-semibold px-4 py-1.5 rounded-full" style="background-color: #f7f6f2; color: #55615b; font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.85rem; border-radius: 2rem;">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
                     @endif
                 </div>
                 <div class="mb-3">
@@ -204,9 +204,9 @@
                         </div>
                     </div>
                     <div class="modal-footer border-0 pt-0 d-flex gap-2">
-                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='verif_dosen'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=true; document.getElementById('check2_{{ $item->id_peminjaman }}').required=true;" class="btn btn-main flex-grow-1" style="border-radius:0.75rem;">Setujui</button>
+                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='verif_dosen'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=true; document.getElementById('check2_{{ $item->id_peminjaman }}').required=true;" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Setujui</button>
                         <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='revisi'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=false; document.getElementById('check2_{{ $item->id_peminjaman }}').required=false;" class="btn btn-warning text-white flex-grow-1" style="border-radius:0.75rem; background-color:#dca134; border:none;">Minta Revisi</button>
-                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='ditolak'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=false; document.getElementById('check2_{{ $item->id_peminjaman }}').required=false;" class="btn btn-danger flex-grow-1" style="border-radius:0.75rem; background-color:#c95b50; border:none;">Tolak</button>
+                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='ditolak'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=false; document.getElementById('check2_{{ $item->id_peminjaman }}').required=false;" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem; background-color:#c95b50; border:none;">Tolak</button>
                     </div>
                 </form>
             </div>

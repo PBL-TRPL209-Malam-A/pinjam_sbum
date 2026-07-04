@@ -1,9 +1,9 @@
-@extends('layout.pic')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'PIC · Konfirmasi Kesiapan Fasilitas')
-@section('page_heading', 'Dashboard')
 
-@section('pic_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -99,9 +99,9 @@
 
 <!-- Banner Card -->
 <div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Pastikan fasilitas siap sebelum digunakan</h2>
-        <p class="mb-0 text-secondary text-wrap">
+    <div class="p-6 lg:p-8">
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Pastikan fasilitas siap sebelum digunakan</h2>
+        <p class="text-[#7d8781] max-w-2xl">
             PIC memeriksa kondisi ruangan dan perlengkapan, lalu menyimpan status siap atau kendala.
         </p>
     </div>
@@ -164,7 +164,7 @@
                                 {{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $item->jam_mulai ? str_replace(':', '.', substr($item->jam_mulai, 0, 5)) : '08.00' }} - {{ $item->jam_selesai ? str_replace(':', '.', substr($item->jam_selesai, 0, 5)) : '12.00' }}
                             </div>
                         </div>
-                        <span class="badge-verifikasi-soft">Menunggu PIC</span>
+                        <span class="inline-block bg-[#fcf1d3] text-[#7d6006] text-[13px] font-semibold px-4 py-1.5 rounded-full">Menunggu PIC</span>
                     </div>
                 </div>
             @empty

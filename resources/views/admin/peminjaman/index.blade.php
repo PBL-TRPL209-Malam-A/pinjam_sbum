@@ -1,9 +1,9 @@
-@extends('layout.admin')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Kelola Data Peminjaman')
-@section('page_heading', 'Admin SBUM')
 
-@section('admin_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -116,19 +116,19 @@
 <!-- Table Area -->
 <div class="mb-3 fw-semibold text-secondary">Riwayat Peminjaman</div>
 <div id="peminjamanTableContainer" class="custom-table mb-3" style="overflow-x: auto; background: #fffdfa;">
-    <table class="table table-borderless mb-0">
+    <table class="w-full text-left border-collapse">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Tanggal & Waktu</th>
-                <th>Peminjam</th>
-                <th>Fasilitas</th>
-                <th>Nama Acara</th>
-                <th>Keterangan Acara</th>
-                <th>Dosen PJ</th>
-                <th>PIC Fasilitas</th>
-                <th>Status</th>
-                <th>Tahapan Persetujuan</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">ID</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Tanggal & Waktu</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Peminjam</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Fasilitas</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Nama Acara</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Keterangan Acara</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Dosen PJ</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">PIC Fasilitas</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Status</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Tahapan Persetujuan</th>
             </tr>
         </thead>
         <tbody>
@@ -190,19 +190,19 @@
                 @endphp
                 <tr>
                     <td class="fw-semibold">SBUM-2026-{{ str_pad($p->id_peminjaman, 4, '0', STR_PAD_LEFT) }}</td>
-                    <td>
+                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                         <span class="fw-semibold">{{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }}</span>
                         <br>
                         <span class="small text-muted">{{ $p->jam_mulai ? substr($p->jam_mulai, 0, 5) : '08:00' }} - {{ $p->jam_selesai ? substr($p->jam_selesai, 0, 5) : '12:00' }}</span>
                     </td>
-                    <td>{{ $p->user->nama_lengkap ?? '-' }}</td>
-                    <td>
+                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->user->nama_lengkap ?? '-' }}</td>
+                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                         {{ $p->ruangan->isNotEmpty() ? $p->ruangan->first()->nama_ruangan : ($p->barang->isNotEmpty() ? $p->barang->first()->nama_barang : '-') }}
                     </td>
-                    <td>{{ $p->nama_kegiatan }}</td>
-                    <td>{{ $p->keterangan ?: '-' }}</td>
-                    <td>{{ $p->dosen->nama_lengkap ?? '-' }}</td>
-                    <td>
+                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->nama_kegiatan }}</td>
+                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->keterangan ?: '-' }}</td>
+                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->dosen->nama_lengkap ?? '-' }}</td>
+                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                         @if($p->ruangan->isNotEmpty())
                             {{ $p->ruangan->first()->pic->nama_lengkap ?? '-' }}
                         @elseif($p->barang->isNotEmpty())
@@ -211,7 +211,7 @@
                             -
                         @endif
                     </td>
-                    <td>
+                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                         @if($p->status === 'proses_pengembalian')
                             <a href="{{ route('pic.pengembalian', ['selected_id' => $p->id_peminjaman]) }}" class="text-decoration-none">
                                 <span class="{{ $badgeClass }}">{{ $statusText }}</span>

@@ -1,9 +1,9 @@
-@extends('layout.admin')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Verifikasi Pengembalian')
-@section('page_heading', 'Admin SBUM')
 
-@section('admin_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -343,8 +343,8 @@
         }
         $picCatatan = $picVer ? $picVer->catatan : 'Pemeriksaan Kesiapan oleh PIC';
 
-        $fotoUrl = $fotoPath ? (str_starts_with($fotoPath, 'storage/') ? asset($fotoPath) : asset('storage/' . $fotoPath)) : null;
-        $dokumenUrl = $dokumenPath ? (str_starts_with($dokumenPath, 'storage/') ? asset($dokumenPath) : asset('storage/' . $dokumenPath)) : null;
+        $fotoUrl = $fotoPath ? asset($fotoPath) : null;
+        $dokumenUrl = $dokumenPath ? asset($dokumenPath) : null;
     @endphp
     <!-- Detail Modal for Return SBUM -->
     <div class="modal fade" id="detailModalReturn{{ $item->id_pengembalian }}{{ $item->kategori }}" tabindex="-1" aria-hidden="true">

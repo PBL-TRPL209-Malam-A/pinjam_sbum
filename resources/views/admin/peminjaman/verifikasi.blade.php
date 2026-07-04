@@ -1,9 +1,9 @@
-@extends('layout.admin')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Verifikasi Pengajuan Peminjaman')
-@section('page_heading', 'Admin SBUM')
 
-@section('admin_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;

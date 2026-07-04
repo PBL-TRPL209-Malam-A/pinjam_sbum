@@ -1,293 +1,127 @@
-@extends('layout.app')
+@extends('layout.auth')
 
 @section('content')
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background-color: #1f1f1f;
-    }
+<div class="min-h-screen flex flex-col items-center justify-center py-10 px-4 relative">
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-black/40 z-10"></div>
+        <img src="{{ asset('images/gedungpoli.jpg') }}" alt="Background" class="w-full h-full object-cover">
+    </div>
 
-    .register-page {
-        min-height: 100vh;
-        background: #1f1f1f;
-        padding: 18px;
-    }
-
-    .page-label {
-        color: #7a7a7a;
-        font-size: 18px;
-        font-weight: 700;
-        margin-bottom: 14px;
-    }
-
-    .register-wrapper {
-        position: relative;
-        min-height: calc(100vh - 70px);
-        background: #f6f1e9;
-        border-radius: 24px;
-        border: 1px solid #e8dfd1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        padding: 40px 20px;
-    }
-
-    .register-card {
-        position: relative;
-        z-index: 2;
-        width: 100%;
-        max-width: 560px;
-        background: #fbfaf7;
-        border-radius: 24px;
-        padding: 38px 34px 28px;
-        border: 1px solid #e8e0d7;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-    }
-
-    .register-title {
-        text-align: center;
-        font-size: 28px;
-        font-weight: 800;
-        color: #2c3a32;
-        margin-bottom: 8px;
-    }
-
-    .register-subtitle {
-        text-align: center;
-        color: #8d918c;
-        font-size: 14px;
-        margin-bottom: 28px;
-    }
-
-    .custom-label {
-        font-size: 13px;
-        font-weight: 700;
-        color: #2f2f2f;
-        margin-bottom: 8px;
-    }
-
-    .custom-label span {
-        color: #d68a52;
-    }
-
-    .custom-input-group {
-        border: 1px solid #ddd7ce;
-        border-radius: 10px;
-        overflow: hidden;
-        background: #fff;
-    }
-
-    .custom-input-group .input-group-text {
-        background: #fff;
-        border: 0;
-        color: #9aa195;
-        padding-left: 12px;
-        padding-right: 6px;
-    }
-
-    .custom-input-group .form-control {
-        border: 0;
-        box-shadow: none !important;
-        height: 46px;
-        font-size: 14px;
-        color: #333;
-    }
-
-    .custom-input-group .form-control::placeholder {
-        color: #a5a5a5;
-    }
-
-    .register-btn {
-        height: 46px;
-        border: 0;
-        border-radius: 10px;
-        background-color: #476f5b;
-        color: #fff;
-        font-size: 16px;
-        font-weight: 700;
-    }
-
-    .register-btn:hover {
-        background-color: #3e624f;
-        color: #fff;
-    }
-
-    .login-text {
-        margin-top: 12px;
-        text-align: center;
-        font-size: 13px;
-        color: #8a8a8a;
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
-    .login-text a {
-        text-decoration: none;
-        color: #476f5b;
-        font-weight: 700;
-    }
-
-    .bg-circle {
-        position: absolute;
-        border-radius: 50%;
-        background: #eef4ee;
-        z-index: 1;
-    }
-
-    .circle-top {
-        width: 170px;
-        height: 170px;
-        top: 22px;
-        right: 62px;
-    }
-
-    .circle-bottom {
-        width: 220px;
-        height: 220px;
-        left: -35px;
-        bottom: -55px;
-    }
-
-    @media (max-width: 768px) {
-        .register-card {
-            padding: 28px 20px 22px;
-        }
-
-        .register-title {
-            font-size: 24px;
-        }
-
-        .circle-top {
-            width: 120px;
-            height: 120px;
-            right: -20px;
-        }
-
-        .circle-bottom {
-            width: 150px;
-            height: 150px;
-            left: -40px;
-            bottom: -40px;
-        }
-    }
-</style>
-
-<div class="register-page">
-    <div class="page-label">Register Mahasiswa</div>
-
-    <div class="register-wrapper">
-        <div class="bg-circle circle-top"></div>
-        <div class="bg-circle circle-bottom"></div>
-
-        <div class="register-card">
-            <h1 class="register-title">Daftar Akun</h1>
-            <p class="register-subtitle">Lengkapi biodata singkat untuk membuat akun mahasiswa</p>
+    <div class="w-full max-w-[560px] bg-white/50 backdrop-blur-xl border border-white/60 rounded-[24px] p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative overflow-hidden mx-auto z-20">
+        
+        <div class="relative z-10">
+            <h1 class="text-[28px] font-extrabold text-center text-gray-900 mb-2">Daftar Akun</h1>
+            <p class="text-center text-gray-800 font-medium text-[14px] mb-8">Lengkapi biodata singkat untuk membuat akun peminjam</p>
 
             <form action="{{ route('register.post') }}" method="POST">
                 @csrf
 
-                @if(session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @if($errors->any())
+                    <div class="bg-red-50 text-red-600 p-4 rounded-xl mb-6 text-sm border border-red-100">
+                        <ul class="list-disc pl-5 mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
 
-                <div class="mb-3">
-                    <label class="form-label custom-label">Nama Lengkap <span>*</span></label>
-                    <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-person"></i>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label class="block text-[13px] font-bold text-gray-900 mb-2">Nama Lengkap <span class="text-[#d68a52]">*</span></label>
+                        <div class="flex items-center bg-white/90 border border-white/60 rounded-[10px] overflow-hidden focus-within:border-[#466454] transition">
+                            <span class="pl-3.5 pr-2.5 text-[#9aa195]">
+                                <i class="bi bi-person"></i>
+                            </span>
+                            <input
+                                type="text"
+                                name="nama_lengkap"
+                                class="w-full h-[46px] pr-3 bg-transparent outline-none text-[#333] text-[14px] placeholder:text-[#a5a5a5]"
+                                placeholder="Nama lengkap Anda"
+                                value="{{ old('nama_lengkap') }}" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[13px] font-bold text-gray-900 mb-2">NIM / NIK / NIP <span class="text-[#d68a52]">*</span></label>
+                        <div class="flex items-center bg-white/90 border border-white/60 rounded-[10px] overflow-hidden focus-within:border-[#466454] transition">
+                            <span class="pl-3.5 pr-2.5 text-[#9aa195]">
+                                <i class="bi bi-card-text"></i>
+                            </span>
+                            <input
+                                type="text"
+                                name="nim_nik"
+                                class="w-full h-[46px] pr-3 bg-transparent outline-none text-[#333] text-[14px] placeholder:text-[#a5a5a5]"
+                                placeholder="Nomor identitas"
+                                value="{{ old('nim_nik') }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-[13px] font-bold text-gray-900 mb-2">No. Telepon / WhatsApp <span class="text-[#d68a52]">*</span></label>
+                    <div class="flex items-center bg-white/90 border border-white/60 rounded-[10px] overflow-hidden focus-within:border-[#466454] transition">
+                        <span class="pl-3.5 pr-2.5 text-[#9aa195]">
+                            <i class="bi bi-telephone"></i>
                         </span>
                         <input
                             type="text"
-                            name="nama_lengkap"
-                            class="form-control"
-                            placeholder="Masukkan nama lengkap"
-                            value="{{ old('nama_lengkap') }}"
-                            autocomplete="name">
+                            name="no_telepon"
+                            class="w-full h-[46px] pr-3 bg-transparent outline-none text-[#333] text-[14px] placeholder:text-[#a5a5a5]"
+                            placeholder="Contoh: 081234567890"
+                            value="{{ old('no_telepon') }}" required>
                     </div>
-                    @error('nama_lengkap')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label custom-label">NIM <span>*</span></label>
-                    <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-card-text"></i>
-                        </span>
-                        <input
-                            type="text"
-                            name="nim"
-                            class="form-control"
-                            placeholder="Masukkan NIM"
-                            value="{{ old('nim') }}">
-                    </div>
-                    @error('nim')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label custom-label">Email <span>*</span></label>
-                    <div class="input-group custom-input-group">
-                        <span class="input-group-text">
+                <div class="mb-5">
+                    <label class="block text-[13px] font-bold text-gray-900 mb-2">Alamat Email <span class="text-[#d68a52]">*</span></label>
+                    <div class="flex items-center bg-white/90 border border-white/60 rounded-[10px] overflow-hidden focus-within:border-[#466454] transition">
+                        <span class="pl-3.5 pr-2.5 text-[#9aa195]">
                             <i class="bi bi-envelope"></i>
                         </span>
                         <input
                             type="email"
                             name="email"
-                            class="form-control"
-                            placeholder="Masukkan email"
-                            value="{{ old('email') }}"
-                            autocomplete="email">
-                    </div>
-                    @error('email')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label custom-label">Password <span>*</span></label>
-                    <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-lock"></i>
-                        </span>
-                        <input
-                            type="password"
-                            name="password"
-                            class="form-control"
-                            placeholder="Masukkan password"
-                            autocomplete="new-password">
-                    </div>
-                    @error('password')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label custom-label">Konfirmasi Password <span>*</span></label>
-                    <div class="input-group custom-input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-lock"></i>
-                        </span>
-                        <input
-                            type="password"
-                            name="password_confirmation"
-                            class="form-control"
-                            placeholder="Masukkan konfirmasi password"
-                            autocomplete="new-password">
+                            class="w-full h-[46px] pr-3 bg-transparent outline-none text-[#333] text-[14px] placeholder:text-[#a5a5a5]"
+                            placeholder="Email aktif"
+                            value="{{ old('email') }}" required>
                     </div>
                 </div>
 
-                <button type="submit" class="btn register-btn w-100">Daftar</button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                    <div>
+                        <label class="block text-[13px] font-bold text-gray-900 mb-2">Password <span class="text-[#d68a52]">*</span></label>
+                        <div class="flex items-center bg-white/90 border border-white/60 rounded-[10px] overflow-hidden focus-within:border-[#466454] transition">
+                            <span class="pl-3.5 pr-2.5 text-[#9aa195]">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                            <input
+                                type="password"
+                                name="password"
+                                class="w-full h-[46px] pr-3 bg-transparent outline-none text-[#333] text-[14px] placeholder:text-[#a5a5a5]"
+                                placeholder="Min. 6 karakter" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[13px] font-bold text-gray-900 mb-2">Konfirmasi Password <span class="text-[#d68a52]">*</span></label>
+                        <div class="flex items-center bg-white/90 border border-white/60 rounded-[10px] overflow-hidden focus-within:border-[#466454] transition">
+                            <span class="pl-3.5 pr-2.5 text-[#9aa195]">
+                                <i class="bi bi-shield-lock"></i>
+                            </span>
+                            <input
+                                type="password"
+                                name="password_confirmation"
+                                class="w-full h-[46px] pr-3 bg-transparent outline-none text-[#333] text-[14px] placeholder:text-[#a5a5a5]"
+                                placeholder="Ulangi password" required>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="login-text">
+                <button type="submit" class="w-full h-[46px] bg-[#476f5b] hover:bg-[#3e624f] text-white rounded-[10px] font-bold text-[16px] transition">Daftar Sekarang</button>
+
+                <div class="mt-4 text-center text-[13px] text-gray-800 font-medium flex items-center justify-center gap-2">
                     <span>Sudah punya akun?</span>
-                    <a href="{{ route('login') }}">Masuk</a>
+                    <a href="{{ route('login') }}" class="text-[#2b3a31] font-bold hover:underline">Masuk</a>
                 </div>
             </form>
         </div>

@@ -1,9 +1,9 @@
-@extends('layout.admin')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Atur Jadwal Penggunaan Fasilitas')
-@section('page_heading', 'Admin SBUM')
 
-@section('admin_content')
+
+
+@section('content')
 <!-- Tailwind CSS v3 CDN with Preflight disabled to prevent style overrides -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -142,7 +142,7 @@
             </div>
             <div class="modal-footer border-0 pt-0">
                 <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                <button type="button" id="btnAddSlotConfirm" class="btn btn-main" style="border-radius:0.75rem;">Tambah Slot</button>
+                <button type="button" id="btnAddSlotConfirm" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Tambah Slot</button>
             </div>
         </div>
     </div>

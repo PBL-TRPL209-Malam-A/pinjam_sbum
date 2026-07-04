@@ -1,9 +1,9 @@
-@extends('layout.admin')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Admin')
-@section('page_heading', 'Profil Admin')
 
-@section('admin_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -92,7 +92,7 @@
         <p class="mb-4 text-secondary">
             Halaman ini menampilkan informasi profil, data operasional, kontak, dan ringkasan aktivitas admin.
         </p>
-        <button class="btn btn-main" data-bs-toggle="modal" data-bs-target="#editProfilModal">Edit Profil</button>
+        <button class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" data-bs-toggle="modal" data-bs-target="#editProfilModal">Edit Profil</button>
     </div>
 </div>
 
@@ -231,7 +231,7 @@
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                    <button type="submit" class="btn btn-main" style="border-radius:0.75rem;">Simpan Perubahan</button>
+                    <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Perubahan</button>
                 </div>
             </form>
         </div>

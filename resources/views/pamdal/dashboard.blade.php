@@ -1,90 +1,56 @@
-@extends('layout.pamdal')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Pamdal')
-@section('page_heading', 'Dashboard Pamdal')
 
-@section('pamdal_content')
-<style>
-    .banner-card {
-        background-color: #edf2ea;
-        border: 1px solid #dfe7dc;
-        border-radius: 1.5rem;
-    }
-    .metric-card {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.5rem;
-        padding: 1.5rem;
-        transition: 0.3s;
-    }
-    .metric-card:hover {
-        transform: translateY(-2px);
-    }
-    .metric-title {
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: var(--text-muted);
-        margin-bottom: 0.5rem;
-    }
-    .metric-value {
-        font-size: 2.25rem;
-        font-weight: 700;
-        color: var(--text-main);
-    }
-    .quick-list-card {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.5rem;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-</style>
+
+
+@section('content')
+
 
 <!-- Banner Card -->
-<div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Selamat Datang, {{ auth()->user()->nama_lengkap }}!</h2>
-        <p class="mb-4 text-secondary text-wrap" style="max-width: 650px;">
+<div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[24px] p-6 lg:p-8 mb-6 shadow-sm">
+    <div class="p-6 lg:p-8">
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Selamat Datang, {{ auth()->user()->nama_lengkap }}!</h2>
+        <p class="text-[#7d8781] max-w-2xl mb-6">
             Pantau pengawasan ketertiban fasilitas, kelayakan penggunaan kapasitas, dan pelaporan kendala secara langsung untuk memastikan ketertiban area kampus.
         </p>
-        <a href="{{ route('pamdal.monitoring') }}" class="btn btn-main d-inline-flex align-items-center justify-content-center">Buka Monitoring</a>
+        <a href="{{ route('pamdal.monitoring') }}" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block">Buka Monitoring</a>
     </div>
 </div>
 
 <!-- Metrics Row -->
-<div class="row g-4 mb-4">
-    <div class="col-6 col-md-3">
-        <div class="metric-card">
-            <div class="metric-title">Kegiatan Hari Ini</div>
-            <div class="metric-value">{{ $todaySchedules }}</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div>
+        <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 hover:-translate-y-1 transition duration-300">
+            <div class="text-sm font-medium text-[#7d8781] mb-2">Kegiatan Hari Ini</div>
+            <div class="text-4xl font-bold text-[#466454]">{{ $todaySchedules }}</div>
         </div>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="metric-card">
-            <div class="metric-title">Total Pengawasan</div>
-            <div class="metric-value">{{ $totalPengawasan }}</div>
+    <div>
+        <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 hover:-translate-y-1 transition duration-300">
+            <div class="text-sm font-medium text-[#7d8781] mb-2">Total Pengawasan</div>
+            <div class="text-4xl font-bold text-[#466454]">{{ $totalPengawasan }}</div>
         </div>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="metric-card">
-            <div class="metric-title">Aman Terkendali</div>
-            <div class="metric-value">{{ $amanTerkendali }}</div>
+    <div>
+        <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 hover:-translate-y-1 transition duration-300">
+            <div class="text-sm font-medium text-[#7d8781] mb-2">Aman Terkendali</div>
+            <div class="text-4xl font-bold text-[#466454]">{{ $amanTerkendali }}</div>
         </div>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="metric-card">
-            <div class="metric-title">Ada Kendala</div>
-            <div class="metric-value">{{ $adaKendala }}</div>
+    <div>
+        <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 hover:-translate-y-1 transition duration-300">
+            <div class="text-sm font-medium text-[#7d8781] mb-2">Ada Kendala</div>
+            <div class="text-4xl font-bold text-[#466454]">{{ $adaKendala }}</div>
         </div>
     </div>
 </div>
 
 <!-- Info Card -->
-<div class="quick-list-card">
-    <h3 class="fs-5 fw-semibold text-main mb-3">Tugas Utama Pamdal</h3>
-    <ul class="text-secondary small ps-3">
-        <li class="mb-2">Memantau ketertiban dan kapasitas ruangan saat kegiatan mahasiswa berlangsung.</li>
-        <li class="mb-2">Mencatat temuan lapangan dan melaporkan status pengawasan ke dalam sistem.</li>
+<div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 mb-6">
+    <h3 class="text-xl font-bold text-[#466454] mb-3">Tugas Utama Pamdal</h3>
+    <ul class="text-[#7d8781] text-sm list-disc list-inside space-y-2">
+        <li>Memantau ketertiban dan kapasitas ruangan saat kegiatan mahasiswa berlangsung.</li>
+        <li>Mencatat temuan lapangan dan melaporkan status pengawasan ke dalam sistem.</li>
         <li>Menjaga keamanan area sekitar fasilitas selama waktu peminjaman.</li>
     </ul>
 </div>

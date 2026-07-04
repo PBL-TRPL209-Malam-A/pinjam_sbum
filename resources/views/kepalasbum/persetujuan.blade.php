@@ -1,306 +1,20 @@
-@extends('layout.app')
+@extends('layout.app_tailwind')
 
 @section('content')
-<style>
-    :root{
-        --page-bg:#f5f2ec;
-        --panel-bg:#fcfbf8;
-        --soft-bg:#edf2ea;
-        --line:#e7ddd1;
-        --text-main:#33403b;
-        --text-muted:#7b8681;
-        --primary-main:#5d7d6b;
-        --primary-dark:#496454;
-        --soft-green:#dfe9df;
-        --yellow-bg:#fdf5e6;
-        --yellow-text:#b8860b;
-        --yellow-line:#f5deb3;
-        --red-main:#b85c5c;
-        --red-dark:#9c4a4a;
-    }
+<div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+    <div>
+        <div class="text-[19px] text-[#7d8781] mb-1">Kepala SBUM</div>
+        <h1 class="text-[32px] font-bold text-[#466454] leading-tight mb-2">Persetujuan Akhir Peminjaman</h1>
+    </div>
+</div>
 
-    body{
-        background:var(--page-bg);
-        color:var(--text-main);
-        font-family: Arial, Helvetica, sans-serif;
-    }
 
-    .app-shell{
-        background:var(--panel-bg);
-        border:1px solid var(--line);
-        border-radius:2rem;
-        overflow:hidden;
-        min-height:calc(100vh - 3rem);
-    }
 
-    .sidebar-panel{
-        min-height:100%;
-        border-right:1px solid var(--line);
-        background:rgba(255,255,255,.25);
-    }
-
-    .logo-box{
-        display:flex;
-        align-items:center;
-        gap:.75rem;
-    }
-
-    .logo-box img{
-        width:48px;
-        height:auto;
-        object-fit:contain;
-    }
-
-    .logo-text{
-        font-size:1.2rem;
-        font-weight:700;
-        color:#55615b;
-    }
-
-    .sidebar-link{
-        color:#55615b;
-        border-radius:1rem;
-        padding:.95rem 1rem;
-        text-decoration:none;
-        display:flex;
-        align-items:center;
-        gap:.75rem;
-        transition:.2s ease;
-    }
-
-    .sidebar-link:hover{
-        background:#f3f6f3;
-        color:var(--primary-dark);
-    }
-
-    .sidebar-link.active{
-        background:#edf3ee;
-        color:var(--primary-dark);
-        font-weight:600;
-    }
-
-    .sidebar-dot{
-        width:1.35rem;
-        height:1.35rem;
-        border-radius:50%;
-        background:#dfe7df;
-        flex-shrink:0;
-    }
-
-    .page-caption{
-        color:var(--text-muted);
-        font-size:1.25rem;
-        margin-bottom:1.2rem;
-    }
-
-    .page-heading{
-        font-size:1.35rem;
-        font-weight:500;
-        margin-bottom:0;
-    }
-
-    .search-input{
-        height:3rem;
-        border-radius:1rem;
-        border:1px solid #ddd2c5;
-        background:#fffdfa;
-    }
-
-    .search-dot{
-        width:2.25rem;
-        height:2.25rem;
-        background:#cfdacd;
-        border-radius:50%;
-        flex-shrink:0;
-    }
-
-    .intro-card{
-        background:var(--soft-bg);
-        border:1px solid #dfe7dc;
-        border-radius:1.75rem;
-    }
-
-    .btn-main{
-        background:var(--primary-main);
-        border:0;
-        border-radius:1rem;
-        min-width:140px;
-        height:44px;
-        color:#fff;
-        font-weight:600;
-        transition: 0.2s;
-    }
-
-    .btn-main:hover{
-        background:var(--primary-dark);
-        color:#fff;
-    }
-
-    .logout-btn{
-        background:transparent;
-        border:0;
-        color:#5b635f;
-        padding:0;
-        font-size:16px;
-    }
-
-    .proposal-card {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.5rem;
-        padding: 1.5rem;
-        margin-bottom: 1.25rem;
-    }
-
-    .badge-pending-final {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 130px;
-        height: 32px;
-        border-radius: 999px;
-        background: var(--yellow-bg);
-        color: var(--yellow-text);
-        border: 1px solid var(--yellow-line);
-        font-size: 0.85rem;
-        font-weight: 500;
-    }
-
-    .btn-action-detail {
-        background: #fffdfa;
-        border: 1px solid #dfd4c8;
-        border-radius: 0.75rem;
-        height: 40px;
-        min-width: 90px;
-        color: #5f6963;
-        font-weight: 600;
-        transition: 0.2s;
-    }
-
-    .btn-action-detail:hover {
-        background: #f7f2eb;
-    }
-
-    .btn-action-approve {
-        background: var(--primary-main);
-        border: 0;
-        border-radius: 0.75rem;
-        height: 40px;
-        min-width: 90px;
-        color: #fff;
-        font-weight: 600;
-        transition: 0.2s;
-    }
-
-    .btn-action-approve:hover {
-        background: var(--primary-dark);
-    }
-
-    .btn-action-reject {
-        background: var(--red-main);
-        border: 0;
-        border-radius: 0.75rem;
-        height: 40px;
-        min-width: 90px;
-        color: #fff;
-        font-weight: 600;
-        transition: 0.2s;
-    }
-
-    .btn-action-reject:hover {
-        background: var(--red-dark);
-    }
-
-    .decision-card {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.5rem;
-        padding: 1.5rem;
-        margin-top: 2rem;
-    }
-
-    .soft-textarea {
-        width: 100%;
-        border-radius: 1rem;
-        border: 1px solid #dfd4c8;
-        background: #fffdfa;
-        padding: 1rem;
-        font-size: 0.95rem;
-        color: var(--text-main);
-        outline: none;
-        resize: none;
-    }
-
-    .soft-textarea:focus {
-        border-color: var(--primary-main);
-    }
-
-    @media (max-width: 991.98px){
-        .sidebar-panel{
-            border-right:0;
-            border-bottom:1px solid var(--line);
-        }
-    }
-</style>
-
-<div class="container-fluid py-3 py-lg-4 px-2 px-lg-4">
-    <div class="app-shell">
-        <div class="row g-0">
-            <aside class="col-lg-3 col-xl-2 sidebar-panel p-3 p-lg-4 d-flex flex-column">
-                <div class="logo-box mb-4">
-                    <img src="{{ asset('assets/images/logo-sbum-icon.png') }}" alt="SBUM">
-                    <div class="logo-text">SBUM</div>
-                </div>
-
-                <nav class="nav flex-column gap-2">
-                    <a href="{{ route('kepalasbum.dashboard') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span><span>Dashboard</span>
-                    </a>
-                    <a href="{{ route('kepalasbum.staff') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span><span>Data Staff SBUM</span>
-                    </a>
-                    <a href="{{ route('kepalasbum.persetujuan') }}" class="sidebar-link active">
-                        <span class="sidebar-dot"></span><span>Persetujuan Akhir</span>
-                    </a>
-                    <a href="{{ route('kepalasbum.laporan') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span><span>Laporan Peminjaman</span>
-                    </a>
-                    <a href="{{ route('kepalasbum.laporan-pengembalian') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span><span>Laporan Pengembalian</span>
-                    </a>
-                    <a href="{{ route('kepalasbum.profil') }}" class="sidebar-link">
-                        <span class="sidebar-dot"></span><span>Profil</span>
-                    </a>
-                </nav>
-
-                <div class="mt-auto pt-5 pt-lg-4">
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="logout-btn">Logout</button>
-                    </form>
-                </div>
-            </aside>
-
-            <main class="col-lg-9 col-xl-10 p-3 p-md-4 p-xl-4">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
-                    <div>
-                        <div class="page-caption">Kepala SBUM</div>
-                        <h1 class="page-heading">Persetujuan Akhir Peminjaman</h1>
-                    </div>
-
-                    <div class="d-flex align-items-center gap-3 w-100 w-md-auto">
-                        <input type="text" class="form-control search-input" placeholder="Cari data">
-                        <div class="search-dot"></div>
-                    </div>
-                </div>
-
-                <div class="card intro-card shadow-none mb-4">
-                    <div class="card-body p-4 p-lg-5">
-                        <h2 class="fs-5 fw-semibold mb-3">Final approval untuk pengajuan yang sudah diverifikasi</h2>
-                        <p class="mb-0 text-secondary">
-                            Kepala SBUM memberikan persetujuan akhir setelah verifikasi dosen dan admin selesai.
-                        </p>
-                    </div>
+                <div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[24px] p-6 lg:p-8 mb-6 shadow-sm">
+                    <h2 class="text-xl font-semibold text-[#466454] mb-2">Final approval untuk pengajuan yang sudah diverifikasi</h2>
+                    <p class="mb-0 text-[#54615b]">
+                        Kepala SBUM memberikan persetujuan akhir setelah verifikasi dosen dan admin selesai.
+                    </p>
                 </div>
 
                 @if(session('success'))
@@ -309,98 +23,21 @@
                     </div>
                 @endif
 
-                <h2 class="fs-5 fw-bold mb-3 text-secondary">Daftar Pengajuan Final</h2>
+                <h2 class="text-xl font-bold mb-4 text-[#466454]">Daftar Pengajuan Final</h2>
 
-                @forelse($peminjaman as $p)
-                <div class="proposal-card">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3">
-                        <div>
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="fw-bold text-secondary">SBUM-2026-{{ str_pad($p->id_peminjaman, 4, '0', STR_PAD_LEFT) }}</span>
-                                <span class="badge-pending-final">Menunggu Final</span>
-                            </div>
-                            <h3 class="fs-5 fw-bold mb-2">{{ $p->nama_kegiatan }}</h3>
-                            <p class="mb-1 text-secondary" style="font-size: 0.95rem;">
-                                Peminjam: <strong class="text-dark">{{ $p->user->nama_lengkap ?? '-' }}</strong> - 
-                                <span>
-                                    @if($p->ruangan->isNotEmpty())
-                                        {{ $p->ruangan->first()->nama_ruangan }}
-                                    @elseif($p->barang->isNotEmpty())
-                                        {{ $p->barang->first()->nama_barang }}
-                                    @else
-                                        Fasilitas
-                                    @endif
-                                </span>
-                            </p>
-                            <p class="mb-0 text-secondary" style="font-size: 0.9rem;">
-                                {{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} - {{ $p->jam_mulai ? str_replace(':', '.', substr($p->jam_mulai, 0, 5)) : '08.00' }} - {{ $p->jam_selesai ? str_replace(':', '.', substr($p->jam_selesai, 0, 5)) : '12.00' }} - 
-                                <span class="text-success fw-medium">Sudah diverifikasi dosen dan admin</span>
-                            </p>
-                        </div>
-
-                        <div class="d-flex gap-2 align-self-md-center">
-                            <button class="btn-action-detail" data-bs-toggle="modal" data-bs-target="#detailModal{{ $p->id_peminjaman }}">Detail</button>
-                            <form action="{{ route('kepalasbum.verifikasi', $p->id_peminjaman) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="status_pengajuan" value="disetujui_kepala">
-                                <input type="hidden" name="catatan" id="catatan_setuju_{{ $p->id_peminjaman }}" value="">
-                                <button type="submit" class="btn-action-approve" onclick="document.getElementById('catatan_setuju_{{ $p->id_peminjaman }}').value = document.getElementById('catatan_keputusan').value">Setujui</button>
-                            </form>
-                            <form action="{{ route('kepalasbum.verifikasi', $p->id_peminjaman) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="status_pengajuan" value="ditolak">
-                                <input type="hidden" name="catatan" id="catatan_tolak_{{ $p->id_peminjaman }}" value="">
-                                <button type="submit" class="btn-action-reject" onclick="document.getElementById('catatan_tolak_{{ $p->id_peminjaman }}').value = document.getElementById('catatan_keputusan').value">Tolak</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal Detail -->
-                <div class="modal fade" id="detailModal{{ $p->id_peminjaman }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #fffdfa; border: 1px solid var(--line) !important;">
-                            <div class="modal-header border-0 pb-0" style="background-color: #f7f3eb; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                                <h5 class="modal-title fw-bold text-main">Detail Permohonan</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body p-4 text-start">
-                                <div class="mb-3">
-                                    <span class="text-muted small d-block">Nama Kegiatan</span>
-                                    <span class="fw-bold text-main fs-5">{{ $p->nama_kegiatan }}</span>
+                <div class="grid gap-4 mb-6">
+                    @forelse($peminjaman as $p)
+                    <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 hover:-translate-y-1 transition duration-300">
+                        <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                            <div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="font-bold text-[#7d8781]">SBUM-2026-{{ str_pad($p->id_peminjaman, 4, '0', STR_PAD_LEFT) }}</span>
+                                    <span class="inline-block bg-[#fdf5e6] text-[#b8860b] border border-[#f5deb3] text-[13px] font-semibold px-3 py-1 rounded-full">Menunggu Final</span>
                                 </div>
-                                <div class="mb-3">
-                                    <span class="text-muted small d-block">Peminjam</span>
-                                    <span class="fw-semibold text-main">{{ $p->user->nama_lengkap ?? '-' }}</span>
-                                </div>
-                                <div class="mb-3">
-                                     <span class="text-muted small d-block">Tanggal & Waktu</span>
-                                     <span class="fw-semibold text-main">{{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $p->jam_mulai ? str_replace(':', '.', substr($p->jam_mulai, 0, 5)) : '08.00' }} - {{ $p->jam_selesai ? str_replace(':', '.', substr($p->jam_selesai, 0, 5)) : '12.00' }}</span>
-                                 </div>
-                                @if($p->ruangan->count() > 0)
-                                <div class="mb-3">
-                                    <span class="text-muted small d-block">Jumlah Peserta</span>
-                                    <span class="fw-semibold text-main">{{ $p->jumlah_peserta ?? 0 }} orang</span>
-                                </div>
-                                @elseif($p->barang->count() > 0)
-                                <div class="mb-3">
-                                    <span class="text-muted small d-block">Jumlah Barang</span>
-                                    <span class="fw-semibold text-main">{{ $p->barang->first()->pivot->jumlah ?? 1 }} Buah</span>
-                                </div>
-                                @endif
-                                <div class="mb-3">
-                                    <span class="text-muted small d-block">Keterangan Acara</span>
-                                    <span class="fw-semibold text-main">{{ $p->keterangan ?: 'Tidak ada keterangan tambahan.' }}</span>
-                                </div>
-                                <div class="mb-3">
-                                    <span class="text-muted small d-block">Dosen Penanggung Jawab</span>
-                                    <span class="fw-semibold text-main">{{ $p->dosen ? $p->dosen->nama_lengkap : 'N/A' }}</span>
-                                </div>
-                                <div class="mb-3">
-                                    <span class="text-muted small d-block">Nama Ruangan / Barang</span>
-                                    <span class="fw-semibold text-main">
+                                <h3 class="text-lg font-bold text-[#466454] mb-2">{{ $p->nama_kegiatan }}</h3>
+                                <p class="mb-1 text-[#7d8781] text-sm">
+                                    Peminjam: <strong class="text-[#33403b]">{{ $p->user->nama_lengkap ?? '-' }}</strong> - 
+                                    <span>
                                         @if($p->ruangan->isNotEmpty())
                                             {{ $p->ruangan->first()->nama_ruangan }}
                                         @elseif($p->barang->isNotEmpty())
@@ -409,50 +46,125 @@
                                             Fasilitas
                                         @endif
                                     </span>
-                                </div>
-                                <div class="mb-3">
-                                    <span class="text-muted small d-block">PIC Fasilitas</span>
-                                    <span class="fw-semibold text-main">
-                                        @if($p->ruangan->isNotEmpty() && $p->ruangan->first()->pic)
-                                            {{ $p->ruangan->first()->pic->nama_lengkap }}
-                                        @elseif($p->barang->isNotEmpty() && $p->barang->first()->pic)
-                                            {{ $p->barang->first()->pic->nama_lengkap }}
-                                        @else
-                                            N/A
-                                        @endif
-                                    </span>
-                                </div>
-                                <div class="mb-3">
-                                    <span class="text-muted small d-block">Admin Verifikator</span>
-                                    <span class="fw-semibold text-main">
-                                        @php
-                                            $adminVerif = $p->verifikasi->firstWhere('peran_verifikasi', 'Admin SBUM');
-                                        @endphp
-                                        {{ $adminVerif && $adminVerif->verifikator ? $adminVerif->verifikator->nama_lengkap : 'N/A' }}
-                                    </span>
-                                </div>
+                                </p>
+                                <p class="mb-0 text-[#7d8781] text-sm">
+                                    {{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} - {{ $p->jam_mulai ? str_replace(':', '.', substr($p->jam_mulai, 0, 5)) : '08.00' }} - {{ $p->jam_selesai ? str_replace(':', '.', substr($p->jam_selesai, 0, 5)) : '12.00' }} - 
+                                    <span class="text-green-600 font-medium">Sudah diverifikasi dosen dan admin</span>
+                                </p>
                             </div>
-                            <div class="modal-footer border-0 pt-0">
-                                <button type="button" class="btn btn-main w-100" data-bs-dismiss="modal" style="border-radius:0.75rem;">Tutup</button>
+
+                            <div class="flex gap-2">
+                                <button class="border border-[#e6ddd2] text-[#466454] px-4 py-2 rounded-xl font-semibold hover:bg-[#f5f2ec] transition" data-bs-toggle="modal" data-bs-target="#detailModal{{ $p->id_peminjaman }}">Detail</button>
+                                <form action="{{ route('kepalasbum.verifikasi', $p->id_peminjaman) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status_pengajuan" value="disetujui_kepala">
+                                    <input type="hidden" name="catatan" id="catatan_setuju_{{ $p->id_peminjaman }}" value="">
+                                    <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition" onclick="document.getElementById('catatan_setuju_{{ $p->id_peminjaman }}').value = document.getElementById('catatan_keputusan').value">Setujui</button>
+                                </form>
+                                <form action="{{ route('kepalasbum.verifikasi', $p->id_peminjaman) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status_pengajuan" value="ditolak">
+                                    <input type="hidden" name="catatan" id="catatan_tolak_{{ $p->id_peminjaman }}" value="">
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold transition" onclick="document.getElementById('catatan_tolak_{{ $p->id_peminjaman }}').value = document.getElementById('catatan_keputusan').value">Tolak</button>
+                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
-                @empty
-                <div class="card p-5 text-center text-secondary border-0" style="background:#fffdfa; border-radius:1.5rem; border: 1px solid var(--line) !important;">
-                    Tidak ada pengajuan yang membutuhkan persetujuan akhir.
-                </div>
-                @endforelse
 
-                <div class="decision-card">
-                    <h3 class="fs-6 fw-bold mb-1 text-secondary">Catatan Keputusan</h3>
-                    <p class="mb-3 text-secondary" style="font-size: 0.9rem;">
+                    <!-- Modal Detail -->
+                    <div class="modal fade" id="detailModal{{ $p->id_peminjaman }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content rounded-[24px] border-0 shadow-lg">
+                                <div class="modal-header border-b border-[#e6ddd2] p-6 bg-[#f7f3eb] rounded-t-[24px]">
+                                    <h5 class="text-xl font-bold text-[#466454]">Detail Permohonan</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-6 text-start">
+                                    <div class="mb-4">
+                                        <span class="text-[#7d8781] text-sm block mb-1">Nama Kegiatan</span>
+                                        <span class="font-bold text-[#466454] text-lg">{{ $p->nama_kegiatan }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <span class="text-[#7d8781] text-sm block mb-1">Peminjam</span>
+                                        <span class="font-semibold text-[#54615b]">{{ $p->user->nama_lengkap ?? '-' }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                         <span class="text-[#7d8781] text-sm block mb-1">Tanggal & Waktu</span>
+                                         <span class="font-semibold text-[#54615b]">{{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }} · {{ $p->jam_mulai ? str_replace(':', '.', substr($p->jam_mulai, 0, 5)) : '08.00' }} - {{ $p->jam_selesai ? str_replace(':', '.', substr($p->jam_selesai, 0, 5)) : '12.00' }}</span>
+                                     </div>
+                                    @if($p->ruangan->count() > 0)
+                                    <div class="mb-4">
+                                        <span class="text-[#7d8781] text-sm block mb-1">Jumlah Peserta</span>
+                                        <span class="font-semibold text-[#54615b]">{{ $p->jumlah_peserta ?? 0 }} orang</span>
+                                    </div>
+                                    @elseif($p->barang->count() > 0)
+                                    <div class="mb-4">
+                                        <span class="text-[#7d8781] text-sm block mb-1">Jumlah Barang</span>
+                                        <span class="font-semibold text-[#54615b]">{{ $p->barang->first()->pivot->jumlah ?? 1 }} Buah</span>
+                                    </div>
+                                    @endif
+                                    <div class="mb-4">
+                                        <span class="text-[#7d8781] text-sm block mb-1">Keterangan Acara</span>
+                                        <span class="font-semibold text-[#54615b]">{{ $p->keterangan ?: 'Tidak ada keterangan tambahan.' }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <span class="text-[#7d8781] text-sm block mb-1">Dosen Penanggung Jawab</span>
+                                        <span class="font-semibold text-[#54615b]">{{ $p->dosen ? $p->dosen->nama_lengkap : 'N/A' }}</span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <span class="text-[#7d8781] text-sm block mb-1">Nama Ruangan / Barang</span>
+                                        <span class="font-semibold text-[#54615b]">
+                                            @if($p->ruangan->isNotEmpty())
+                                                {{ $p->ruangan->first()->nama_ruangan }}
+                                            @elseif($p->barang->isNotEmpty())
+                                                {{ $p->barang->first()->nama_barang }}
+                                            @else
+                                                Fasilitas
+                                            @endif
+                                        </span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <span class="text-[#7d8781] text-sm block mb-1">PIC Fasilitas</span>
+                                        <span class="font-semibold text-[#54615b]">
+                                            @if($p->ruangan->isNotEmpty() && $p->ruangan->first()->pic)
+                                                {{ $p->ruangan->first()->pic->nama_lengkap }}
+                                            @elseif($p->barang->isNotEmpty() && $p->barang->first()->pic)
+                                                {{ $p->barang->first()->pic->nama_lengkap }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <span class="text-[#7d8781] text-sm block mb-1">Admin Verifikator</span>
+                                        <span class="font-semibold text-[#54615b]">
+                                            @php
+                                                $adminVerif = $p->verifikasi->firstWhere('peran_verifikasi', 'Admin SBUM');
+                                            @endphp
+                                            {{ $adminVerif && $adminVerif->verifikator ? $adminVerif->verifikator->nama_lengkap : 'N/A' }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0 p-6 pt-0">
+                                    <button type="button" class="bg-[#466454] hover:bg-[#395244] text-white px-5 py-2.5 rounded-[14px] font-semibold transition" data-bs-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-8 text-center text-[#7d8781]">
+                        Tidak ada pengajuan yang membutuhkan persetujuan akhir.
+                    </div>
+                    @endforelse
+                </div>
+
+                <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 mb-6">
+                    <h3 class="text-xl font-bold text-[#466454] mb-2">Catatan Keputusan</h3>
+                    <p class="text-[#7d8781] text-sm mb-4">
                         Tambahkan alasan persetujuan atau penolakan agar proses audit dan histori keputusan jelas.
                     </p>
-                    <textarea id="catatan_keputusan" rows="3" class="soft-textarea" placeholder="Contoh: Disetujui karena sesuai agenda kampus dan kapasitas ruangan mencukupi."></textarea>
+                    <textarea id="catatan_keputusan" rows="3" class="w-full bg-[#fcfbf8] border border-[#e6ddd2] rounded-[16px] p-4 text-[#54615b] focus:outline-none focus:border-[#466454] transition" placeholder="Contoh: Disetujui karena sesuai agenda kampus dan kapasitas ruangan mencukupi."></textarea>
                 </div>
-            </main>
-        </div>
-    </div>
-</div>
 @endsection

@@ -1,9 +1,9 @@
-@extends('layout.admin')
+@extends('layout.app_tailwind')
 
-@section('page_caption', 'Kelola Data Pengembalian')
-@section('page_heading', 'Admin SBUM')
 
-@section('admin_content')
+
+
+@section('content')
 <style>
     .banner-card {
         background-color: #edf2ea;
@@ -73,30 +73,30 @@
 <!-- Table Area -->
 <div class="mb-3 fw-semibold text-secondary">Data Pengembalian</div>
 <div class="custom-table mb-4">
-    <table class="table table-borderless mb-0">
+    <table class="w-full text-left border-collapse">
         <thead>
             <tr>
-                <th>ID Return</th>
-                <th>Fasilitas</th>
-                <th>Peminjam</th>
-                <th>Kondisi</th>
-                <th>Aksi</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">ID Return</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Fasilitas</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Peminjam</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kondisi</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Aksi</th>
             </tr>
         </thead>
         <tbody>
             @forelse($pengembalian as $p)
             <tr>
                 <td class="fw-semibold">RET-2026-{{ str_pad($p->id_pengembalian, 4, '0', STR_PAD_LEFT) }}</td>
-                <td>{{ $p->peminjaman->nama_fasilitas ?? '-' }}</td>
-                <td>{{ $p->peminjaman->user->nama_lengkap ?? '-' }}</td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->peminjaman->nama_fasilitas ?? '-' }}</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->peminjaman->user->nama_lengkap ?? '-' }}</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($p->status_pengembalian == 'pending')
                         <span class="badge-pemeriksaan">Perlu Pemeriksaan</span>
                     @else
                         <span class="badge-baik">Baik</span>
                     @endif
                 </td>
-                <td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <a href="{{ route('admin.verifikasi-pengembalian') }}?selected_id={{ $p->id_pengembalian }}&kategori={{ $p->kategori }}" class="btn btn-detail-outline">Detail</a>
                 </td>
             </tr>
@@ -104,17 +104,17 @@
             <!-- Realistic fallback content matching Image 4 -->
             <tr>
                 <td class="fw-semibold">RET-2026-0062</td>
-                <td>Aula Utama</td>
-                <td>Moch Azmi</td>
-                <td><span class="badge-baik">Baik</span></td>
-                <td><a href="{{ route('admin.verifikasi-pengembalian') }}" class="btn btn-detail-outline">Detail</a></td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Aula Utama</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Moch Azmi</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><span class="badge-baik">Baik</span></td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><a href="{{ route('admin.verifikasi-pengembalian') }}" class="btn btn-detail-outline">Detail</a></td>
             </tr>
             <tr>
                 <td class="fw-semibold">RET-2026-0061</td>
-                <td>Projector Epson</td>
-                <td>Grexia</td>
-                <td><span class="badge-pemeriksaan">Perlu Pemeriksaan</span></td>
-                <td><a href="{{ route('admin.verifikasi-pengembalian') }}" class="btn btn-detail-outline">Detail</a></td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Projector Epson</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Grexia</td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><span class="badge-pemeriksaan">Perlu Pemeriksaan</span></td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><a href="{{ route('admin.verifikasi-pengembalian') }}" class="btn btn-detail-outline">Detail</a></td>
             </tr>
             @endforelse
         </tbody>

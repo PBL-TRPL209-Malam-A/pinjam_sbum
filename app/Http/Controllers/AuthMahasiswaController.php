@@ -473,7 +473,7 @@ class AuthMahasiswaController extends Controller
             'catatan' => 'nullable|string',
             'tanggal_selesai_aktual' => 'required|date',
             'jam_selesai_aktual' => 'required|date_format:H:i',
-            'foto_kondisi' => 'required|file|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'foto_kondisi' => 'required|file|image|mimes:jpeg,png,jpg,webp|max:10240',
             'dokumen_administrasi' => 'required|file|mimes:pdf|max:10240',
         ]);
 
@@ -481,12 +481,18 @@ class AuthMahasiswaController extends Controller
 
         $fotoPath = null;
         if ($request->hasFile('foto_kondisi')) {
-            $fotoPath = $request->file('foto_kondisi')->store('pengembalian/foto', 'public');
+            $file = $request->file('foto_kondisi');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/pengembalian/foto'), $fileName);
+            $fotoPath = 'uploads/pengembalian/foto/' . $fileName;
         }
 
         $docPath = null;
         if ($request->hasFile('dokumen_administrasi')) {
-            $docPath = $request->file('dokumen_administrasi')->store('pengembalian/dokumen', 'public');
+            $file = $request->file('dokumen_administrasi');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/pengembalian/dokumen'), $fileName);
+            $docPath = 'uploads/pengembalian/dokumen/' . $fileName;
         }
 
         DB::beginTransaction();
@@ -610,6 +616,27 @@ class AuthMahasiswaController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('mahasiswa.pdf_bukti', compact('peminjaman'));
         
         return $pdf->download('Bukti_Peminjaman_' . $peminjaman->id_peminjaman . '.pdf');
+    }
+
+    public function eksporPdfPengembalian($id)
+    {
+        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
+            abort(403, 'Akses hanya untuk mahasiswa.');
+        }
+
+        $peminjaman = \App\Models\Peminjaman::with(['user', 'ruangan', 'barang', 'pengembalian'])
+            ->where('user_id', auth()->id())
+            ->where('id_peminjaman', $id)
+            ->firstOrFail();
+            
+        if (!$peminjaman->pengembalian) {
+            abort(404, 'Data pengembalian belum ada.');
+        }
+
+        // Load view into PDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('mahasiswa.pdf_bukti_pengembalian', compact('peminjaman'));
+        
+        return $pdf->download('Bukti_Pengembalian_' . $peminjaman->id_peminjaman . '.pdf');
     }
 
     public function logout(Request $request)
