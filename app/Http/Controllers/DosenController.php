@@ -57,7 +57,7 @@ class DosenController extends Controller
 
         $status = $request->status_pengajuan;
         if ($status === 'verif_dosen' || $status === 'disetujui') {
-            $status = 'menunggu_admin';
+            $status = 'menunggu_pic';
         } elseif ($status === 'revisi') {
             $status = 'revisi';
         }
@@ -73,7 +73,7 @@ class DosenController extends Controller
                 'id_verifikator' => auth()->user()->id_user,
                 'peran_verifikasi' => 'Dosen',
                 'jenis_verifikasi' => 'Persetujuan Akademik',
-                'status' => $status === 'menunggu_admin' ? 'disetujui' : ($status === 'ditolak' ? 'ditolak' : 'pending'),
+                'status' => $status === 'menunggu_pic' ? 'disetujui' : ($status === 'ditolak' ? 'ditolak' : 'pending'),
                 'catatan' => $request->catatan ?? 'Diverifikasi oleh Dosen',
                 'tanggal' => now(),
             ]);

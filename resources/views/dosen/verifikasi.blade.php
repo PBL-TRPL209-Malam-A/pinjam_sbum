@@ -198,15 +198,18 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Catatan Dosen</label>
-                            <textarea name="catatan" class="form-control" rows="3" placeholder="Tambahkan catatan akademik..." style="border-radius: 0.75rem; border-color: #dfd4c8;"></textarea>
+                        <div class="mb-3" id="rejectNoteContainer{{ $item->id_peminjaman }}" style="display: none;">
+                            <label class="form-label text-danger fw-bold">Alasan Penolakan <span class="text-danger">*</span></label>
+                            <textarea name="catatan" id="catatanField{{ $item->id_peminjaman }}" class="form-control border-danger" rows="3" placeholder="Wajib: Berikan alasan kenapa pengajuan ini ditolak..." style="border-radius: 0.75rem;"></textarea>
                         </div>
                     </div>
-                    <div class="modal-footer border-0 pt-0 d-flex gap-2">
+                    <div class="modal-footer border-0 pt-0 d-flex gap-2" id="actionButtonsContainer{{ $item->id_peminjaman }}">
                         <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='verif_dosen'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=true; document.getElementById('check2_{{ $item->id_peminjaman }}').required=true;" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Setujui</button>
-                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='revisi'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=false; document.getElementById('check2_{{ $item->id_peminjaman }}').required=false;" class="btn btn-warning text-white flex-grow-1" style="border-radius:0.75rem; background-color:#dca134; border:none;">Minta Revisi</button>
-                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='ditolak'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=false; document.getElementById('check2_{{ $item->id_peminjaman }}').required=false;" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem; background-color:#c95b50; border:none;">Tolak</button>
+                        <button type="button" onclick="showRejectNote({{ $item->id_peminjaman }})" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem; background-color:#c95b50; border:none;">Tolak</button>
+                    </div>
+                    <div class="modal-footer border-0 pt-0 d-flex gap-2" id="confirmRejectContainer{{ $item->id_peminjaman }}" style="display: none;">
+                        <button type="button" onclick="cancelReject({{ $item->id_peminjaman }})" class="btn btn-light" style="border-radius:0.75rem; color:#7d8781;">Batal</button>
+                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='ditolak'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=false; document.getElementById('check2_{{ $item->id_peminjaman }}').required=false;" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem; background-color:#c95b50; border:none;">Konfirmasi Tolak</button>
                     </div>
                 </form>
             </div>
@@ -220,4 +223,20 @@
     </div>
     @endforelse
 </div>
+
+<script>
+    function showRejectNote(id) {
+        document.getElementById('rejectNoteContainer' + id).style.display = 'block';
+        document.getElementById('actionButtonsContainer' + id).style.display = 'none';
+        document.getElementById('confirmRejectContainer' + id).style.display = 'flex';
+        document.getElementById('catatanField' + id).required = true;
+    }
+    function cancelReject(id) {
+        document.getElementById('rejectNoteContainer' + id).style.display = 'none';
+        document.getElementById('actionButtonsContainer' + id).style.display = 'flex';
+        document.getElementById('confirmRejectContainer' + id).style.display = 'none';
+        document.getElementById('catatanField' + id).required = false;
+        document.getElementById('catatanField' + id).value = '';
+    }
+</script>
 @endsection

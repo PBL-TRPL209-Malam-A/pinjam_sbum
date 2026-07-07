@@ -65,7 +65,7 @@ class PicController extends Controller
         ]);
 
         $peminjaman = Peminjaman::findOrFail($request->peminjaman_id);
-        $status = $request->status_kesiapan === 'siap' ? 'siap_digunakan' : 'ditolak';
+        $status = $request->status_kesiapan === 'siap' ? 'menunggu_admin' : 'ditolak';
 
         $fotoPath = null;
         if ($request->hasFile('foto_kondisi')) {
@@ -85,7 +85,7 @@ class PicController extends Controller
                 'id_verifikator' => auth()->user()->id_user,
                 'peran_verifikasi' => 'PIC Fasilitas',
                 'jenis_verifikasi' => 'Pemeriksaan Kesiapan',
-                'status' => $status === 'siap_digunakan' ? 'disetujui' : 'ditolak',
+                'status' => $status === 'menunggu_admin' ? 'disetujui' : 'ditolak',
                 'catatan' => $request->catatan ?? 'Pemeriksaan Kesiapan oleh PIC',
                 'tanggal' => now(),
             ]);

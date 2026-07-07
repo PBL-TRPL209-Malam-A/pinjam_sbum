@@ -32,7 +32,7 @@ class BookingStoreRequest extends FormRequest
             'jumlah_peserta' => 'nullable|integer|min:1',
             'jumlah_barang' => 'nullable|integer|min:1',
             'dosen_id' => 'required|integer|exists:user,id_user',
-            'pic_id' => 'required|integer|exists:user,id_user',
+            
             'keterangan' => 'nullable|string',
         ];
     }

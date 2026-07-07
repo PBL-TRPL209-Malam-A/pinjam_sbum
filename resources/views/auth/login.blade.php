@@ -41,7 +41,7 @@
                             class="w-full h-[50px] pr-4 bg-transparent outline-none text-[#333] text-[15px] placeholder:text-[#a7a7a7]"
                             placeholder="Masukkan email, NIM, atau NIK/NIP"
                             value="{{ old('login') }}"
-                            autocomplete="username">
+                            autocomplete="off">
                     </div>
                 </div>
 
@@ -56,7 +56,7 @@
                             name="password"
                             class="w-full h-[50px] pr-4 bg-transparent outline-none text-[#333] text-[15px] placeholder:text-[#a7a7a7]"
                             placeholder="Masukkan password"
-                            autocomplete="current-password">
+                            autocomplete="off">
                     </div>
                 </div>
 

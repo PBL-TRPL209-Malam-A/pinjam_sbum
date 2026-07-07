@@ -137,6 +137,35 @@ class KepalaSbumController extends Controller
         return view('kepalasbum.persetujuan', compact('peminjaman'));
     }
 
+    public function verifikasiSemua(\Illuminate\Http\Request $request)
+    {
+        $peminjamans = Peminjaman::where('status', 'menunggu_kepala')->get();
+
+        if ($peminjamans->isEmpty()) {
+            return back()->with('success', 'Tidak ada pengajuan yang perlu disetujui.');
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($peminjamans) {
+            foreach ($peminjamans as $peminjaman) {
+                $peminjaman->update([
+                    'status' => 'siap_digunakan'
+                ]);
+
+                \App\Models\VerifikasiPeminjaman::create([
+                    'id_peminjaman' => $peminjaman->id_peminjaman,
+                    'id_verifikator' => auth()->user()->id_user,
+                    'peran_verifikasi' => 'Kepala SBUM',
+                    'jenis_verifikasi' => 'Persetujuan Akhir',
+                    'status' => 'disetujui',
+                    'catatan' => 'Disetujui massal oleh Kepala SBUM',
+                    'tanggal' => now(),
+                ]);
+            }
+        });
+
+        return back()->with('success', 'Semua pengajuan peminjaman berhasil disetujui.');
+    }
+
     public function verifikasi(Request $request, $id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
@@ -147,7 +176,7 @@ class KepalaSbumController extends Controller
 
         $status = $request->status_pengajuan;
         if ($status === 'disetujui_kepala' || $status === 'disetujui') {
-            $status = 'menunggu_pic';
+            $status = 'siap_digunakan';
         }
 
         \Illuminate\Support\Facades\DB::transaction(function () use ($peminjaman, $status, $request) {
@@ -161,7 +190,7 @@ class KepalaSbumController extends Controller
                 'id_verifikator' => auth()->user()->id_user,
                 'peran_verifikasi' => 'Kepala SBUM',
                 'jenis_verifikasi' => 'Persetujuan Akhir',
-                'status' => $status === 'menunggu_pic' ? 'disetujui' : 'ditolak',
+                'status' => $status === 'siap_digunakan' ? 'disetujui' : 'ditolak',
                 'catatan' => $request->catatan ?? 'Diverifikasi oleh Kepala SBUM',
                 'tanggal' => now(),
             ]);
@@ -379,7 +408,9 @@ class KepalaSbumController extends Controller
                 <th>ID Peminjaman</th>
                 <th>Nama Peminjam</th>
                 <th>Fasilitas</th>
+                <th>Nama Gedung</th>
                 <th>Tanggal Pengajuan</th>
+                <th>Jam Peminjaman</th>
                 <th>Tujuan</th>
                 <th>Status</th>
               </tr>";
@@ -388,7 +419,19 @@ class KepalaSbumController extends Controller
         foreach($peminjaman as $p) {
             $nama_peminjam = $p->user ? $p->user->nama_lengkap : '-';
             $fasilitas = $p->nama_fasilitas;
+            
+            $nama_gedung = '-';
+            if ($p->jenis_peminjaman === 'ruangan' && $p->ruangan->count() > 0) {
+                $nama_gedung = $p->ruangan->first()->nama_gedung ?? '-';
+            }
+            
             $tanggal = $p->tanggal_pengajuan ? $p->tanggal_pengajuan->format('d M Y') : '-';
+            
+            $jam_peminjaman = '-';
+            if ($p->jam_mulai && $p->jam_selesai) {
+                $jam_peminjaman = substr($p->jam_mulai, 0, 5) . ' - ' . substr($p->jam_selesai, 0, 5);
+            }
+            
             $tujuan = $p->tujuan_peminjaman;
             $status = ucfirst(str_replace('_', ' ', $p->status));
             
@@ -397,7 +440,9 @@ class KepalaSbumController extends Controller
                     <td>PJM-{$p->id_peminjaman}</td>
                     <td>$nama_peminjam</td>
                     <td>$fasilitas</td>
+                    <td>$nama_gedung</td>
                     <td>$tanggal</td>
+                    <td>$jam_peminjaman</td>
                     <td>$tujuan</td>
                     <td>$status</td>
                   </tr>";

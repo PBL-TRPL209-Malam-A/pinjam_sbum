@@ -350,8 +350,8 @@ class AuthPeminjamController extends Controller
             abort(403, 'Akses hanya untuk peminjam.');
         }
 
-        $rooms = \App\Models\Ruangan::available()->get();
-        $items = \App\Models\Barang::where('stok_tersedia', '>', 0)->get();
+        $rooms = \App\Models\Ruangan::with('pic')->available()->get();
+        $items = \App\Models\Barang::with('pic')->where('stok_tersedia', '>', 0)->get();
 
         return view('peminjam.jadwal', compact('rooms', 'items'));
     }
@@ -363,8 +363,8 @@ class AuthPeminjamController extends Controller
         }
 
         // Active facilities
-        $rooms = \App\Models\Ruangan::available()->get();
-        $items = \App\Models\Barang::where('stok_tersedia', '>', 0)->get();
+        $rooms = \App\Models\Ruangan::with('pic')->available()->get();
+        $items = \App\Models\Barang::with('pic')->where('stok_tersedia', '>', 0)->get();
 
         // Allowed responsible staff - only Dosen can be academic sponsor
         $staff = User::whereHas('roles', function ($q) {
@@ -432,7 +432,7 @@ class AuthPeminjamController extends Controller
             $peminjaman = \App\Models\Peminjaman::create([
                 'user_id' => auth()->id(),
                 'dosen_id' => $request->input('dosen_id'),
-                'pic_id' => $request->input('pic_id'),
+                'pic_id' => strtolower($type) === 'ruangan' ? $ruangan->pic_id : $barang->pic_id,
                 'nama_kegiatan' => $request->input('nama_kegiatan'),
                 'jumlah_peserta' => $request->input('jumlah_peserta'),
                 'jenis_peminjaman' => strtolower($type) === 'ruangan' ? 'ruangan' : 'barang',

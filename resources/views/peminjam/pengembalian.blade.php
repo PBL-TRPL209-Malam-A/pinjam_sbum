@@ -81,18 +81,18 @@
                                 </div>
                             </div>
  
-                            <div>
+                            <div id="catatanContainer" style="display: none;">
                                 <label class="block text-[#5c6761] font-semibold mb-2">Catatan Pengembalian</label>
                                 <textarea name="catatan" class="w-full px-4 py-3 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition min-h-[100px]" placeholder="Masukkan catatan pengembalian (opsional)"></textarea>
                             </div>
  
                             <div>
-                                <label class="block text-[#5c6761] font-semibold mb-2">Upload Foto Kondisi Fasilitas <span class="text-[#7b8681] font-normal text-sm">(Format: .jpg, .jpeg, .png, maks 5MB)</span></label>
+                                <label class="block text-[#5c6761] font-semibold mb-2">Upload Foto Kondisi Setelah Pemakaian <span class="text-[#7b8681] font-normal text-sm">(Format: .jpg, .jpeg, .png, maks 5MB)</span></label>
                                 <input type="file" name="foto_kondisi" class="w-full px-4 py-2.5 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition" accept="image/png, image/jpeg, image/jpg" required>
                             </div>
  
                             <div>
-                                <label class="block text-[#5c6761] font-semibold mb-2">Upload Dokumen Administrasi Pasca-Pakai <span class="text-[#7b8681] font-normal text-sm">(Format: .pdf, maks 10MB)</span></label>
+                                <label class="block text-[#5c6761] font-semibold mb-2">Upload Dokumentasi Kegiatan <span class="text-[#7b8681] font-normal text-sm">(Format: .pdf, maks 10MB)</span></label>
                                 <input type="file" name="dokumen_administrasi" class="w-full px-4 py-2.5 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition" accept="application/pdf" required>
                             </div>
                         </div>
@@ -150,6 +150,8 @@
                 choiceGood.classList.remove('border-transparent');
                 choiceNote.classList.remove('border-[#92723c]');
                 choiceNote.classList.add('border-transparent');
+                
+                document.getElementById('catatanContainer').style.display = 'none';
             });
 
             choiceNote.addEventListener('click', function() {
@@ -158,6 +160,8 @@
                 choiceNote.classList.remove('border-transparent');
                 choiceGood.classList.remove('border-[#557b58]');
                 choiceGood.classList.add('border-transparent');
+                
+                document.getElementById('catatanContainer').style.display = 'block';
             });
         }
     });

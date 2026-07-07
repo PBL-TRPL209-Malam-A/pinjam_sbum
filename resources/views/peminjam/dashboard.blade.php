@@ -143,10 +143,10 @@
                                 @php
                                     $statusClass = 'bg-[#f3e7c8] text-[#92723c] border-[#e3c98b]';
                                     $statusText = 'Menunggu';
-                                    if(in_array($pengajuan->status, ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala_sbum', 'menunggu_pic'])) {
+                                    if(in_array($pengajuan->status, ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala', 'menunggu_pic'])) {
                                         if($pengajuan->status == 'menunggu_dosen') $statusText = 'Menunggu Dosen';
                                         elseif($pengajuan->status == 'menunggu_admin') $statusText = 'Menunggu Admin';
-                                        elseif($pengajuan->status == 'menunggu_kepala_sbum') $statusText = 'Menunggu Ka. SBUM';
+                                        elseif($pengajuan->status == 'menunggu_kepala') $statusText = 'Menunggu Ka. SBUM';
                                         elseif($pengajuan->status == 'menunggu_pic') $statusText = 'Menunggu PIC';
                                     } elseif($pengajuan->status == 'disetujui' || $pengajuan->status == 'selesai') {
                                         $statusClass = 'bg-[#dcebd7] text-[#557b58] border-[#b7d2b6]';
@@ -159,13 +159,20 @@
                                 <span class="inline-flex items-center justify-center px-4 py-2 rounded-full text-[13px] font-bold border {{ $statusClass }}">
                                     {{ $statusText }}
                                 </span>
-                            </div>
+                            
+                            @if($pengajuan->status == 'ditolak')
+                                <div class="mt-3 p-3 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700">
+                                    <span class="font-bold block mb-1">Alasan Penolakan:</span>
+                                    {{ $pengajuan->verifikasi->where('status', 'ditolak')->last()->catatan ?? 'Tidak ada keterangan.' }}
+                                </div>
+                            @endif
+</div>
 
                             <!-- Modern Progress Bar with Tailwind -->
                             <div class="grid grid-cols-3 gap-3.5 items-center mt-4">
                                 <div class="h-2 rounded-full relative overflow-hidden bg-[#557a67]"></div>
-                                <div class="h-2 rounded-full relative overflow-hidden {{ in_array($pengajuan->status, ['menunggu_admin', 'menunggu_kepala_sbum', 'menunggu_pic', 'disetujui', 'selesai']) ? 'bg-[#557a67]' : 'bg-[#d9d4cc]' }}"></div>
-                                <div class="h-2 rounded-full relative overflow-hidden {{ in_array($pengajuan->status, ['menunggu_kepala_sbum', 'menunggu_pic', 'disetujui', 'selesai']) ? 'bg-[#557a67]' : 'bg-[#d9d4cc]' }}"></div>
+                                <div class="h-2 rounded-full relative overflow-hidden {{ in_array($pengajuan->status, ['menunggu_pic', 'menunggu_admin', 'menunggu_kepala', 'disetujui', 'siap_digunakan', 'selesai']) ? 'bg-[#557a67]' : 'bg-[#d9d4cc]' }}"></div>
+                                <div class="h-2 rounded-full relative overflow-hidden {{ in_array($pengajuan->status, ['menunggu_admin', 'menunggu_kepala', 'disetujui', 'siap_digunakan', 'selesai']) ? 'bg-[#557a67]' : 'bg-[#d9d4cc]' }}"></div>
                             </div>
                             <div class="grid grid-cols-3 gap-3.5 mt-2 text-[12px] md:text-[13px] font-medium text-[#7a847e]">
                                 <span>Diajukan</span>

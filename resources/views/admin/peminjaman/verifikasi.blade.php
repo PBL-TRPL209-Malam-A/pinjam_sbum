@@ -141,9 +141,9 @@
                     @php
                         $statusSteps = [
                             'menunggu_dosen' => 1,
-                            'menunggu_admin' => 2,
-                            'menunggu_kepala' => 3,
-                            'menunggu_pic' => 4,
+                            'menunggu_pic' => 2,
+                            'menunggu_admin' => 3,
+                            'menunggu_kepala' => 4,
                             'siap_digunakan' => 5,
                             'pending' => 1,
                             'disetujui' => 5,
@@ -162,9 +162,9 @@
                     <div class="d-flex justify-content-between small text-muted mt-1" style="font-size:0.65rem;">
                         <span>Diajukan</span>
                         <span>Dosen PJ</span>
+                        <span>PIC</span>
                         <span>Admin</span>
                         <span>Kepala</span>
-                        <span>PIC</span>
                     </div>
  
                     <div class="mt-3 text-end">
@@ -263,18 +263,21 @@
                         <label class="form-check-label text-main fw-semibold ms-2" for="check3">Dokumen pendukung valid</label>
                     </div>
 
-                    <div class="mt-4 text-start">
-                        <label class="form-label text-secondary fw-semibold">Catatan Admin</label>
-                        <textarea name="catatan" class="form-control" rows="3" placeholder="Tambahkan catatan verifikasi" style="border-radius: 0.75rem; border-color: #dfd4c8;"></textarea>
+                    <div class="mt-4 text-start" id="rejectNoteContainer" style="display: none;">
+                        <label class="form-label text-danger fw-bold">Alasan Penolakan <span class="text-danger">*</span></label>
+                        <textarea name="catatan" id="catatanField" class="form-control border-danger" rows="3" placeholder="Wajib: Berikan alasan kenapa pengajuan ini ditolak..." style="border-radius: 0.75rem;"></textarea>
                     </div>
                 </div>
 
                 <div class="mb-3 fw-semibold text-secondary text-start">Keputusan</div>
                 <div class="decision-card">
-                    <div class="d-grid gap-2">
+                    <div class="d-grid gap-2" id="actionButtonsContainer">
                         <button type="submit" onclick="setStatus('disetujui')" class="btn btn-decision-verify">Verifikasi</button>
-                        <button type="submit" onclick="setStatus('ditolak')" class="btn btn-decision-reject">Tolak</button>
-                        <button type="submit" onclick="setStatus('revisi')" class="btn btn-decision-revision">Minta Revisi</button>
+                        <button type="button" onclick="showRejectNote()" class="btn btn-decision-reject">Tolak</button>
+                    </div>
+                    <div class="d-grid gap-2 mt-3" id="confirmRejectContainer" style="display: none;">
+                        <button type="button" onclick="cancelReject()" class="btn btn-light" style="border-radius:0.75rem; color:#7d8781;">Batal</button>
+                        <button type="submit" onclick="setStatus('ditolak')" class="btn btn-decision-reject">Konfirmasi Tolak</button>
                     </div>
                 </div>
             </form>
@@ -316,4 +319,21 @@
         }
     }
 </script>
+
+<script>
+    function showRejectNote() {
+        document.getElementById('rejectNoteContainer').style.display = 'block';
+        document.getElementById('actionButtonsContainer').style.display = 'none';
+        document.getElementById('confirmRejectContainer').style.display = 'block';
+        document.getElementById('catatanField').required = true;
+    }
+    function cancelReject() {
+        document.getElementById('rejectNoteContainer').style.display = 'none';
+        document.getElementById('actionButtonsContainer').style.display = 'block';
+        document.getElementById('confirmRejectContainer').style.display = 'none';
+        document.getElementById('catatanField').required = false;
+        document.getElementById('catatanField').value = '';
+    }
+</script>
+
 @endsection

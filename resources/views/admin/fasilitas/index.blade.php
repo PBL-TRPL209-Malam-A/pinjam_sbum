@@ -76,6 +76,7 @@
             <tr>
                 <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Nama</th>
                 <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kode Ruangan</th>
+                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Gedung</th>
                 <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Foto</th>
                 <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kategori</th>
                 <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kapasitas</th>
@@ -89,6 +90,7 @@
             <tr>
                 <td class="fw-semibold">{{ $r->nama_ruangan }}</td>
                 <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><code>{{ $r->kode_ruangan }}</code></td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $r->nama_gedung ?? '-' }}</td>
                 <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($r->foto_ruangan)
                         <img src="{{ asset($r->foto_ruangan) }}" alt="{{ $r->nama_ruangan }}" class="img-fluid rounded-3" style="width: 150px; height: 150px; object-fit: cover; max-width: 100%;">
@@ -126,6 +128,7 @@
             <tr>
                 <td class="fw-semibold">Aula Utama Polibatam</td>
                 <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><code>kode-ruangan</code></td>
+                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">-</td>
                 <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">Tidak ada foto</div>
                 </td>
@@ -171,7 +174,12 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary fw-semibold">Gedung</label>
-                        <input type="text" name="nama_gedung" class="form-control" placeholder="cth: Gedung Utama" style="border-radius:0.75rem;">
+                        <select name="nama_gedung" class="form-select" style="border-radius:0.75rem;">
+                            <option value="">-- Pilih Gedung --</option>
+                            <option value="Gedung Utama">Gedung Utama</option>
+                            <option value="Gedung Tower A dan Tower B">Gedung Tower A dan Tower B</option>
+                            <option value="Gedung Technopreneur">Gedung Technopreneur</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary fw-semibold">Lantai</label>
@@ -258,7 +266,12 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-secondary fw-semibold">Gedung</label>
-                            <input type="text" name="nama_gedung" class="form-control" value="{{ $r->nama_gedung }}" style="border-radius:0.75rem;">
+                            <select name="nama_gedung" class="form-select" style="border-radius:0.75rem;">
+                                <option value="" {{ empty($r->nama_gedung) ? 'selected' : '' }}>-- Pilih Gedung --</option>
+                                <option value="Gedung Utama" {{ $r->nama_gedung == 'Gedung Utama' ? 'selected' : '' }}>Gedung Utama</option>
+                                <option value="Gedung Tower A dan Tower B" {{ $r->nama_gedung == 'Gedung Tower A dan Tower B' ? 'selected' : '' }}>Gedung Tower A dan Tower B</option>
+                                <option value="Gedung Technopreneur" {{ $r->nama_gedung == 'Gedung Technopreneur' ? 'selected' : '' }}>Gedung Technopreneur</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-secondary fw-semibold">Lantai</label>

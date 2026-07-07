@@ -126,6 +126,7 @@
                             <thead class="bg-[#f5f2ec] text-[#466454]">
                                 <tr>
                                     <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Fasilitas</th>
+                                    <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Gedung</th>
                                     <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Peminjam</th>
                                     <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Tanggal Pengembalian</th>
                                     <th style="text-align: center;" class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Status</th>
@@ -143,6 +144,13 @@
                                             {{ $p->peminjaman->barang->first()->nama_barang }}
                                         @else
                                             Fasilitas
+                                        @endif
+                                    </td>
+                                                                        <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                                        @if($p->peminjaman->ruangan->isNotEmpty())
+                                            {{ $p->peminjaman->ruangan->first()->nama_gedung ?? '-' }}
+                                        @else
+                                            -
                                         @endif
                                     </td>
                                     <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->peminjaman->user->nama_lengkap ?? '-' }}</td>
@@ -171,9 +179,14 @@
                                             } elseif($p->peminjaman->barang->isNotEmpty()){
                                                 $fasilitasName = $p->peminjaman->barang->first()->nama_barang;
                                             }
+                                            $gedungName = '-';
+                                            if($p->peminjaman->ruangan->isNotEmpty()){
+                                                $gedungName = $p->peminjaman->ruangan->first()->nama_gedung ?? '-';
+                                            }
                                             $detailData = [
                                                 'peminjam' => $p->peminjaman->user->nama_lengkap ?? '-',
                                                 'fasilitas' => $fasilitasName,
+                                                'gedung' => $gedungName,
                                                 'tanggal_kembali' => date('d M Y', strtotime($p->tanggal_kembali)),
                                                 'status_pengembalian' => $p->status_pengembalian == 'dikonfirmasi_admin' ? 'Selesai' : 'Proses',
                                                 'kondisi_kembali' => $p->kondisi_kembali,
@@ -209,6 +222,10 @@
                 <div class="grid grid-cols-3 gap-2 border-b border-gray-50 pb-2">
                     <span class="text-sm font-semibold text-gray-500">Fasilitas</span>
                     <span class="col-span-2 text-sm font-bold text-gray-800" x-text="selectedData?.fasilitas"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 border-b border-gray-50 pb-2">
+                    <span class="text-sm font-semibold text-gray-500">Gedung</span>
+                    <span class="col-span-2 text-sm font-bold text-gray-800" x-text="selectedData?.gedung"></span>
                 </div>
                 <div class="grid grid-cols-3 gap-2 border-b border-gray-50 pb-2">
                     <span class="text-sm font-semibold text-gray-500">Tujuan Peminjaman</span>

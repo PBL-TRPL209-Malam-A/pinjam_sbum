@@ -23,7 +23,18 @@
                     </div>
                 @endif
 
-                <h2 class="text-xl font-bold mb-4 text-[#466454]">Daftar Pengajuan Final</h2>
+                                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-[#466454]">Daftar Pengajuan Final</h2>
+                    @if($peminjaman->count() > 0)
+                    <form action="{{ route('kepalasbum.verifikasi-semua') }}" method="POST" class="inline" onsubmit="return confirm('Anda yakin ingin menyetujui SEMUA pengajuan peminjaman ini?');">
+                        @csrf
+                        <button type="submit" class="bg-[#557a67] text-white px-5 py-2 rounded-xl font-semibold hover:bg-[#466454] transition shadow-sm flex items-center gap-2">
+                            <i class="bi bi-check2-all"></i> Setujui Semua
+                        </button>
+                    </form>
+                    @endif
+                </div>
+
 
                 <div class="grid gap-4 mb-6">
                     @forelse($peminjaman as $p)

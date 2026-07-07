@@ -72,7 +72,7 @@
                                 <select id="facilitySelectRuangan" class="h-12 w-full px-4 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition soft-input-ts">
                                     <option value="">-- Pilih Ruangan --</option>
                                     @foreach($rooms as $room)
-                                        <option value="Ruangan-{{ $room->id_ruangan }}" {{ (old('facility_id') ?? $selectedFacilityId) == "Ruangan-{$room->id_ruangan}" ? 'selected' : '' }}>
+                                        <option value="Ruangan-{{ $room->id_ruangan }}" data-pic="{{ $room->pic->nama_lengkap ?? 'Belum diatur' }}" {{ (old('facility_id') ?? $selectedFacilityId) == "Ruangan-{$room->id_ruangan}" ? 'selected' : '' }}>
                                             {{ $room->nama_ruangan }} ({{ $room->kode_ruangan }} - {{ $room->nama_gedung }})
                                         </option>
                                     @endforeach
@@ -84,7 +84,7 @@
                                 <select id="facilitySelectBarang" class="h-12 w-full px-4 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition soft-input-ts">
                                     <option value="">-- Pilih Barang Inventaris --</option>
                                     @foreach($items as $item)
-                                        <option value="Inventaris-{{ $item->id_barang }}" {{ (old('facility_id') ?? $selectedFacilityId) == "Inventaris-{$item->id_barang}" ? 'selected' : '' }}>
+                                        <option value="Inventaris-{{ $item->id_barang }}" data-pic="{{ $item->pic->nama_lengkap ?? 'Belum diatur' }}" {{ (old('facility_id') ?? $selectedFacilityId) == "Inventaris-{$item->id_barang}" ? 'selected' : '' }}>
                                             {{ $item->nama_barang }} ({{ $item->kode_barang }} - Stok: {{ $item->stok_tersedia }})
                                         </option>
                                     @endforeach
@@ -147,14 +147,7 @@
                                 </div>
                                 <div class="lg:col-span-1">
                                     <label class="block text-[#5c6761] font-semibold mb-2">PIC Fasilitas</label>
-                                    <select name="pic_id" class="h-12 w-full px-4 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition" required>
-                                        <option value="">-- Pilih PIC --</option>
-                                        @foreach($pics as $pic)
-                                            <option value="{{ $pic->id_user }}" {{ old('pic_id') == $pic->id_user ? 'selected' : '' }}>
-                                                {{ $pic->nama_lengkap }} ({{ $pic->roles->pluck('nama_role')->first() ?? 'PIC' }})
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" id="pic_display" class="h-12 w-full px-4 rounded-2xl border border-[#dfd4c8] bg-[#f5f2ec] text-[#7b8681] focus:outline-none transition cursor-not-allowed" value="-- Otomatis --" readonly>
                                 </div>
                             </div>
 
@@ -308,9 +301,18 @@ document.addEventListener('DOMContentLoaded', function () {
         if (selectedOpt && selectedOpt.value) {
             summaryFacility.textContent = selectedOpt.text.split('(')[0].trim();
             if (realFacilityId) realFacilityId.value = selectedOpt.value;
+            
+            // Update PIC display
+            const picDisplay = document.getElementById('pic_display');
+            if (picDisplay && selectedOpt.dataset.pic) {
+                picDisplay.value = selectedOpt.dataset.pic;
+            }
         } else {
             summaryFacility.textContent = '-- Pilih Fasilitas --';
             if (realFacilityId) realFacilityId.value = '';
+            
+            const picDisplay = document.getElementById('pic_display');
+            if (picDisplay) picDisplay.value = '-- Otomatis --';
         }
         
         if (tanggalInput && summaryTime) {

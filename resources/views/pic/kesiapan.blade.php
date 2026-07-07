@@ -70,7 +70,7 @@
         background-color: #f0e9df;
     }
     .btn-confirm-ready {
-        background-color: var(--primary-main);
+        background-color: #557b58;
         color: white;
         font-weight: 600;
         border-radius: 0.75rem;
@@ -80,7 +80,7 @@
         transition: 0.2s;
     }
     .btn-confirm-ready:hover {
-        background-color: var(--primary-dark);
+        background-color: #456447;
     }
     .btn-report-issue {
         background-color: #c95b50;
@@ -278,19 +278,23 @@
                     </div>
                     @endif
 
-                    <div class="mt-4 text-start">
-                        <label class="form-label text-secondary small fw-semibold">Catatan PIC</label>
-                        <textarea name="catatan" class="form-control" rows="3" style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.9rem;" placeholder="Masukkan catatan kesiapan fasilitas..."></textarea>
+                    <div class="mt-4 text-start" id="rejectNoteContainer" style="display: none;">
+                        <label class="form-label text-danger small fw-bold">Detail Kendala / Penolakan <span class="text-danger">*</span></label>
+                        <textarea name="catatan" id="catatanField" class="form-control border-danger" rows="3" style="border-radius: 0.75rem; font-size: 0.9rem;" placeholder="Wajib: Deskripsikan kendala atau alasan penolakan..."></textarea>
                     </div>
 
                     <div class="mt-3 text-start">
-                        <label class="form-label text-secondary small fw-semibold">Upload Bukti Kondisi Ruangan</label>
+                        <label class="form-label text-secondary small fw-semibold">Upload Bukti Kondisi Ruangan (Opsional)</label>
                         <input type="file" name="foto_kondisi" class="form-control" accept="image/png, image/jpeg, image/jpg, image/webp" style="border-radius: 0.75rem;">
                     </div>
 
-                    <div class="d-grid gap-2 mt-4">
+                    <div class="d-grid gap-2 mt-4" id="actionButtonsContainer">
                         <button type="button" onclick="submitKesiapan('siap')" class="btn btn-confirm-ready">Konfirmasi Siap</button>
-                        <button type="button" onclick="submitKesiapan('kendala')" class="btn btn-report-issue">Laporkan Kendala</button>
+                        <button type="button" onclick="showRejectNote()" class="btn btn-report-issue">Laporkan Kendala / Tolak</button>
+                    </div>
+                    <div class="d-grid gap-2 mt-3" id="confirmRejectContainer" style="display: none;">
+                        <button type="button" onclick="submitKesiapan('kendala')" class="btn btn-report-issue">Konfirmasi Laporan Kendala</button>
+                        <button type="button" onclick="cancelReject()" class="btn btn-light" style="border-radius:0.75rem; color:#7d8781;">Batal</button>
                     </div>
                 </div>
             </form>
@@ -303,6 +307,20 @@
 </div>
 
 <script>
+    function showRejectNote() {
+        document.getElementById('rejectNoteContainer').style.display = 'block';
+        document.getElementById('actionButtonsContainer').style.display = 'none';
+        document.getElementById('confirmRejectContainer').style.display = 'block';
+        document.getElementById('catatanField').required = true;
+    }
+    function cancelReject() {
+        document.getElementById('rejectNoteContainer').style.display = 'none';
+        document.getElementById('actionButtonsContainer').style.display = 'block';
+        document.getElementById('confirmRejectContainer').style.display = 'none';
+        document.getElementById('catatanField').required = false;
+        document.getElementById('catatanField').value = '';
+    }
+
     function submitKesiapan(status) {
         document.getElementById('kesiapanField').value = status;
         
