@@ -11,8 +11,8 @@
 
             <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
                 <div>
-                    <div class="text-[19px] text-[#7d8781] mb-1">Mahasiswa</div>
-                    <h1 class="text-[28px] font-normal m-0 text-[#33403b]">Dashboard Mahasiswa</h1>
+                    <div class="text-[19px] text-[#7d8781] mb-1">Peminjam</div>
+                    <h1 class="text-[28px] font-normal m-0 text-[#33403b]">Dashboard Peminjam</h1>
                 </div>
 
                 <div class="flex items-center gap-3.5 w-full md:w-auto relative">
@@ -35,10 +35,10 @@
                         Kelola peminjaman ruangan dan fasilitas kampus dari satu dashboard yang sederhana dan mudah dipantau.
                     </div>
                     <div class="flex gap-3.5 flex-col md:flex-row relative z-10">
-                        <a href="{{ route('mahasiswa.pengajuan') }}" class="min-w-[190px] h-[50px] rounded-2xl font-bold bg-[#587a68] text-white flex items-center justify-center no-underline hover:bg-[#466454] transition shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                        <a href="{{ route('peminjam.pengajuan') }}" class="min-w-[190px] h-[50px] rounded-2xl font-bold bg-[#587a68] text-white flex items-center justify-center no-underline hover:bg-[#466454] transition shadow-md hover:shadow-lg hover:-translate-y-0.5">
                             <i class="bi bi-plus-lg mr-2"></i> Ajukan Peminjaman
                         </a>
-                        <a href="{{ route('mahasiswa.jadwal') }}" class="min-w-[190px] h-[50px] rounded-2xl font-bold border border-[#d8cfc2] bg-[#fffdfa] text-[#6b756f] flex items-center justify-center no-underline hover:bg-[#f8f4ee] hover:text-[#4f5954] transition shadow-sm hover:shadow">
+                        <a href="{{ route('peminjam.jadwal') }}" class="min-w-[190px] h-[50px] rounded-2xl font-bold border border-[#d8cfc2] bg-[#fffdfa] text-[#6b756f] flex items-center justify-center no-underline hover:bg-[#f8f4ee] hover:text-[#4f5954] transition shadow-sm hover:shadow">
                             <i class="bi bi-calendar-week mr-2"></i> Lihat Jadwal
                         </a>
                     </div>
@@ -93,7 +93,7 @@
                     <div class="text-[15px] font-bold mt-1 mb-3.5 text-[#52605a]">Aksi Cepat</div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-[18px]">
                         <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-6 md:p-7 min-h-[116px] hover:shadow-md transition cursor-pointer group hover:-translate-y-1">
-                            <a href="{{ route('mahasiswa.pengajuan') }}" class="no-underline block h-full">
+                            <a href="{{ route('peminjam.pengajuan') }}" class="no-underline block h-full">
                                 <div class="text-[16px] text-[#5e6762] mb-3 group-hover:text-[#587a68] transition flex items-center gap-2 font-semibold">
                                     <i class="bi bi-plus-circle"></i> Ajukan Peminjaman
                                 </div>
@@ -101,7 +101,7 @@
                             </a>
                         </div>
                         <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-6 md:p-7 min-h-[116px] hover:shadow-md transition cursor-pointer group hover:-translate-y-1">
-                            <a href="{{ route('mahasiswa.jadwal') }}" class="no-underline block h-full">
+                            <a href="{{ route('peminjam.jadwal') }}" class="no-underline block h-full">
                                 <div class="text-[16px] text-[#5e6762] mb-3 group-hover:text-[#587a68] transition flex items-center gap-2 font-semibold">
                                     <i class="bi bi-search"></i> Cek Ketersediaan
                                 </div>
@@ -109,7 +109,7 @@
                             </a>
                         </div>
                         <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-6 md:p-7 min-h-[116px] hover:shadow-md transition cursor-pointer group hover:-translate-y-1">
-                            <a href="{{ route('mahasiswa.riwayat') }}" class="no-underline block h-full">
+                            <a href="{{ route('peminjam.riwayat') }}" class="no-underline block h-full">
                                 <div class="text-[16px] text-[#5e6762] mb-3 group-hover:text-[#587a68] transition flex items-center gap-2 font-semibold">
                                     <i class="bi bi-clock-history"></i> Status Pengajuan
                                 </div>
@@ -117,7 +117,7 @@
                             </a>
                         </div>
                         <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[22px] p-6 md:p-7 min-h-[116px] hover:shadow-md transition cursor-pointer group hover:-translate-y-1">
-                            <a href="{{ route('mahasiswa.pengembalian') }}" class="no-underline block h-full">
+                            <a href="{{ route('peminjam.pengembalian') }}" class="no-underline block h-full">
                                 <div class="text-[16px] text-[#5e6762] mb-3 group-hover:text-[#587a68] transition flex items-center gap-2 font-semibold">
                                     <i class="bi bi-arrow-return-left"></i> Ajukan Pengembalian
                                 </div>

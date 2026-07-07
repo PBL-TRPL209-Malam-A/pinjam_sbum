@@ -1,6 +1,7 @@
 @extends('layout.app_tailwind')
 
 @section('content')
+<div x-data="{ showModal: false, selectedData: null }">
 <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
     <div>
         <div class="text-[19px] text-[#7d8781] mb-1">Kepala SBUM</div>
@@ -129,6 +130,7 @@
                                     <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Tanggal Pengembalian</th>
                                     <th style="text-align: center;" class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Status</th>
                                     <th style="text-align: right; padding-right: 2rem;" class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kondisi</th>
+                                    <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2] text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -161,15 +163,75 @@
                                             <span class="inline-block bg-[#e0e7ff] text-[#3730a3] text-[13px] font-semibold px-3 py-1 rounded-full border border-[#c7d2fe]">Perlu Diperiksa</span>
                                         @endif
                                     </td>
+                                    <td class="p-4 border-b border-[#e6ddd2] text-center">
+                                        @php
+                                            $fasilitasName = 'Fasilitas';
+                                            if($p->peminjaman->ruangan->isNotEmpty()){
+                                                $fasilitasName = $p->peminjaman->ruangan->first()->nama_ruangan;
+                                            } elseif($p->peminjaman->barang->isNotEmpty()){
+                                                $fasilitasName = $p->peminjaman->barang->first()->nama_barang;
+                                            }
+                                            $detailData = [
+                                                'peminjam' => $p->peminjaman->user->nama_lengkap ?? '-',
+                                                'fasilitas' => $fasilitasName,
+                                                'tanggal_kembali' => date('d M Y', strtotime($p->tanggal_kembali)),
+                                                'status_pengembalian' => $p->status_pengembalian == 'dikonfirmasi_admin' ? 'Selesai' : 'Proses',
+                                                'kondisi_kembali' => $p->kondisi_kembali,
+                                                'tujuan' => $p->peminjaman->tujuan
+                                            ];
+                                        @endphp
+                                        <button @click='selectedData = @json($detailData); showModal = true' class="bg-[#e4efe8] hover:bg-[#d0e3d7] text-[#466454] px-3 py-1.5 rounded-lg text-xs font-bold transition">Detail</button>
+                                    </td>
                                 </tr>
                                 @endforeach
                                 @if($pengembalian->isEmpty())
                                 <tr>
-                                    <td colspan="5" class="p-4 border-b border-[#e6ddd2] text-center text-[#7d8781]">Belum ada data pengembalian yang sesuai dengan filter.</td>
+                                    <td colspan="6" class="p-4 border-b border-[#e6ddd2] text-center text-[#7d8781]">Belum ada data pengembalian yang sesuai dengan filter.</td>
                                 </tr>
                                 @endif
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+    <!-- Modal -->
+    <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" style="display: none;">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl border border-gray-100" @click.away="showModal = false">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
+                <h3 class="text-xl font-bold text-[#466454]">Detail Pengembalian</h3>
+                <button @click="showModal = false" class="text-gray-400 hover:text-gray-600 transition"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="space-y-3" x-show="selectedData">
+                <div class="grid grid-cols-3 gap-2 border-b border-gray-50 pb-2">
+                    <span class="text-sm font-semibold text-gray-500">Peminjam</span>
+                    <span class="col-span-2 text-sm font-bold text-gray-800" x-text="selectedData?.peminjam"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 border-b border-gray-50 pb-2">
+                    <span class="text-sm font-semibold text-gray-500">Fasilitas</span>
+                    <span class="col-span-2 text-sm font-bold text-gray-800" x-text="selectedData?.fasilitas"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 border-b border-gray-50 pb-2">
+                    <span class="text-sm font-semibold text-gray-500">Tujuan Peminjaman</span>
+                    <span class="col-span-2 text-sm font-bold text-gray-800" x-text="selectedData?.tujuan"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 border-b border-gray-50 pb-2">
+                    <span class="text-sm font-semibold text-gray-500">Tanggal Kembali</span>
+                    <span class="col-span-2 text-sm font-bold text-gray-800" x-text="selectedData?.tanggal_kembali"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 border-b border-gray-50 pb-2">
+                    <span class="text-sm font-semibold text-gray-500">Kondisi</span>
+                    <span class="col-span-2 text-sm font-bold capitalize text-gray-800" x-text="selectedData?.kondisi_kembali"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 border-b border-gray-50 pb-2">
+                    <span class="text-sm font-semibold text-gray-500">Status</span>
+                    <span class="col-span-2 text-sm font-bold uppercase text-[#466454]" x-text="selectedData?.status_pengembalian"></span>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button @click="showModal = false" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-bold transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+

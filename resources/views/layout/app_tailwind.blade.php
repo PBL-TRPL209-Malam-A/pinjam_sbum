@@ -29,51 +29,51 @@
                 </div>
 
                 <nav class="grid gap-2.5 mt-3 overflow-y-auto pr-1 custom-scrollbar">
-                    @if(auth()->check() && auth()->user()->isMahasiswa())
-                    <!-- Mahasiswa Menu -->
-                    <a href="{{ route('mahasiswa.dashboard') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('mahasiswa.dashboard') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
+                    @if(auth()->check() && auth()->user()->isPeminjam())
+                    <!-- Peminjam Menu -->
+                    <a href="{{ route('peminjam.dashboard') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('peminjam.dashboard') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0">
                             <i class="bi bi-grid-fill"></i>
                         </span>
                         <span>Dashboard</span>
                     </a>
-                    <a href="{{ route('mahasiswa.fasilitas') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('mahasiswa.fasilitas*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
+                    <a href="{{ route('peminjam.fasilitas') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('peminjam.fasilitas*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0">
                             <i class="bi bi-box-seam"></i>
                         </span>
                         <span>Fasilitas</span>
                     </a>
-                    <a href="{{ route('mahasiswa.jadwal') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('mahasiswa.jadwal*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
+                    <a href="{{ route('peminjam.jadwal') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('peminjam.jadwal*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0">
                             <i class="bi bi-calendar-check"></i>
                         </span>
                         <span>Jadwal</span>
                     </a>
-                    <a href="{{ route('mahasiswa.pengajuan') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('mahasiswa.pengajuan*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
+                    <a href="{{ route('peminjam.pengajuan') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('peminjam.pengajuan*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0">
                             <i class="bi bi-pencil-square"></i>
                         </span>
                         <span>Pengajuan Saya</span>
                     </a>
-                    <a href="{{ route('mahasiswa.pengembalian') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('mahasiswa.pengembalian*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
+                    <a href="{{ route('peminjam.pengembalian') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('peminjam.pengembalian*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0">
                             <i class="bi bi-arrow-return-left"></i>
                         </span>
                         <span>Pengembalian</span>
                     </a>
-                    <a href="{{ route('mahasiswa.riwayat') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('mahasiswa.riwayat*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
+                    <a href="{{ route('peminjam.riwayat') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('peminjam.riwayat*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0">
                             <i class="bi bi-clock-history"></i>
                         </span>
                         <span class="leading-tight">Riwayat<br>Peminjaman</span>
                     </a>
-                    <a href="{{ route('mahasiswa.notifikasi') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('mahasiswa.notifikasi*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
+                    <a href="{{ route('peminjam.notifikasi') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('peminjam.notifikasi*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0">
                             <i class="bi bi-bell"></i>
                         </span>
                         <span>Notifikasi</span>
                     </a>
-                    <a href="{{ route('mahasiswa.profil') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('mahasiswa.profil*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
+                    <a href="{{ route('peminjam.profil') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('peminjam.profil*') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0">
                             <i class="bi bi-person"></i>
                         </span>

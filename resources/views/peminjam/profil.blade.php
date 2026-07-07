@@ -5,8 +5,8 @@
 @section('content')
             <div class="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-6">
                 <div>
-                    <div class="text-[#7b8681] text-[20px] mb-1">Mahasiswa</div>
-                    <h1 class="text-[24px] font-medium m-0">Profil Mahasiswa</h1>
+                    <div class="text-[#7b8681] text-[20px] mb-1">Peminjam</div>
+                    <h1 class="text-[24px] font-medium m-0">Profil Peminjam</h1>
                 </div>
 
                 <div class="flex items-center gap-3 w-full md:w-auto">
@@ -18,9 +18,9 @@
             <div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[28px] p-6 lg:p-8 mb-6 relative overflow-hidden">
                 <div class="relative z-10 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div>
-                        <h2 class="text-xl font-semibold mb-2">Kelola biodata dan akun mahasiswa</h2>
+                        <h2 class="text-xl font-semibold mb-2">Kelola biodata dan akun peminjam</h2>
                         <p class="mb-0 text-[#5f6963]">
-                            Halaman ini menampilkan informasi profil, data akademik, kontak, dan ringkasan aktivitas peminjaman mahasiswa.
+                            Halaman ini menampilkan informasi profil, data akademik, kontak, dan ringkasan aktivitas peminjaman peminjam.
                         </p>
                     </div>
                     <button class="h-12 px-6 bg-[#5d7d6b] hover:bg-[#496454] text-white font-semibold rounded-2xl transition border-0 cursor-pointer shadow-sm shrink-0 whitespace-nowrap">Edit Profil</button>
@@ -37,7 +37,7 @@
                             <!-- Avatar placeholder -->
                         </div>
                         <div class="font-bold text-[#33403b] text-lg mb-1">{{ auth()->user()->nama_lengkap }}</div>
-                        <div class="text-[#7b8681] text-sm mb-3">Mahasiswa TRPL</div>
+                        <div class="text-[#7b8681] text-sm mb-3">Peminjam TRPL</div>
                         <span class="inline-flex items-center justify-center min-w-[120px] h-8 rounded-full bg-[#e5eee5] text-[#557b58] border border-[#d2dfd2] text-sm font-semibold">Aktif</span>
                     </div>
 

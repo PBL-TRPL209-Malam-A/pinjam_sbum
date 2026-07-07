@@ -5,8 +5,8 @@
 @section('content')
             <div class="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-6">
                 <div>
-                    <div class="text-[#7b8681] text-[20px] mb-1">Mahasiswa</div>
-                    <h1 class="text-[24px] font-medium m-0">Notifikasi Mahasiswa</h1>
+                    <div class="text-[#7b8681] text-[20px] mb-1">Peminjam</div>
+                    <h1 class="text-[24px] font-medium m-0">Notifikasi Peminjam</h1>
                 </div>
 
                 <div class="flex items-center gap-3 w-full md:w-auto">
@@ -17,9 +17,9 @@
 
             <div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[28px] p-6 lg:p-8 mb-6 relative overflow-hidden">
                 <div class="relative z-10">
-                    <h2 class="text-xl font-semibold mb-2">Pantau informasi terbaru akun mahasiswa</h2>
+                    <h2 class="text-xl font-semibold mb-2">Pantau informasi terbaru akun peminjam</h2>
                     <p class="mb-4 text-[#5f6963]">
-                        Halaman ini menampilkan pemberitahuan penting terkait pengajuan, persetujuan, jadwal penggunaan, pengembalian, dan aktivitas akun mahasiswa.
+                        Halaman ini menampilkan pemberitahuan penting terkait pengajuan, persetujuan, jadwal penggunaan, pengembalian, dan aktivitas akun peminjam.
                     </p>
                     <div class="flex flex-wrap gap-2">
                         <button class="h-12 px-6 bg-[#5d7d6b] hover:bg-[#496454] text-white font-semibold rounded-2xl transition border-0 cursor-pointer shadow-sm">Tandai Sudah Dibaca</button>
@@ -135,7 +135,7 @@
                     <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[24px] p-6">
                         <div class="font-semibold text-lg text-[#33403b] mb-2">Catatan</div>
                         <div class="text-[#7b8681] text-[14.5px] leading-relaxed">
-                            Notifikasi akan muncul otomatis saat ada perubahan status pengajuan, jadwal penggunaan, dan proses pengembalian fasilitas mahasiswa.
+                            Notifikasi akan muncul otomatis saat ada perubahan status pengajuan, jadwal penggunaan, dan proses pengembalian fasilitas peminjam.
                         </div>
                     </div>
                 </div>

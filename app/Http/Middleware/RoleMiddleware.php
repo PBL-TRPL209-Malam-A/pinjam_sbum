@@ -38,8 +38,8 @@ class RoleMiddleware
             case 'pamdal':
                 $hasRole = $user->isPamdal();
                 break;
-            case 'mahasiswa':
-                $hasRole = $user->isMahasiswa();
+            case 'peminjam':
+                $hasRole = $user->isPeminjam();
                 break;
         }
 

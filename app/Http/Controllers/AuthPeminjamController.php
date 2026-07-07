@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class AuthMahasiswaController extends Controller
+class AuthPeminjamController extends Controller
 {
     public function showLogin()
     {
@@ -18,10 +18,10 @@ class AuthMahasiswaController extends Controller
                 $user->isAdmin() && \Illuminate\Support\Facades\Route::has('admin.dashboard') => 'admin.dashboard',
                 $user->isPic() && \Illuminate\Support\Facades\Route::has('pic.dashboard') => 'pic.dashboard',
                 $user->isDosen() && \Illuminate\Support\Facades\Route::has('dosen.dashboard') => 'dosen.dashboard',
-                $user->isMahasiswa() && \Illuminate\Support\Facades\Route::has('mahasiswa.dashboard') => 'mahasiswa.dashboard',
+                $user->isPeminjam() && \Illuminate\Support\Facades\Route::has('peminjam.dashboard') => 'peminjam.dashboard',
                 $user->isKepalaSbum() && \Illuminate\Support\Facades\Route::has('kepalasbum.persetujuan') => 'kepalasbum.persetujuan',
                 $user->isPamdal() && \Illuminate\Support\Facades\Route::has('pamdal.dashboard') => 'pamdal.dashboard',
-                default => 'mahasiswa.dashboard',
+                default => 'peminjam.dashboard',
             };
             return redirect()->route($redirectRoute);
         }
@@ -32,7 +32,7 @@ class AuthMahasiswaController extends Controller
     public function showRegister()
     {
         if (auth()->check()) {
-            return redirect()->route('mahasiswa.dashboard');
+            return redirect()->route('peminjam.dashboard');
         }
 
         return view('auth.register');
@@ -67,8 +67,8 @@ class AuthMahasiswaController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return redirect()->route('mahasiswa.dashboard')
-                ->with('success', 'Registrasi mahasiswa berhasil.');
+            return redirect()->route('peminjam.dashboard')
+                ->with('success', 'Registrasi peminjam berhasil.');
         } catch (\Throwable $e) {
             DB::rollBack();
 
@@ -105,7 +105,7 @@ class AuthMahasiswaController extends Controller
             $user->isAdmin() && \Illuminate\Support\Facades\Route::has('admin.dashboard') => 'admin.dashboard',
             $user->isPic() && \Illuminate\Support\Facades\Route::has('pic.dashboard') => 'pic.dashboard',
             $user->isDosen() && \Illuminate\Support\Facades\Route::has('dosen.dashboard') => 'dosen.dashboard',
-            $user->isMahasiswa() && \Illuminate\Support\Facades\Route::has('mahasiswa.dashboard') => 'mahasiswa.dashboard',
+            $user->isPeminjam() && \Illuminate\Support\Facades\Route::has('peminjam.dashboard') => 'peminjam.dashboard',
             $user->isKepalaSbum() && \Illuminate\Support\Facades\Route::has('kepalasbum.persetujuan') => 'kepalasbum.persetujuan',
             $user->isPamdal() && \Illuminate\Support\Facades\Route::has('pamdal.dashboard') => 'pamdal.dashboard',
             default => 'home',
@@ -116,8 +116,8 @@ class AuthMahasiswaController extends Controller
 
     public function dashboard()
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $userId = auth()->id();
@@ -157,7 +157,7 @@ class AuthMahasiswaController extends Controller
             ->take(3)
             ->get();
 
-        return view('mahasiswa.dashboard', compact(
+        return view('peminjam.dashboard', compact(
             'pengajuanAktif', 
             'menungguPersetujuan', 
             'riwayatSelesai', 
@@ -169,8 +169,8 @@ class AuthMahasiswaController extends Controller
 
     public function fasilitas(Request $request)
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $search = $request->input('search');
@@ -253,7 +253,7 @@ class AuthMahasiswaController extends Controller
             ]
         );
 
-        return view('mahasiswa.fasilitas', [
+        return view('peminjam.fasilitas', [
             'facilities' => $paginatedFacilities,
             'buildings' => $buildings,
             'selectedCategory' => $category,
@@ -266,7 +266,7 @@ class AuthMahasiswaController extends Controller
     public function fasilitasDetail(Request $request)
     {
         try {
-            if (!auth()->check() || !auth()->user()->isMahasiswa()) {
+            if (!auth()->check() || !auth()->user()->isPeminjam()) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
 
@@ -346,20 +346,20 @@ class AuthMahasiswaController extends Controller
 
     public function jadwal()
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $rooms = \App\Models\Ruangan::available()->get();
         $items = \App\Models\Barang::where('stok_tersedia', '>', 0)->get();
 
-        return view('mahasiswa.jadwal', compact('rooms', 'items'));
+        return view('peminjam.jadwal', compact('rooms', 'items'));
     }
 
     public function pengajuan(Request $request)
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         // Active facilities
@@ -380,13 +380,13 @@ class AuthMahasiswaController extends Controller
 
         $selectedFacilityId = $request->query('facility_id');
 
-        return view('mahasiswa.pengajuan', compact('rooms', 'items', 'staff', 'pics', 'selectedFacilityId'));
+        return view('peminjam.pengajuan', compact('rooms', 'items', 'staff', 'pics', 'selectedFacilityId'));
     }
 
     public function pengajuanStore(\App\Http\Requests\BookingStoreRequest $request)
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $facilityParts = explode('-', $request->input('facility_id'), 2);
@@ -397,15 +397,34 @@ class AuthMahasiswaController extends Controller
         $type = $facilityParts[0];
         $id = $facilityParts[1];
 
-        if (strtolower($type) === 'ruangan') {
-            $ruangan = \App\Models\Ruangan::find($id);
-            if (!$ruangan || $ruangan->status_ruangan === 'maintenance' || $ruangan->status_ruangan === 'tidak tersedia') {
-                return back()->withErrors(['facility_id' => 'Fasilitas ini sedang dalam masa perawatan dan tidak dapat dipinjam.'])->withInput();
-            }
-        }
-
         DB::beginTransaction();
         try {
+            if (strtolower($type) === 'ruangan') {
+                $ruangan = \App\Models\Ruangan::find($id);
+                if (!$ruangan || $ruangan->status_ruangan === 'maintenance' || $ruangan->status_ruangan === 'tidak tersedia') {
+                    DB::rollBack();
+                    return back()->withErrors(['facility_id' => 'Fasilitas ini sedang dalam masa perawatan dan tidak dapat dipinjam.'])->withInput();
+                }
+            } else {
+                // Lock the barang for update to prevent race conditions
+                $barang = \App\Models\Barang::where('id_barang', $id)->lockForUpdate()->first();
+                $jumlahBarang = (int) ($request->input('jumlah_barang') ?: 1);
+
+                if (!$barang) {
+                    DB::rollBack();
+                    return back()->withErrors(['facility_id' => 'Barang tidak valid.'])->withInput();
+                }
+
+                if ($barang->stok_tersedia < $jumlahBarang) {
+                    DB::rollBack();
+                    return back()->with('error', "Peminjaman ditolak! Sisa stok barang '{$barang->nama_barang}' saat ini hanya {$barang->stok_tersedia}.")->withInput();
+                }
+
+                // Deduct stock immediately (Reservation)
+                $barang->stok_tersedia -= $jumlahBarang;
+                $barang->save();
+            }
+
             $jam_mulai = $request->input('jam_mulai');
             $jam_selesai = $request->input('jam_selesai');
             $tanggal_pengajuan = $request->input('tanggal') . ' ' . $jam_mulai;
@@ -433,13 +452,13 @@ class AuthMahasiswaController extends Controller
                 DB::table('detail_peminjaman_barang')->insert([
                     'peminjaman_id' => $peminjaman->id_peminjaman,
                     'barang_id' => $id,
-                    'jumlah' => $request->input('jumlah_barang') ?: 1,
+                    'jumlah' => $jumlahBarang,
                 ]);
             }
  
             DB::commit();
  
-            return redirect()->route('mahasiswa.dashboard')
+            return redirect()->route('peminjam.dashboard')
                 ->with('success', 'Pengajuan peminjaman berhasil diajukan dan sedang menunggu verifikasi.');
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -449,8 +468,8 @@ class AuthMahasiswaController extends Controller
 
     public function pengembalian()
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $peminjaman = \App\Models\Peminjaman::with(['ruangan', 'barang'])
@@ -458,13 +477,13 @@ class AuthMahasiswaController extends Controller
             ->where('status', 'siap_digunakan')
             ->get();
 
-        return view('mahasiswa.pengembalian', compact('peminjaman'));
+        return view('peminjam.pengembalian', compact('peminjaman'));
     }
 
     public function storePengembalian(Request $request)
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $request->validate([
@@ -549,7 +568,7 @@ class AuthMahasiswaController extends Controller
 
             DB::commit();
 
-            return redirect()->route('mahasiswa.dashboard')
+            return redirect()->route('peminjam.dashboard')
                 ->with('success', 'Pengembalian berhasil diajukan dan sedang menunggu verifikasi.');
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -559,17 +578,17 @@ class AuthMahasiswaController extends Controller
 
     public function profil()
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
-        return view('mahasiswa.profil');
+        return view('peminjam.profil');
     }
 
     public function notifikasi()
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $notifikasi = \App\Models\Peminjaman::with(['ruangan', 'barang'])
@@ -584,13 +603,13 @@ class AuthMahasiswaController extends Controller
         $persetujuan = $notifikasi->whereIn('status', ['disetujui', 'ditolak'])->count();
         $jadwal = $notifikasi->where('status', 'disetujui')->where('tanggal_pengajuan', '>=', now()->toDateString())->count();
 
-        return view('mahasiswa.notifikasi', compact('notifikasi', 'belumDibaca', 'hariIni', 'persetujuan', 'jadwal'));
+        return view('peminjam.notifikasi', compact('notifikasi', 'belumDibaca', 'hariIni', 'persetujuan', 'jadwal'));
     }
 
     public function riwayat()
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $peminjaman = \App\Models\Peminjaman::with(['ruangan', 'barang', 'dosen'])
@@ -598,13 +617,13 @@ class AuthMahasiswaController extends Controller
             ->orderBy('id_peminjaman', 'desc')
             ->get();
 
-        return view('mahasiswa.riwayat', compact('peminjaman'));
+        return view('peminjam.riwayat', compact('peminjaman'));
     }
 
     public function eksporPdf($id)
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $peminjaman = \App\Models\Peminjaman::with(['user', 'ruangan', 'barang', 'dosen', 'verifikasi.verifikator'])
@@ -613,15 +632,15 @@ class AuthMahasiswaController extends Controller
             ->firstOrFail();
 
         // Load view into PDF
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('mahasiswa.pdf_bukti', compact('peminjaman'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('peminjam.pdf_bukti', compact('peminjaman'));
         
         return $pdf->download('Bukti_Peminjaman_' . $peminjaman->id_peminjaman . '.pdf');
     }
 
     public function eksporPdfPengembalian($id)
     {
-        if (!auth()->check() || !auth()->user()->isMahasiswa()) {
-            abort(403, 'Akses hanya untuk mahasiswa.');
+        if (!auth()->check() || !auth()->user()->isPeminjam()) {
+            abort(403, 'Akses hanya untuk peminjam.');
         }
 
         $peminjaman = \App\Models\Peminjaman::with(['user', 'ruangan', 'barang', 'pengembalian'])
@@ -634,7 +653,7 @@ class AuthMahasiswaController extends Controller
         }
 
         // Load view into PDF
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('mahasiswa.pdf_bukti_pengembalian', compact('peminjaman'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('peminjam.pdf_bukti_pengembalian', compact('peminjaman'));
         
         return $pdf->download('Bukti_Pengembalian_' . $peminjaman->id_peminjaman . '.pdf');
     }

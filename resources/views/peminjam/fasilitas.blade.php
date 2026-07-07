@@ -3,11 +3,11 @@
 
 
 @section('content')
-            <form action="{{ route('mahasiswa.fasilitas') }}" method="GET">
+            <form action="{{ route('peminjam.fasilitas') }}" method="GET">
                 <div class="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-6">
                     <div>
-                        <div class="text-[#7b8681] text-[20px] mb-1">Mahasiswa</div>
-                        <h1 class="text-[24px] font-medium m-0">Mahasiswa · Daftar Fasilitas</h1>
+                        <div class="text-[#7b8681] text-[20px] mb-1">Peminjam</div>
+                        <h1 class="text-[24px] font-medium m-0">Peminjam · Daftar Fasilitas</h1>
                     </div>
 
                     <div class="flex items-center gap-3 w-full md:w-auto">
@@ -24,7 +24,7 @@
                     <div class="relative z-10">
                         <h2 class="text-xl font-semibold mb-2">Lihat daftar fasilitas yang tersedia</h2>
                         <p class="mb-0 text-[#5f6963]">
-                            Mahasiswa membuka menu fasilitas dan sistem menampilkan ruangan serta barang inventaris yang bisa dipinjam.
+                            Peminjam membuka menu fasilitas dan sistem menampilkan ruangan serta barang inventaris yang bisa dipinjam.
                         </p>
                     </div>
                     <!-- Decorative shapes -->
@@ -89,7 +89,7 @@
                                             @endif
                                         </div>
                                         <div class="flex flex-wrap items-center gap-2">
-                                            <a href="{{ route('mahasiswa.pengajuan', ['facility_id' => $item->kategori . '-' . $item->id]) }}" class="bg-[#5d7d6b] hover:bg-[#496454] text-white font-semibold text-[13.5px] rounded-full px-4 py-2 transition no-underline text-center">
+                                            <a href="{{ route('peminjam.pengajuan', ['facility_id' => $item->kategori . '-' . $item->id]) }}" class="bg-[#5d7d6b] hover:bg-[#496454] text-white font-semibold text-[13.5px] rounded-full px-4 py-2 transition no-underline text-center">
                                                 Ajukan Peminjaman
                                             </a>
                                             <button type="button" class="btn-detail bg-[#eef4ee] hover:bg-[#5d7d6b] hover:text-white text-[#496454] border border-[#c8d8c8] hover:border-[#5d7d6b] font-semibold text-[13.5px] rounded-full px-4 py-2 transition cursor-pointer" data-id="{{ $item->id }}" data-category="{{ $item->kategori }}">
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.show();
 
             // Fetch details
-            fetch(`/mahasiswa/fasilitas/detail?id=${id}&kategori=${category}`)
+            fetch(`/peminjam/fasilitas/detail?id=${id}&kategori=${category}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Gagal mengambil data detail');

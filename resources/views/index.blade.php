@@ -53,7 +53,7 @@
                         <span class="text-green-300 text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-100">Peminjaman Fasilitas</span> Kampus
                     </h1>
                     <p class="text-lg text-white/80 mb-10 max-w-xl leading-relaxed">
-                        SBUM membantu mahasiswa dan admin dalam mengelola pengajuan fasilitas kampus secara cepat, transparan, dan efisien. Mulai dari aula, laboratorium, ruang seminar, hingga lapangan dapat diajukan dalam satu dashboard yang rapi.
+                        SBUM membantu peminjam dan admin dalam mengelola pengajuan fasilitas kampus secara cepat, transparan, dan efisien. Mulai dari aula, laboratorium, ruang seminar, hingga lapangan dapat diajukan dalam satu dashboard yang rapi.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
                         <a href="#fasilitas" class="inline-flex justify-center items-center px-8 py-4 text-base font-bold text-[#1f5f4d] bg-white rounded-xl hover:bg-gray-50 transition shadow-lg hover:shadow-xl hover:-translate-y-0.5 duration-200">
@@ -75,12 +75,12 @@
                                     <img src="{{ asset('images/logo-sbum.png') }}" class="w-6 h-6 object-contain" />
                                 </div>
                                 <div>
-                                    <div class="font-bold text-gray-900 text-sm">Dashboard Mahasiswa</div>
+                                    <div class="font-bold text-gray-900 text-sm">Dashboard Peminjam</div>
                                     <div class="text-xs text-gray-500">Ringkasan aktivitas peminjaman</div>
                                 </div>
                             </div>
                             <div class="px-3 py-1.5 bg-gray-100 rounded-full text-xs font-semibold text-gray-600 flex items-center gap-1.5">
-                                <i class="bi bi-person-circle"></i> Mahasiswa
+                                <i class="bi bi-person-circle"></i> Peminjam
                             </div>
                         </div>
                         

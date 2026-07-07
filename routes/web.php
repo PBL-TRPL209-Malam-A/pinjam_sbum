@@ -1,34 +1,34 @@
 <?php
 
-use App\Http\Controllers\AuthMahasiswaController;
+use App\Http\Controllers\AuthPeminjamController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'index')->name('home');
 
-Route::get('/login', [AuthMahasiswaController::class, 'showLogin'])->name('login');
-Route::get('/register', [AuthMahasiswaController::class, 'showRegister'])->name('register');
+Route::get('/login', [AuthPeminjamController::class, 'showLogin'])->name('login');
+Route::get('/register', [AuthPeminjamController::class, 'showRegister'])->name('register');
 
 Route::middleware('guest')->group(function () {
-    Route::post('/login', [AuthMahasiswaController::class, 'login'])->name('login.post');
-    Route::post('/register', [AuthMahasiswaController::class, 'register'])->name('register.post');
+    Route::post('/login', [AuthPeminjamController::class, 'login'])->name('login.post');
+    Route::post('/register', [AuthPeminjamController::class, 'register'])->name('register.post');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/mahasiswa/dashboard', [AuthMahasiswaController::class, 'dashboard'])->name('mahasiswa.dashboard');
-    Route::get('/mahasiswa/fasilitas', [AuthMahasiswaController::class, 'fasilitas'])->name('mahasiswa.fasilitas');
-    Route::get('/mahasiswa/fasilitas/detail', [AuthMahasiswaController::class, 'fasilitasDetail'])->name('mahasiswa.fasilitas.detail');
-    Route::get('/mahasiswa/jadwal', [AuthMahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal');
-    Route::get('/mahasiswa/jadwal/slots', [\App\Http\Controllers\ScheduleController::class, 'getSlots'])->name('mahasiswa.jadwal.slots');
-    Route::get('/mahasiswa/pengajuan', [AuthMahasiswaController::class, 'pengajuan'])->name('mahasiswa.pengajuan');
-    Route::post('/mahasiswa/pengajuan', [AuthMahasiswaController::class, 'pengajuanStore'])->name('mahasiswa.pengajuan.store');
-    Route::get('/mahasiswa/pengembalian', [AuthMahasiswaController::class, 'pengembalian'])->name('mahasiswa.pengembalian');
-    Route::post('/mahasiswa/pengembalian', [AuthMahasiswaController::class, 'storePengembalian'])->name('mahasiswa.pengembalian.store');
-    Route::get('/mahasiswa/profil', [AuthMahasiswaController::class, 'profil'])->name('mahasiswa.profil');
-    Route::get('/mahasiswa/notifikasi', [AuthMahasiswaController::class, 'notifikasi'])->name('mahasiswa.notifikasi');
-    Route::get('/mahasiswa/riwayat', [AuthMahasiswaController::class, 'riwayat'])->name('mahasiswa.riwayat');
-    Route::get('/mahasiswa/riwayat/pdf/{id}', [AuthMahasiswaController::class, 'eksporPdf'])->name('mahasiswa.riwayat.pdf');
-    Route::get('/mahasiswa/riwayat/pdf-pengembalian/{id}', [AuthMahasiswaController::class, 'eksporPdfPengembalian'])->name('mahasiswa.riwayat.pdf_pengembalian');
-    Route::post('/logout', [AuthMahasiswaController::class, 'logout'])->name('logout');
+    Route::get('/peminjam/dashboard', [AuthPeminjamController::class, 'dashboard'])->name('peminjam.dashboard');
+    Route::get('/peminjam/fasilitas', [AuthPeminjamController::class, 'fasilitas'])->name('peminjam.fasilitas');
+    Route::get('/peminjam/fasilitas/detail', [AuthPeminjamController::class, 'fasilitasDetail'])->name('peminjam.fasilitas.detail');
+    Route::get('/peminjam/jadwal', [AuthPeminjamController::class, 'jadwal'])->name('peminjam.jadwal');
+    Route::get('/peminjam/jadwal/slots', [\App\Http\Controllers\ScheduleController::class, 'getSlots'])->name('peminjam.jadwal.slots');
+    Route::get('/peminjam/pengajuan', [AuthPeminjamController::class, 'pengajuan'])->name('peminjam.pengajuan');
+    Route::post('/peminjam/pengajuan', [AuthPeminjamController::class, 'pengajuanStore'])->name('peminjam.pengajuan.store');
+    Route::get('/peminjam/pengembalian', [AuthPeminjamController::class, 'pengembalian'])->name('peminjam.pengembalian');
+    Route::post('/peminjam/pengembalian', [AuthPeminjamController::class, 'storePengembalian'])->name('peminjam.pengembalian.store');
+    Route::get('/peminjam/profil', [AuthPeminjamController::class, 'profil'])->name('peminjam.profil');
+    Route::get('/peminjam/notifikasi', [AuthPeminjamController::class, 'notifikasi'])->name('peminjam.notifikasi');
+    Route::get('/peminjam/riwayat', [AuthPeminjamController::class, 'riwayat'])->name('peminjam.riwayat');
+    Route::get('/peminjam/riwayat/pdf/{id}', [AuthPeminjamController::class, 'eksporPdf'])->name('peminjam.riwayat.pdf');
+    Route::get('/peminjam/riwayat/pdf-pengembalian/{id}', [AuthPeminjamController::class, 'eksporPdfPengembalian'])->name('peminjam.riwayat.pdf_pengembalian');
+    Route::post('/logout', [AuthPeminjamController::class, 'logout'])->name('logout');
 });
 
 // Routes for Admin

@@ -51,10 +51,10 @@
         background-color: #dfd4c8;
     }
     .timeline-step.completed {
-        background-color: var(--primary-main);
+        background-color: #557a67;
     }
     .btn-decision-verify {
-        background-color: var(--primary-main);
+        background-color: #16a34a;
         color: white;
         font-weight: 600;
         border-radius: 0.75rem;
@@ -64,10 +64,10 @@
         transition: 0.2s;
     }
     .btn-decision-verify:hover {
-        background-color: var(--primary-dark);
+        background-color: #15803d;
     }
     .btn-decision-reject {
-        background-color: #c95b50;
+        background-color: #dc2626;
         color: white;
         font-weight: 600;
         border-radius: 0.75rem;
@@ -77,12 +77,12 @@
         transition: 0.2s;
     }
     .btn-decision-reject:hover {
-        background-color: #b34e44;
+        background-color: #b91c1c;
     }
     .btn-decision-revision {
-        border: 1px solid var(--line);
-        background: white;
-        color: var(--text-main);
+        border: none;
+        background-color: #eab308;
+        color: white;
         font-weight: 600;
         border-radius: 0.75rem;
         height: 48px;
@@ -90,7 +90,7 @@
         transition: 0.2s;
     }
     .btn-decision-revision:hover {
-        background-color: #fdfcf9;
+        background-color: #ca8a04;
     }
 </style>
 
@@ -127,7 +127,7 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="fw-bold text-main">SBUM-2026-{{ str_pad($item->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · {{ $item->nama_kegiatan }}</div>                            <div class="text-secondary small mt-1">
-                                Peminjam: {{ $item->user->nama_lengkap ?? 'Mahasiswa' }} · 
+                                Peminjam: {{ $item->user->nama_lengkap ?? 'Peminjam' }} · 
                                 {{ $item->nama_fasilitas_with_type }}
                             </div>
                             <div class="text-muted small mt-2">

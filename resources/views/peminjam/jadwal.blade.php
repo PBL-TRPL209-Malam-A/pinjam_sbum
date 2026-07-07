@@ -5,8 +5,8 @@
 @section('content')
             <div class="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-6">
                 <div>
-                    <div class="text-[#7b8681] text-[20px] mb-1">Mahasiswa</div>
-                    <h1 class="text-[24px] font-medium m-0">Mahasiswa · Jadwal Ketersediaan</h1>
+                    <div class="text-[#7b8681] text-[20px] mb-1">Peminjam</div>
+                    <h1 class="text-[24px] font-medium m-0">Peminjam · Jadwal Ketersediaan</h1>
                 </div>
 
                 <div class="flex items-center gap-3 w-full md:w-auto">
@@ -19,7 +19,7 @@
                 <div class="relative z-10">
                     <h2 class="text-xl font-semibold mb-2">Lihat jadwal ketersediaan fasilitas</h2>
                     <p class="mb-0 text-[#5f6963]">
-                        Mahasiswa membuka menu jadwal dan sistem menampilkan slot pemakaian agar tidak terjadi bentrok.
+                        Peminjam membuka menu jadwal dan sistem menampilkan slot pemakaian agar tidak terjadi bentrok.
                     </p>
                 </div>
                 <!-- Decorative shapes -->
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
         slotsGrid.classList.add('d-none');
 
         // Fetch slot data from API
-        fetch(`/mahasiswa/jadwal/slots?facility_id=${facilityVal}&tanggal=${dateVal}`)
+        fetch(`/peminjam/jadwal/slots?facility_id=${facilityVal}&tanggal=${dateVal}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Gagal mengambil data jadwal.');

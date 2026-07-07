@@ -49,7 +49,7 @@
 <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 mb-6">
     <h3 class="text-xl font-bold text-[#466454] mb-3">Tugas Utama Pamdal</h3>
     <ul class="text-[#7d8781] text-sm list-disc list-inside space-y-2">
-        <li>Memantau ketertiban dan kapasitas ruangan saat kegiatan mahasiswa berlangsung.</li>
+        <li>Memantau ketertiban dan kapasitas ruangan saat kegiatan peminjam berlangsung.</li>
         <li>Mencatat temuan lapangan dan melaporkan status pengawasan ke dalam sistem.</li>
         <li>Menjaga keamanan area sekitar fasilitas selama waktu peminjaman.</li>
     </ul>

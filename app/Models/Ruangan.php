@@ -21,7 +21,7 @@ class Ruangan extends Model
         'deskripsi_ruangan',
         'pic_id',
     ];
-
+    //  tambahkan const gedung 
     public function pic()
     {
         return $this->belongsTo(User::class, 'pic_id', 'id_user');

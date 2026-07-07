@@ -5,7 +5,7 @@
 @section('content')
             <div class="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-6">
                 <div>
-                    <div class="text-[#7b8681] text-[20px] mb-1">Mahasiswa</div>
+                    <div class="text-[#7b8681] text-[20px] mb-1">Peminjam</div>
                     <h1 class="text-[24px] font-medium m-0">Riwayat Peminjaman & Bukti</h1>
                 </div>
 
@@ -52,11 +52,11 @@
                             
                             <div class="mt-5 pt-4 border-t border-[#e7ddd1] flex flex-wrap gap-3 justify-end">
                                 @if(!in_array($pjm->status, ['ditolak', 'menunggu_dosen']))
-                                    <a href="{{ route('mahasiswa.riwayat.pdf', $pjm->id_peminjaman) }}" target="_blank" class="inline-flex items-center gap-2 bg-[#5d7d6b] hover:bg-[#496454] text-white font-semibold rounded-xl px-4 py-2.5 transition no-underline text-sm">
+                                    <a href="{{ route('peminjam.riwayat.pdf', $pjm->id_peminjaman) }}" target="_blank" class="inline-flex items-center gap-2 bg-[#5d7d6b] hover:bg-[#496454] text-white font-semibold rounded-xl px-4 py-2.5 transition no-underline text-sm">
                                         <i class="bi bi-file-earmark-pdf"></i> Cetak Bukti Peminjaman
                                     </a>
                                     @if($pjm->pengembalian)
-                                        <a href="{{ route('mahasiswa.riwayat.pdf_pengembalian', $pjm->id_peminjaman) }}" target="_blank" class="inline-flex items-center gap-2 bg-[#3b4d44] hover:bg-[#2c3a33] text-white font-semibold rounded-xl px-4 py-2.5 transition no-underline text-sm">
+                                        <a href="{{ route('peminjam.riwayat.pdf_pengembalian', $pjm->id_peminjaman) }}" target="_blank" class="inline-flex items-center gap-2 bg-[#3b4d44] hover:bg-[#2c3a33] text-white font-semibold rounded-xl px-4 py-2.5 transition no-underline text-sm">
                                             <i class="bi bi-file-earmark-pdf"></i> Cetak Bukti Pengembalian
                                         </a>
                                     @endif

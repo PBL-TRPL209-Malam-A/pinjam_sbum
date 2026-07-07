@@ -80,7 +80,7 @@
     <div style="max-width: 550px;">
         <h2 class="fs-4 fw-bold text-main mb-2">Halo, Dosen Penanggung Jawab</h2>
         <p class="text-secondary small mb-3">
-            Tinjau permohonan mahasiswa, verifikasi kelayakan kegiatan, lalu lanjutkan ke keputusan.
+            Tinjau permohonan peminjam, verifikasi kelayakan kegiatan, lalu lanjutkan ke keputusan.
         </p>
         <button class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block">Buka Antrian</button>
     </div>
@@ -105,7 +105,7 @@
             <div>
                 <div class="req-header">
                     <div>
-                        <h4 class="fs-5 fw-bold text-main mb-0">{{ $item->user->nama_lengkap ?? 'Mahasiswa' }}</h4>
+                        <h4 class="fs-5 fw-bold text-main mb-0">{{ $item->user->nama_lengkap ?? 'Peminjam' }}</h4>
                         <div class="text-[#7d8781] text-sm">{{ $item->user->nim ?? '-' }} · Kegiatan</div>
                     </div>
                     @if($item->status == 'menunggu_dosen')
@@ -185,12 +185,12 @@
                                 </div>
                                 <div class="d-flex align-items-center mb-2">
                                     <input class="form-check-input mt-0" type="checkbox" id="check2_{{ $item->id_peminjaman }}" required>
-                                    <label class="form-check-label text-main fw-semibold ms-2" for="check2_{{ $item->id_peminjaman }}">Jumlah dan jenis barang masuk akal dan diperlukan mahasiswa</label>
+                                    <label class="form-check-label text-main fw-semibold ms-2" for="check2_{{ $item->id_peminjaman }}">Jumlah dan jenis barang masuk akal dan diperlukan peminjam</label>
                                 </div>
                             @else
                                 <div class="d-flex align-items-center mb-2">
                                     <input class="form-check-input mt-0" type="checkbox" id="check1_{{ $item->id_peminjaman }}" required>
-                                    <label class="form-check-label text-main fw-semibold ms-2" for="check1_{{ $item->id_peminjaman }}">Kegiatan mahasiswa sesuai dengan ranah akademik/kemahasiswaan</label>
+                                    <label class="form-check-label text-main fw-semibold ms-2" for="check1_{{ $item->id_peminjaman }}">Kegiatan peminjam sesuai dengan ranah akademik/kepeminjaman</label>
                                 </div>
                                 <div class="d-flex align-items-center mb-2">
                                     <input class="form-check-input mt-0" type="checkbox" id="check2_{{ $item->id_peminjaman }}" required>

@@ -5,8 +5,8 @@
 @section('content')
             <div class="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-6">
                 <div>
-                    <div class="text-[#7b8681] text-[20px] mb-1">Mahasiswa</div>
-                    <h1 class="text-[24px] font-medium m-0">Mahasiswa · Ajukan Pengembalian</h1>
+                    <div class="text-[#7b8681] text-[20px] mb-1">Peminjam</div>
+                    <h1 class="text-[24px] font-medium m-0">Peminjam · Ajukan Pengembalian</h1>
                 </div>
 
                 <div class="flex items-center gap-3 w-full md:w-auto">
@@ -19,7 +19,7 @@
                 <div class="relative z-10">
                     <h2 class="text-xl font-semibold mb-2">Ajukan pengembalian fasilitas</h2>
                     <p class="mb-0 text-[#5f6963]">
-                        Mahasiswa membuka menu pengembalian, mengisi data, lalu submit agar admin dapat memverifikasi.
+                        Peminjam membuka menu pengembalian, mengisi data, lalu submit agar admin dapat memverifikasi.
                     </p>
                 </div>
                 <!-- Decorative shapes -->
@@ -27,7 +27,7 @@
                 <div class="absolute right-20 -bottom-10 w-32 h-32 bg-[#d6e5d6]/60 rounded-full blur-xl"></div>
             </div>
 
-            <form action="{{ route('mahasiswa.pengembalian.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('peminjam.pengembalian.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="xl:col-span-2">

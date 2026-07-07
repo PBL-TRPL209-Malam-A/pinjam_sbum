@@ -9,9 +9,9 @@
 <!-- Banner Card -->
 <div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[24px] p-6 lg:p-8 mb-6 shadow-sm">
     <div class="p-6 lg:p-8">
-        <h2 class="text-xl font-semibold text-[#466454] mb-2">Verifikasi permohonan mahasiswa dengan cepat</h2>
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Verifikasi permohonan peminjam dengan cepat</h2>
         <p class="text-[#7d8781] max-w-2xl mb-6">
-            Dashboard ini membantu dosen memantau pengajuan yang perlu diverifikasi, keputusan terbaru, dan jadwal kegiatan mahasiswa.
+            Dashboard ini membantu dosen memantau pengajuan yang perlu diverifikasi, keputusan terbaru, dan jadwal kegiatan peminjam.
         </p>
         <a href="{{ route('dosen.verifikasi-peminjaman') }}" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block">Buka Verifikasi</a>
     </div>
@@ -72,7 +72,7 @@
             <!-- Fallbacks to match mockup exactly -->
             <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[20px] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                 <div>
-                    <div class="font-semibold text-[#466454]">SBUM-2026-0148 - Seminar Mahasiswa Baru</div>
+                    <div class="font-semibold text-[#466454]">SBUM-2026-0148 - Seminar Peminjam Baru</div>
                     <div class="text-[#7d8781] text-sm mt-1">Moch Azmi · Aula Utama · 12 Apr 2026</div>
                 </div>
                 <div>
@@ -110,11 +110,11 @@
             Ditolak · Lab Komputer 2 - 09 Apr
         </div>
 
-        <div class="mb-4 mt-8 font-semibold text-[#7d8781]">Jadwal Kegiatan Mahasiswa</div>
+        <div class="mb-4 mt-8 font-semibold text-[#7d8781]">Jadwal Kegiatan Peminjam</div>
         <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 mb-6">
             <div class="mb-4">
                 <div class="text-[#7d8781] text-sm font-semibold">12 Apr · 08.00 - 12.00</div>
-                <div class="font-semibold text-[#466454] mt-1">Aula Utama · Seminar Mahasiswa Baru</div>
+                <div class="font-semibold text-[#466454] mt-1">Aula Utama · Seminar Peminjam Baru</div>
             </div>
             <div>
                 <div class="text-[#7d8781] text-sm font-semibold">13 Apr · 09.00 - 11.00</div>

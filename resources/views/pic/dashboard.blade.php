@@ -11,7 +11,7 @@
     <div class="p-6 lg:p-8">
         <h2 class="text-xl font-semibold text-[#466454] mb-2">Selamat Datang, {{ auth()->user()->nama_lengkap }}!</h2>
         <p class="text-[#7d8781] max-w-2xl mb-6">
-            Pantau kesiapan fasilitas ruangan yang Anda kelola untuk memastikan semua kegiatan mahasiswa berjalan dengan baik.
+            Pantau kesiapan fasilitas ruangan yang Anda kelola untuk memastikan semua kegiatan peminjam berjalan dengan baik.
         </p>
         <a href="{{ route('pic.kesiapan') }}" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block">Buka Kesiapan</a>
     </div>

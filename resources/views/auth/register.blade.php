@@ -50,10 +50,10 @@
                             </span>
                             <input
                                 type="text"
-                                name="nim_nik"
+                                name="nim"
                                 class="w-full h-[46px] pr-3 bg-transparent outline-none text-[#333] text-[14px] placeholder:text-[#a5a5a5]"
                                 placeholder="Nomor identitas"
-                                value="{{ old('nim_nik') }}" required>
+                                value="{{ old('nim') }}" required>
                         </div>
                     </div>
                 </div>

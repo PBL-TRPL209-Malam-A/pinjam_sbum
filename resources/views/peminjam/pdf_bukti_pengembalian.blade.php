@@ -197,7 +197,7 @@
 
     <div class="footer-note">
         Dokumen ini diterbitkan secara otomatis oleh Sistem Booking & Peminjaman SBUM Politeknik Negeri Batam.<br>
-        Bukti ini sah dan merupakan bukti fisik bahwa mahasiswa terkait telah mengembalikan fasilitas.
+        Bukti ini sah dan merupakan bukti fisik bahwa peminjam terkait telah mengembalikan fasilitas.
     </div>
 
 </body>

@@ -472,11 +472,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Listeners for selectors
+    
     ruanganSelect.addEventListener('change', loadSlots);
     tanggalInput.addEventListener('change', loadSlots);
 
-    // Modal controls attached to window for global access
     window.showBookingDetailModal = function(booking) {
         const modal = document.getElementById('eventDetailModal');
         const modalContent = document.getElementById('eventDetailModalContent');

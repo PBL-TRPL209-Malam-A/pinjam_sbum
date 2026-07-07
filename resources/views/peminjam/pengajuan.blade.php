@@ -5,8 +5,8 @@
 @section('content')
             <div class="flex flex-col md:flex-row justify-between md:items-start gap-4 mb-6">
                 <div>
-                    <div class="text-[#7b8681] text-[20px] mb-1">Mahasiswa</div>
-                    <h1 class="text-[24px] font-medium m-0">Mahasiswa · Ajukan Peminjaman</h1>
+                    <div class="text-[#7b8681] text-[20px] mb-1">Peminjam</div>
+                    <h1 class="text-[24px] font-medium m-0">Peminjam · Ajukan Peminjaman</h1>
                 </div>
 
                 <div class="flex items-center gap-3 w-full md:w-auto">
@@ -19,7 +19,7 @@
                 <div class="relative z-10">
                     <h2 class="text-xl font-semibold mb-2">Ajukan peminjaman fasilitas</h2>
                     <p class="mb-0 text-[#5f6963]">
-                        Mahasiswa memilih fasilitas, mengisi data peminjaman, lalu submit agar diproses pihak berwenang.
+                        Peminjam memilih fasilitas, mengisi data peminjaman, lalu submit agar diproses pihak berwenang.
                     </p>
                 </div>
                 <!-- Decorative shapes -->
@@ -49,7 +49,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('mahasiswa.pengajuan.store') }}" method="POST">
+            <form action="{{ route('peminjam.pengajuan.store') }}" method="POST">
                 @csrf
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="xl:col-span-2">
@@ -95,7 +95,7 @@
 
                             <div>
                                 <label class="block text-[#5c6761] font-semibold mb-2">Nama Kegiatan</label>
-                                <input type="text" name="nama_kegiatan" class="h-12 w-full px-4 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition" value="{{ old('nama_kegiatan') ?? 'Seminar Mahasiswa Baru' }}" required>
+                                <input type="text" name="nama_kegiatan" class="h-12 w-full px-4 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition" value="{{ old('nama_kegiatan') ?? 'Seminar Peminjam Baru' }}" required>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">

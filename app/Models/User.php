@@ -45,9 +45,9 @@ class User extends Authenticatable
         });
     }
 
-    public function isMahasiswa(): bool
+    public function isPeminjam(): bool
     {
-        return $this->roles()->where('role.nama_role', 'Mahasiswa')->exists() || 
+        return $this->roles()->where('role.nama_role', 'Peminjam')->exists() || 
                $this->roles()->where('role.id_role', 1)->exists();
     }
 

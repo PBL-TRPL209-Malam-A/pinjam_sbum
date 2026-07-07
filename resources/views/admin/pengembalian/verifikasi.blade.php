@@ -65,7 +65,7 @@
         text-align: center;
     }
     .btn-verify-done {
-        background-color: var(--primary-main);
+        background-color: #16a34a;
         color: white;
         font-weight: 600;
         border-radius: 0.75rem;
@@ -75,7 +75,7 @@
         transition: 0.2s;
     }
     .btn-verify-done:hover {
-        background-color: var(--primary-dark);
+        background-color: #15803d;
     }
     .btn-verify-check {
         background-color: #fcf1d3;
@@ -91,7 +91,7 @@
         background-color: #fce8bc;
     }
     .btn-verify-alert {
-        background-color: #c95b50;
+        background-color: #dc2626;
         color: white;
         font-weight: 600;
         border-radius: 0.75rem;
@@ -101,7 +101,7 @@
         transition: 0.2s;
     }
     .btn-verify-alert:hover {
-        background-color: #b34e44;
+        background-color: #b91c1c;
     }
     .btn-upload-photo {
         background-color: #f7f6f2;
@@ -168,7 +168,7 @@
                         <div>
                             <div class="fw-bold text-main">SBUM-2026-{{ str_pad($item->peminjaman->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · {{ $item->peminjaman->nama_kegiatan }}</div>
                             <div class="text-secondary small mt-1">
-                                Peminjam: {{ $item->peminjaman->user->nama_lengkap ?? 'Mahasiswa' }} · 
+                                Peminjam: {{ $item->peminjaman->user->nama_lengkap ?? 'Peminjam' }} · 
                                 {{ $item->kategori === 'ruangan' ? ($item->peminjaman->ruangan->isNotEmpty() ? $item->peminjaman->ruangan->first()->nama_ruangan : 'Ruangan') : ($item->peminjaman->barang->isNotEmpty() ? $item->peminjaman->barang->first()->nama_barang : 'Barang') }}
                             </div>
                             <div class="text-muted small mt-2">
@@ -217,7 +217,7 @@
                             <!-- Label 1 -->
                             <div style="width: 30%; text-align: left; line-height: 1.2;">
                                 <span class="d-block fw-semibold text-main">Diajukan</span>
-                                <span class="text-muted small text-truncate d-block" style="max-width: 120px;">{{ $item->peminjaman->user->nama_lengkap ?? 'Mahasiswa' }}</span>
+                                <span class="text-muted small text-truncate d-block" style="max-width: 120px;">{{ $item->peminjaman->user->nama_lengkap ?? 'Peminjam' }}</span>
                             </div>
                             <!-- Label 2 -->
                             @php
@@ -277,7 +277,7 @@
                     </div>
                     <div class="checklist-item text-start">
                         <input class="form-check-input mt-0" type="checkbox" id="check3" required>
-                        <label class="form-check-label text-main fw-semibold ms-2" for="check3">Catatan mahasiswa sesuai pemeriksaan</label>
+                        <label class="form-check-label text-main fw-semibold ms-2" for="check3">Catatan peminjam sesuai pemeriksaan</label>
                     </div>
 
                     <div class="mt-4 text-start">
@@ -394,7 +394,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="info-row d-flex flex-column align-items-start mb-0">
-                                <span class="text-secondary small fw-semibold" style="font-size: 0.8rem; color: var(--text-muted);">Catatan Pengembalian Mahasiswa</span>
+                                <span class="text-secondary small fw-semibold" style="font-size: 0.8rem; color: var(--text-muted);">Catatan Pengembalian Peminjam</span>
                                 <span class="fw-bold text-main">{{ $returnCatatan ?: '-' }}</span>
                             </div>
                         </div>
