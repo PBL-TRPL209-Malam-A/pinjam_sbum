@@ -190,26 +190,34 @@
                             @else
                                 <div class="d-flex align-items-center mb-2">
                                     <input class="form-check-input mt-0" type="checkbox" id="check1_{{ $item->id_peminjaman }}" required>
-                                    <label class="form-check-label text-main fw-semibold ms-2" for="check1_{{ $item->id_peminjaman }}">Kegiatan peminjam sesuai dengan ranah akademik/kepeminjaman</label>
+                                    <label class="form-check-label text-main fw-semibold ms-2" for="check1_{{ $item->id_peminjaman }}">Saya memverifikasi bahwa kegiatan ini sesuai dengan tujuan pengajuan peminjaman dan layak menggunakan fasilitas Polibatam.</label>
                                 </div>
                                 <div class="d-flex align-items-center mb-2">
                                     <input class="form-check-input mt-0" type="checkbox" id="check2_{{ $item->id_peminjaman }}" required>
                                     <label class="form-check-label text-main fw-semibold ms-2" for="check2_{{ $item->id_peminjaman }}">Waktu pelaksanaan tidak mengganggu kegiatan belajar mengajar rutin</label>
                                 </div>
                             @endif
+                        <div class="mb-4">
+                            <label class="form-label text-secondary fw-semibold">Keputusan <span class="text-danger">*</span></label>
+                            <div class="d-flex flex-column gap-2">
+                                <label class="d-flex align-items-center p-3 border rounded-3" style="cursor: pointer; background:#dcebd7; border-color:#b7d2b6 !important;">
+                                    <input type="radio" name="status_pengajuan" value="verif_dosen" class="form-check-input mt-0 me-3" required onchange="handleDecisionChange({{ $item->id_peminjaman }}, this.value)">
+                                    <span class="fw-semibold text-[#466454]">Disetujui</span>
+                                </label>
+                                <label class="d-flex align-items-center p-3 border rounded-3" style="cursor: pointer; background:#fdf0f0; border-color:#f5c2c7 !important;">
+                                    <input type="radio" name="status_pengajuan" value="ditolak" class="form-check-input mt-0 me-3" required onchange="handleDecisionChange({{ $item->id_peminjaman }}, this.value)">
+                                    <span class="fw-semibold text-danger">Ditolak</span>
+                                </label>
+                            </div>
                         </div>
+
                         <div class="mb-3" id="rejectNoteContainer{{ $item->id_peminjaman }}" style="display: none;">
-                            <label class="form-label text-danger fw-bold">Alasan Penolakan <span class="text-danger">*</span></label>
-                            <textarea name="catatan" id="catatanField{{ $item->id_peminjaman }}" class="form-control border-danger" rows="3" placeholder="Wajib: Berikan alasan kenapa pengajuan ini ditolak..." style="border-radius: 0.75rem;"></textarea>
+                            <label class="form-label fw-bold" id="rejectLabel{{ $item->id_peminjaman }}">Alasan Penolakan <span class="text-danger">*</span></label>
+                            <textarea name="catatan" id="catatanField{{ $item->id_peminjaman }}" class="form-control" rows="3" placeholder="Wajib diisi..." style="border-radius: 0.75rem;"></textarea>
                         </div>
                     </div>
-                    <div class="modal-footer border-0 pt-0 d-flex gap-2" id="actionButtonsContainer{{ $item->id_peminjaman }}">
-                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='verif_dosen'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=true; document.getElementById('check2_{{ $item->id_peminjaman }}').required=true;" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Setujui</button>
-                        <button type="button" onclick="showRejectNote({{ $item->id_peminjaman }})" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem; background-color:#c95b50; border:none;">Tolak</button>
-                    </div>
-                    <div class="modal-footer border-0 pt-0 d-flex gap-2" id="confirmRejectContainer{{ $item->id_peminjaman }}" style="display: none;">
-                        <button type="button" onclick="cancelReject({{ $item->id_peminjaman }})" class="btn btn-light" style="border-radius:0.75rem; color:#7d8781;">Batal</button>
-                        <button type="submit" onclick="document.getElementById('statusField{{ $item->id_peminjaman }}').value='ditolak'; document.getElementById('check1_{{ $item->id_peminjaman }}').required=false; document.getElementById('check2_{{ $item->id_peminjaman }}').required=false;" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem; background-color:#c95b50; border:none;">Konfirmasi Tolak</button>
+                    <div class="modal-footer border-0 pt-0 d-flex w-100">
+                        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-3 rounded-xl font-semibold transition w-100 border-0" style="border-radius:0.75rem;">Simpan Keputusan</button>
                     </div>
                 </form>
             </div>
@@ -225,18 +233,32 @@
 </div>
 
 <script>
-    function showRejectNote(id) {
-        document.getElementById('rejectNoteContainer' + id).style.display = 'block';
-        document.getElementById('actionButtonsContainer' + id).style.display = 'none';
-        document.getElementById('confirmRejectContainer' + id).style.display = 'flex';
-        document.getElementById('catatanField' + id).required = true;
-    }
-    function cancelReject(id) {
-        document.getElementById('rejectNoteContainer' + id).style.display = 'none';
-        document.getElementById('actionButtonsContainer' + id).style.display = 'flex';
-        document.getElementById('confirmRejectContainer' + id).style.display = 'none';
-        document.getElementById('catatanField' + id).required = false;
-        document.getElementById('catatanField' + id).value = '';
+    function handleDecisionChange(id, value) {
+        const rejectContainer = document.getElementById('rejectNoteContainer' + id);
+        const catatanField = document.getElementById('catatanField' + id);
+        const rejectLabel = document.getElementById('rejectLabel' + id);
+        
+        const check1 = document.getElementById('check1_' + id);
+        const check2 = document.getElementById('check2_' + id);
+
+        if (value === 'ditolak') {
+            rejectContainer.style.display = 'block';
+            catatanField.required = true;
+            catatanField.classList.add('border-danger');
+            catatanField.classList.remove('border-warning');
+            rejectLabel.classList.add('text-danger');
+            rejectLabel.classList.remove('text-warning');
+            rejectLabel.innerHTML = 'Alasan Penolakan <span class="text-danger">*</span>';
+            
+            if (check1) check1.required = false;
+            if (check2) check2.required = false;
+        } else {
+            rejectContainer.style.display = 'none';
+            catatanField.required = false;
+            
+            if (check1) check1.required = true;
+            if (check2) check2.required = true;
+        }
     }
 </script>
 @endsection

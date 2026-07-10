@@ -4,93 +4,30 @@
 
 
 @section('content')
-<style>
-    .banner-card {
-        background-color: #edf2ea;
-        border: 1px solid #dfe7dc;
-        border-radius: 1.5rem;
-    }
-    .custom-table {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.5rem;
-        overflow: hidden;
-    }
-    .custom-table th {
-        background-color: #f7f3eb;
-        color: var(--text-main);
-        font-weight: 600;
-        border: none;
-        padding: 1rem 1.5rem;
-    }
-    .custom-table td {
-        padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid var(--line);
-        color: var(--text-main);
-    }
-    .badge-menunggu {
-        background-color: #fcf1d3;
-        color: #7d6006;
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 0.4rem 1.25rem;
-        border-radius: 2rem;
-        display: inline-block;
-    }
-    .badge-disetujui {
-        background-color: #e2f0d9;
-        color: #385723;
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 0.4rem 1.25rem;
-        border-radius: 2rem;
-        display: inline-block;
-    }
-    .badge-ditolak {
-        background-color: #fcebeb;
-        color: #8b3c3c;
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 0.4rem 1.25rem;
-        border-radius: 2rem;
-        display: inline-block;
-    }
-    .btn-edit-outline {
-        border: 1px solid var(--line);
-        background: white;
-        color: var(--text-main);
-        font-weight: 500;
-        border-radius: 0.75rem;
-        padding: 0.4rem 1.5rem;
-        transition: 0.2s;
-    }
-    .btn-edit-outline:hover {
-        background: #fdfcf9;
-    }
-</style>
+
 
 <!-- Banner Card -->
-<div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Catat dan kelola seluruh data peminjaman</h2>
-        <p class="mb-0 text-secondary text-wrap">
+<div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[24px] p-6 lg:p-8 mb-6 shadow-sm">
+    <div>
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Catat dan kelola seluruh data peminjaman</h2>
+        <p class="text-[#7d8781] max-w-2xl mb-0">
             Admin dapat melihat, mengedit, dan memperbarui data peminjaman untuk memastikan riwayat penggunaan tercatat rapi.
         </p>
     </div>
 </div>
 
 <!-- Controls Bar -->
-<form action="{{ route('admin.peminjaman') }}" method="GET" class="card border-0 rounded-4 p-3 mb-4" style="background: #fffdfa; border: 1px solid var(--line) !important;">
-    <div class="row g-3 align-items-end">
+<form action="{{ route('admin.peminjaman') }}" method="GET" class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-end gap-4">
         <!-- Search bar -->
-        <div class="col-md-3 text-start">
-            <label class="form-label text-secondary small fw-semibold">Cari Kegiatan / Peminjam</label>
-            <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}" style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.9rem;">
+        <div class="w-full md:w-1/4">
+            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Cari Kegiatan / Peminjam</label>
+            <input type="text" name="search" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 h-11 focus:outline-none focus:border-[#466454]" placeholder="Cari..." value="{{ request('search') }}">
         </div>
         <!-- Status Filter -->
-        <div class="col-md-3 text-start">
-            <label class="form-label text-secondary small fw-semibold">Status</label>
-            <select name="status" class="form-select" style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.9rem;">
+        <div class="w-full md:w-1/4">
+            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Status</label>
+            <select name="status" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 h-11 focus:outline-none focus:border-[#466454]">
                 <option value="">Semua Status</option>
                 <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
                 <option value="diterima" {{ request('status') === 'diterima' ? 'selected' : '' }}>Diterima</option>
@@ -99,110 +36,107 @@
             </select>
         </div>
         <!-- Date Picker Filter -->
-        <div class="col-md-3 text-start">
-            <label class="form-label text-secondary small fw-semibold">Tanggal Acara</label>
-            <input type="date" name="date" class="form-control" value="{{ request('date') }}" style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.9rem;">
+        <div class="w-full md:w-1/4">
+            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Tanggal Acara</label>
+            <input type="date" name="date" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 h-11 focus:outline-none focus:border-[#466454]" value="{{ request('date') }}">
         </div>
         <!-- Buttons -->
-        <div class="col-md-3 d-flex gap-2">
-            <button type="submit" class="btn btn-main flex-grow-1" style="height: 38px; border-radius: 0.75rem; min-width: auto; font-size: 0.9rem;">Filter</button>
-            <button type="button" id="exportPdfBtn" class="btn btn-edit-outline" style="height: 38px; border-radius: 0.75rem; border: 1px solid var(--primary-main); color: var(--primary-main); font-size: 0.9rem;">
-                <i class="bi bi-file-earmark-pdf me-1"></i> Export PDF
+        <div class="w-full md:w-1/4 flex gap-2">
+            <button type="submit" class="flex-1 bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition h-11">Filter</button>
+            <button type="button" id="exportPdfBtn" class="border border-[#e6ddd2] text-[#33403b] px-4 py-2 rounded-xl font-semibold hover:bg-[#f5f2ec] transition h-11 flex items-center justify-center">
+                <i class="bi bi-file-earmark-pdf mr-1"></i> Export
             </button>
         </div>
     </div>
 </form>
 
 <!-- Table Area -->
-<div class="mb-3 fw-semibold text-secondary">Riwayat Peminjaman</div>
+<div class="font-semibold text-[#7d8781] mb-4">Riwayat Peminjaman</div>
 <div id="peminjamanTableContainer" class="custom-table mb-3" style="overflow-x: auto; background: #fffdfa;">
-    <table class="w-full text-left border-collapse">
-        <thead>
-            <tr>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">ID</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Tanggal & Waktu</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Peminjam</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Fasilitas</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Nama Acara</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Keterangan Acara</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Dosen PJ</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">PIC Fasilitas</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Status</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Tahapan Persetujuan</th>
-            </tr>
-        </thead>
+    <table class="w-full text-left whitespace-nowrap">
+        <thead><tr class="bg-[#f7f3eb] text-[#33403b]"><th class="px-6 py-4 font-semibold text-sm">ID</th><th class="px-6 py-4 font-semibold text-sm">Tanggal & Waktu</th><th class="px-6 py-4 font-semibold text-sm">Peminjam</th><th class="px-6 py-4 font-semibold text-sm">Fasilitas</th><th class="px-6 py-4 font-semibold text-sm">Nama Acara</th><th class="px-6 py-4 font-semibold text-sm">Keterangan Acara</th><th class="px-6 py-4 font-semibold text-sm">Dosen PJ</th><th class="px-6 py-4 font-semibold text-sm">PIC Fasilitas</th><th class="px-6 py-4 font-semibold text-sm text-center">Status</th><th class="px-6 py-4 font-semibold text-sm">Tahapan Persetujuan</th></tr></thead>
         <tbody>
             @forelse($peminjaman as $p)
                 @php
                     $statusText = 'Pending';
-                    $badgeClass = 'badge-menunggu';
+                    $badgeClass = 'bg-[#fcf1d3] text-[#7d6006] px-4 py-1.5 rounded-full text-xs font-semibold';
                     $tahapanText = 'Menunggu Verifikasi';
+                    $tahapanColor = 'text-[#7d6006]';
 
                     switch($p->status) {
                         case 'menunggu_dosen':
                             $statusText = 'Pending';
-                            $badgeClass = 'badge-menunggu';
+                            $badgeClass = 'bg-[#fcf1d3] text-[#7d6006] px-4 py-1.5 rounded-full text-xs font-semibold';
                             $tahapanText = 'Menunggu Dosen PJ';
+                            $tahapanColor = 'text-[#7d6006]';
                             break;
                         case 'menunggu_admin':
                             $statusText = 'Pending';
-                            $badgeClass = 'badge-menunggu';
+                            $badgeClass = 'bg-[#fcf1d3] text-[#7d6006] px-4 py-1.5 rounded-full text-xs font-semibold';
                             $tahapanText = 'Menunggu Admin';
+                            $tahapanColor = 'text-[#7d6006]';
                             break;
                         case 'menunggu_kepala':
                             $statusText = 'Pending';
-                            $badgeClass = 'badge-menunggu';
+                            $badgeClass = 'bg-[#fcf1d3] text-[#7d6006] px-4 py-1.5 rounded-full text-xs font-semibold';
                             $tahapanText = 'Menunggu Kepala';
+                            $tahapanColor = 'text-[#7d6006]';
                             break;
                         case 'menunggu_pic':
                             $statusText = 'Pending';
-                            $badgeClass = 'badge-menunggu';
+                            $badgeClass = 'bg-[#fcf1d3] text-[#7d6006] px-4 py-1.5 rounded-full text-xs font-semibold';
                             $tahapanText = 'Menunggu PIC';
+                            $tahapanColor = 'text-[#7d6006]';
                             break;
                         case 'siap_digunakan':
                             $statusText = 'Diterima';
-                            $badgeClass = 'badge-disetujui';
+                            $badgeClass = 'bg-[#e2f0d9] text-[#385723] px-4 py-1.5 rounded-full text-xs font-semibold';
                             $tahapanText = 'Verifikasi Tuntas';
+                            $tahapanColor = 'text-[#385723]';
                             break;
                         case 'selesai':
                             $statusText = 'Selesai';
-                            $badgeClass = 'badge-disetujui';
+                            $badgeClass = 'bg-[#e2f0d9] text-[#385723] px-4 py-1.5 rounded-full text-xs font-semibold';
                             $tahapanText = 'Sudah Dikembalikan';
+                            $tahapanColor = 'text-[#385723]';
                             break;
                         case 'proses_pengembalian':
                             $statusText = 'Pengembalian';
-                            $badgeClass = 'badge-menunggu';
+                            $badgeClass = 'bg-blue-100 text-blue-800 px-4 py-1.5 rounded-full text-xs font-semibold';
                             $tahapanText = 'Proses Pengembalian';
+                            $tahapanColor = 'text-blue-800';
                             break;
                         case 'ditolak':
                             $statusText = 'Ditolak';
-                            $badgeClass = 'badge-ditolak';
+                            $badgeClass = 'bg-[#fcebeb] text-[#8b3c3c] px-4 py-1.5 rounded-full text-xs font-semibold';
                             $tahapanText = 'Ditolak';
+                            $tahapanColor = 'text-[#8b3c3c]';
                             break;
                         case 'pending':
                         case 'revisi':
                         default:
                             $statusText = 'Pending';
-                            $badgeClass = 'badge-menunggu';
+                            $badgeClass = 'bg-[#fcf1d3] text-[#7d6006] px-4 py-1.5 rounded-full text-xs font-semibold';
                             $tahapanText = 'Menunggu Perbaikan';
+                            $tahapanColor = 'text-[#7d6006]';
                             break;
                     }
                 @endphp
                 <tr>
-                    <td class="fw-semibold">SBUM-2026-{{ str_pad($p->id_peminjaman, 4, '0', STR_PAD_LEFT) }}</td>
-                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">SBUM-2026-{{ str_pad($p->id_peminjaman, 4, '0', STR_PAD_LEFT) }}</td>
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                         <span class="fw-semibold">{{ $p->tanggal_pengajuan ? \Carbon\Carbon::parse($p->tanggal_pengajuan)->translatedFormat('d M Y') : '-' }}</span>
                         <br>
                         <span class="small text-muted">{{ $p->jam_mulai ? substr($p->jam_mulai, 0, 5) : '08:00' }} - {{ $p->jam_selesai ? substr($p->jam_selesai, 0, 5) : '12:00' }}</span>
                     </td>
-                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->user->nama_lengkap ?? '-' }}</td>
-                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->user->nama_lengkap ?? '-' }}</td>
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                         {{ $p->ruangan->isNotEmpty() ? $p->ruangan->first()->nama_ruangan : ($p->barang->isNotEmpty() ? $p->barang->first()->nama_barang : '-') }}
                     </td>
-                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->nama_kegiatan }}</td>
-                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->keterangan ?: '-' }}</td>
-                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->dosen->nama_lengkap ?? '-' }}</td>
-                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->nama_kegiatan }}</td>
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->keterangan ?: '-' }}</td>
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $p->dosen->nama_lengkap ?? '-' }}</td>
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                         @if($p->ruangan->isNotEmpty())
                             {{ $p->ruangan->first()->pic->nama_lengkap ?? '-' }}
                         @elseif($p->barang->isNotEmpty())
@@ -211,16 +145,16 @@
                             -
                         @endif
                     </td>
-                    <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] text-center">
                         @if($p->status === 'proses_pengembalian')
-                            <a href="{{ route('pic.pengembalian', ['selected_id' => $p->id_peminjaman]) }}" class="text-decoration-none">
-                                <span class="{{ $badgeClass }}">{{ $statusText }}</span>
+                            <a href="{{ route('pic.pengembalian', ['selected_id' => $p->id_peminjaman]) }}" class="hover:opacity-80 transition inline-block">
+                                <span class="{{ $badgeClass }} block w-max mx-auto">{{ $statusText }}</span>
                             </a>
                         @else
-                            <span class="{{ $badgeClass }}">{{ $statusText }}</span>
+                            <span class="{{ $badgeClass }} block w-max mx-auto">{{ $statusText }}</span>
                         @endif
                     </td>
-                    <td class="small text-muted">{{ $tahapanText }}</td>
+                    <td class="px-6 py-4 border-b border-[#e6ddd2] text-sm font-semibold {{ $tahapanColor }}">{{ $tahapanText }}</td>
                 </tr>
             @empty
                 <tr>

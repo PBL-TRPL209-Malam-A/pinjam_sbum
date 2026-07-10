@@ -66,10 +66,15 @@ class ScheduleController extends Controller
                         $status = 'tersedia';
                         $associatedBooking = null;
                         
+                        $startHour = (int)explode(':', $t['start'])[0];
+                        $endHour = (int)explode(':', $t['end'])[0];
+
                         foreach ($peminjamans as $p) {
-                            $hour = (int)$p->tanggal_pengajuan->format('H');
-                            $startHour = (int)explode(':', $t['start'])[0];
-                            if ($hour === $startHour) {
+                            $pHourStart = (int)explode(':', $p->jam_mulai)[0];
+                            $pHourEnd = (int)explode(':', $p->jam_selesai)[0];
+                            
+                            // Check overlap: max(start1, start2) < min(end1, end2)
+                            if (max($pHourStart, $startHour) < min($pHourEnd, $endHour)) {
                                 $status = $p->status === 'siap_digunakan' ? 'dipinjam' : 'pending';
                                 $associatedBooking = $p;
                                 break;
@@ -85,6 +90,8 @@ class ScheduleController extends Controller
                                 'id_peminjaman' => $associatedBooking->id_peminjaman,
                                 'nama_kegiatan' => $associatedBooking->nama_kegiatan,
                                 'keterangan' => $associatedBooking->keterangan,
+                                'jam_mulai' => $associatedBooking->jam_mulai,
+                                'jam_selesai' => $associatedBooking->jam_selesai,
                             ] : null,
                         ];
                     }
@@ -93,11 +100,16 @@ class ScheduleController extends Controller
                         $status = $s->status;
                         $associatedBooking = $s->peminjaman;
                         
+                        $sHourStart = (int)explode(':', $s->jam_mulai)[0];
+                        $sHourEnd = (int)explode(':', $s->jam_selesai)[0];
+
                         // Check if any active booking conflicts or occupies this slot
-                        $sHour = (int)explode(':', $s->jam_mulai)[0];
                         foreach ($peminjamans as $p) {
-                            $hour = (int)$p->tanggal_pengajuan->format('H');
-                            if ($hour === $sHour) {
+                            $pHourStart = (int)explode(':', $p->jam_mulai)[0];
+                            $pHourEnd = (int)explode(':', $p->jam_selesai)[0];
+
+                            // Check overlap
+                            if (max($pHourStart, $sHourStart) < min($pHourEnd, $sHourEnd)) {
                                 $status = $p->status === 'siap_digunakan' ? 'dipinjam' : 'pending';
                                 $associatedBooking = $p;
                                 break;
@@ -113,6 +125,8 @@ class ScheduleController extends Controller
                                 'id_peminjaman' => $associatedBooking->id_peminjaman,
                                 'nama_kegiatan' => $associatedBooking->nama_kegiatan,
                                 'keterangan' => $associatedBooking->keterangan,
+                                'jam_mulai' => $associatedBooking->jam_mulai,
+                                'jam_selesai' => $associatedBooking->jam_selesai,
                             ] : null,
                         ];
                     }
@@ -134,6 +148,7 @@ class ScheduleController extends Controller
 
                 foreach ($defaultTimes as $t) {
                     $startHour = (int)explode(':', $t['start'])[0];
+                    $endHour = (int)explode(':', $t['end'])[0];
                     
                     $approvedQty = 0;
                     $pendingQty = 0;
@@ -141,25 +156,25 @@ class ScheduleController extends Controller
 
                     foreach ($activeBookings as $detail) {
                         if ($detail->peminjaman) {
-                            $bHour = (int)$detail->peminjaman->tanggal_pengajuan->format('H');
-                            if ($bHour === $startHour) {
+                            $pHourStart = (int)explode(':', $detail->peminjaman->jam_mulai)[0];
+                            $pHourEnd = (int)explode(':', $detail->peminjaman->jam_selesai)[0];
+                            
+                            if (max($pHourStart, $startHour) < min($pHourEnd, $endHour)) {
                                 if ($detail->peminjaman->status === 'siap_digunakan') {
                                     $approvedQty += $detail->jumlah;
-                                    $associatedBooking = $detail->peminjaman;
                                 } else {
                                     $pendingQty += $detail->jumlah;
-                                    if (!$associatedBooking) {
-                                        $associatedBooking = $detail->peminjaman;
-                                    }
                                 }
+                                $associatedBooking = $detail->peminjaman;
                             }
                         }
                     }
 
-                    // Stock availability rules
-                    if ($approvedQty >= $barang->stok_tersedia) {
+                    $totalBooked = $approvedQty + $pendingQty;
+                    $status = 'tersedia';
+                    if ($totalBooked >= $barang->stok_tersedia) {
                         $status = 'dipinjam';
-                    } elseif (($approvedQty + $pendingQty) >= $barang->stok_tersedia) {
+                    } elseif ($totalBooked > 0) {
                         $status = 'pending';
                     } else {
                         $status = 'tersedia';
@@ -174,6 +189,8 @@ class ScheduleController extends Controller
                             'id_peminjaman' => $associatedBooking->id_peminjaman,
                             'nama_kegiatan' => $associatedBooking->nama_kegiatan,
                             'keterangan' => $associatedBooking->keterangan,
+                            'jam_mulai' => $associatedBooking->jam_mulai,
+                            'jam_selesai' => $associatedBooking->jam_selesai,
                         ] : null,
                     ];
                 }

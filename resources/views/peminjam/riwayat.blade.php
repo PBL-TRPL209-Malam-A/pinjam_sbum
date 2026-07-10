@@ -26,21 +26,39 @@
                             $facilityName = $pjm->ruangan->isNotEmpty() ? $pjm->ruangan->first()->nama_ruangan : ($pjm->barang->isNotEmpty() ? $pjm->barang->first()->nama_barang : 'Fasilitas');
                             
                             $statusClasses = 'bg-[#fff3cd] text-[#856404]'; // Default pending
-                            $statusLabel = str_replace('_', ' ', Str::title($pjm->status));
+                            $statusLabel = 'Menunggu';
                             
-                            if(in_array($pjm->status, ['ditolak'])) {
+                            $isPengembalian = false;
+                            $pengembalian = $pjm->pengembalianRuangan ?: $pjm->pengembalianBarang;
+                            
+                            if ($pengembalian && in_array($pengembalian->status_pengembalian, ['menunggu_pic', 'menunggu_admin'])) {
+                                $statusClasses = 'bg-blue-100 text-blue-700 border-blue-200';
+                                if($pengembalian->status_pengembalian == 'menunggu_pic') $statusLabel = 'Menunggu Kembali (PIC)';
+                                elseif($pengembalian->status_pengembalian == 'menunggu_admin') $statusLabel = 'Menunggu Kembali (Admin)';
+                            } elseif(in_array($pjm->status, ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala', 'menunggu_pic'])) {
+                                if($pjm->status == 'menunggu_dosen') $statusLabel = 'Menunggu Pinjam (Dosen)';
+                                elseif($pjm->status == 'menunggu_admin') $statusLabel = 'Menunggu Pinjam (Admin)';
+                                elseif($pjm->status == 'menunggu_kepala') $statusLabel = 'Menunggu Pinjam (Ka. SBUM)';
+                                elseif($pjm->status == 'menunggu_pic') $statusLabel = 'Menunggu Pinjam (PIC)';
+                            } elseif(in_array($pjm->status, ['ditolak', 'batal'])) {
                                 $statusClasses = 'bg-[#f8d7da] text-[#721c24]';
-                            } elseif(in_array($pjm->status, ['selesai', 'dibatalkan'])) {
+                                $statusLabel = str_replace('_', ' ', Str::title($pjm->status));
+                            } elseif($pjm->status == 'bermasalah') {
+                                $statusClasses = 'bg-[#f8d7da] text-[#721c24] border border-red-300';
+                                $statusLabel = 'Bermasalah (Cek Bukti)';
+                            } elseif($pjm->status == 'selesai') {
                                 $statusClasses = 'bg-[#e2e3e5] text-[#383d41]';
+                                $statusLabel = 'Selesai / Dikembalikan';
                             } elseif(in_array($pjm->status, ['siap_digunakan', 'disetujui'])) {
                                 $statusClasses = 'bg-[#d4edda] text-[#155724]';
+                                $statusLabel = 'Peminjaman Disetujui';
                             }
                         @endphp
                         <div class="bg-[#fffdfa] border border-[#e0d7cb] rounded-[24px] p-6 transition hover:shadow-md hover:border-[#cfdacd] flex flex-col justify-between h-full">
                             <div>
                                 <div class="flex justify-between items-center mb-4">
                                     <div class="font-bold text-lg text-[#33403b]">{{ $facilityName }}</div>
-                                    <div class="px-3 py-1.5 rounded-full text-xs font-semibold {{ $statusClasses }}">{{ $statusLabel }}</div>
+                                    <div class="px-3 py-1.5 rounded-full text-xs font-semibold {{ $statusClasses }} border">{{ $statusLabel }}</div>
                                 </div>
                                 <div class="text-[#5f6963] mb-2 text-[15px]"><strong>ID:</strong> SBUM-2026-{{ str_pad($pjm->id_peminjaman, 4, '0', STR_PAD_LEFT) }}</div>
                                 <div class="text-[#5f6963] mb-2 text-[15px]"><strong>Kegiatan:</strong> {{ $pjm->nama_kegiatan }}</div>
@@ -55,7 +73,7 @@
                                     <a href="{{ route('peminjam.riwayat.pdf', $pjm->id_peminjaman) }}" target="_blank" class="inline-flex items-center gap-2 bg-[#5d7d6b] hover:bg-[#496454] text-white font-semibold rounded-xl px-4 py-2.5 transition no-underline text-sm">
                                         <i class="bi bi-file-earmark-pdf"></i> Cetak Bukti Peminjaman
                                     </a>
-                                    @if($pjm->pengembalian)
+                                    @if($pjm->pengembalianRuangan || $pjm->pengembalianBarang)
                                         <a href="{{ route('peminjam.riwayat.pdf_pengembalian', $pjm->id_peminjaman) }}" target="_blank" class="inline-flex items-center gap-2 bg-[#3b4d44] hover:bg-[#2c3a33] text-white font-semibold rounded-xl px-4 py-2.5 transition no-underline text-sm">
                                             <i class="bi bi-file-earmark-pdf"></i> Cetak Bukti Pengembalian
                                         </a>

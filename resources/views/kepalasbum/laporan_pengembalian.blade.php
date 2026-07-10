@@ -190,7 +190,7 @@
                                                 'tanggal_kembali' => date('d M Y', strtotime($p->tanggal_kembali)),
                                                 'status_pengembalian' => $p->status_pengembalian == 'dikonfirmasi_admin' ? 'Selesai' : 'Proses',
                                                 'kondisi_kembali' => $p->kondisi_kembali,
-                                                'tujuan' => $p->peminjaman->tujuan
+                                                'tujuan' => $p->peminjaman->nama_kegiatan . ($p->peminjaman->keterangan ? ' - ' . $p->peminjaman->keterangan : '')
                                             ];
                                         @endphp
                                         <button @click='selectedData = @json($detailData); showModal = true' class="bg-[#e4efe8] hover:bg-[#d0e3d7] text-[#466454] px-3 py-1.5 rounded-lg text-xs font-bold transition">Detail</button>

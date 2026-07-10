@@ -205,7 +205,7 @@
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0"><i class="bi bi-grid-fill"></i></span>
                         <span>Dashboard</span>
                     </a>
-                    <a href="{{ route('pamdal.pengawasan') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('pamdal.pengawasan') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
+                    <a href="{{ route('pamdal.monitoring') }}" class="flex items-center gap-3 py-3.5 px-4 rounded-2xl transition duration-200 no-underline {{ request()->routeIs('pamdal.monitoring') ? 'bg-[#eff3f0] !text-[#466454] font-semibold' : '!text-[#54615b] text-[15px] hover:bg-[#f3f7f3] hover:!text-[#466454]' }}">
                         <span class="w-[22px] h-[22px] rounded-full bg-[#dbe4dd] flex items-center justify-center text-[11px] shrink-0"><i class="bi bi-eye"></i></span>
                         <span>Pengawasan</span>
                     </a>

@@ -314,7 +314,7 @@ class AdminController extends Controller
     public function verifikasiPeminjamanStore(Request $request, $id)
     {
         $request->validate([
-            'status_pengajuan' => 'required|in:disetujui,ditolak,revisi',
+            'status_pengajuan' => 'required|in:disetujui,ditolak,revisi,disetujui_bypass',
             'catatan' => 'nullable|string',
         ]);
  
@@ -323,6 +323,8 @@ class AdminController extends Controller
         $status = 'menunggu_admin';
         if ($request->status_pengajuan === 'disetujui') {
             $status = 'menunggu_kepala';
+        } elseif ($request->status_pengajuan === 'disetujui_bypass') {
+            $status = 'siap_digunakan';
         } elseif ($request->status_pengajuan === 'ditolak') {
             $status = 'ditolak';
         } elseif ($request->status_pengajuan === 'revisi') {
@@ -338,11 +340,24 @@ class AdminController extends Controller
                 'id_peminjaman' => $id,
                 'id_verifikator' => auth()->id() ?: 3, // fallback to A001 Admin if not logged in
                 'peran_verifikasi' => 'Admin SBUM',
-                'jenis_verifikasi' => 'Verifikasi Operasional',
-                'status' => $request->status_pengajuan === 'disetujui' ? 'disetujui' : ($request->status_pengajuan === 'ditolak' ? 'ditolak' : 'pending'),
+                'jenis_verifikasi' => $request->status_pengajuan === 'disetujui_bypass' ? 'Verifikasi Operasional (Atas Nama Kepala)' : 'Verifikasi Operasional',
+                'status' => in_array($request->status_pengajuan, ['disetujui', 'disetujui_bypass']) ? 'disetujui' : ($request->status_pengajuan === 'ditolak' ? 'ditolak' : 'pending'),
                 'catatan' => $request->catatan,
                 'tanggal' => now(),
             ]);
+            
+            // Log for Kepala SBUM if bypassed
+            if ($request->status_pengajuan === 'disetujui_bypass') {
+                VerifikasiPeminjaman::create([
+                    'id_peminjaman' => $id,
+                    'id_verifikator' => 2, // Assuming 2 is the ID for Kepala SBUM (or fetch it dynamically based on role if preferred, here using fallback 2 as K001)
+                    'peran_verifikasi' => 'Kepala SBUM',
+                    'jenis_verifikasi' => 'Persetujuan Akhir (Bypass Admin)',
+                    'status' => 'disetujui',
+                    'catatan' => 'Disetujui atas nama Kepala SBUM oleh Admin: ' . $request->catatan,
+                    'tanggal' => now(),
+                ]);
+            }
         });
  
         return redirect()->route('admin.verifikasi-peminjaman')->with('success', 'Status verifikasi peminjaman berhasil diperbarui.');
@@ -352,10 +367,19 @@ class AdminController extends Controller
     public function jadwalIndex(Request $request)
     {
         $ruangan = Ruangan::all();
-        $selectedRuanganId = $request->input('ruangan_id', $ruangan->first()->id_ruangan ?? null);
+        $barang = \App\Models\Barang::all();
+        
+        $selectedType = $request->input('type', 'ruangan');
+        $selectedFasilitasId = null;
+        if ($selectedType === 'ruangan') {
+            $selectedFasilitasId = $request->input('fasilitas_id', $ruangan->first()->id_ruangan ?? null);
+        } else {
+            $selectedFasilitasId = $request->input('fasilitas_id', $barang->first()->id_barang ?? null);
+        }
+        
         $selectedDate = $request->input('tanggal', date('Y-m-d'));
  
-        return view('admin.jadwal.index', compact('ruangan', 'selectedRuanganId', 'selectedDate'));
+        return view('admin.jadwal.index', compact('ruangan', 'barang', 'selectedType', 'selectedFasilitasId', 'selectedDate'));
     }
  
     public function jadwalStore(Request $request)
@@ -366,27 +390,39 @@ class AdminController extends Controller
     public function apiGetSlots(Request $request)
     {
         try {
-            $ruangan_id = $request->query('ruangan_id');
+            $fasilitas_id = $request->query('fasilitas_id');
+            $type = $request->query('type');
             $tanggal = $request->query('tanggal');
 
-            if (!$ruangan_id || !$tanggal) {
-                return response()->json(['message' => 'Fasilitas dan tanggal harus dipilih.'], 400);
+            if (!$fasilitas_id || !$tanggal || !$type) {
+                return response()->json(['message' => 'Fasilitas, tipe, dan tanggal harus dipilih.'], 400);
             }
 
             // 1. Get existing slots from schedules table (with eager loading of related peminjaman and ruangan)
-            $slots = \App\Models\Schedule::with(['ruangan', 'peminjaman'])
-                ->where('ruangan_id', $ruangan_id)
-                ->where('tanggal', $tanggal)
-                ->orderBy('jam_mulai')
-                ->get();
+            $query = \App\Models\Schedule::with(['ruangan', 'barang', 'peminjaman'])
+                ->where('tanggal', $tanggal);
+                
+            if ($type === 'ruangan') {
+                $query->where('ruangan_id', $fasilitas_id);
+            } else {
+                $query->where('barang_id', $fasilitas_id);
+            }
+            $slots = $query->orderBy('jam_mulai')->get();
 
-            // 2. Fetch active bookings (peminjaman) for this room on this date
-            $peminjamans = \App\Models\Peminjaman::whereHas('ruangan', function($q) use ($ruangan_id) {
-                    $q->where('ruangan.id_ruangan', $ruangan_id);
-                })
-                ->whereDate('tanggal_pengajuan', $tanggal)
-                ->whereIn('status', ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala', 'menunggu_pic', 'siap_digunakan'])
-                ->get();
+            // 2. Fetch active bookings (peminjaman) for this facility on this date
+            $peminjamanQuery = \App\Models\Peminjaman::whereDate('tanggal_pengajuan', $tanggal)
+                ->whereIn('status', ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala', 'menunggu_pic', 'siap_digunakan']);
+                
+            if ($type === 'ruangan') {
+                $peminjamanQuery->whereHas('ruangan', function($q) use ($fasilitas_id) {
+                    $q->where('ruangan.id_ruangan', $fasilitas_id);
+                });
+            } else {
+                $peminjamanQuery->whereHas('barang', function($q) use ($fasilitas_id) {
+                    $q->where('barang.id_barang', $fasilitas_id);
+                });
+            }
+            $peminjamans = $peminjamanQuery->get();
 
             // 3. Populate slots data
             $slotsData = [];
@@ -405,11 +441,16 @@ class AdminController extends Controller
                     $status = 'tersedia';
                     $peminjaman_id = null;
 
-                    // Automatically associate booking matching the slot start hour
+                    $startHour = (int)explode(':', $t['start'])[0];
+                    $endHour = (int)explode(':', $t['end'])[0];
+
+                    // Automatically associate booking matching the slot time range
                     foreach ($peminjamans as $p) {
-                        $hour = (int)$p->tanggal_pengajuan->format('H');
-                        $startHour = (int)explode(':', $t['start'])[0];
-                        if ($hour === $startHour) {
+                        $pHourStart = (int)explode(':', $p->jam_mulai)[0];
+                        $pHourEnd = (int)explode(':', $p->jam_selesai)[0];
+                        
+                        // Check overlap: max(start1, start2) < min(end1, end2)
+                        if (max($pHourStart, $startHour) < min($pHourEnd, $endHour)) {
                             $status = $p->status === 'siap_digunakan' ? 'dipinjam' : 'pending';
                             $peminjaman_id = $p->id_peminjaman;
                             break;
@@ -429,10 +470,14 @@ class AdminController extends Controller
                     $status = $s->status;
                     $peminjaman_id = $s->peminjaman_id;
 
-                    $sHour = (int)explode(':', $s->jam_mulai)[0];
+                    $sHourStart = (int)explode(':', $s->jam_mulai)[0];
+                    $sHourEnd = (int)explode(':', $s->jam_selesai)[0];
+
                     foreach ($peminjamans as $p) {
-                        $hour = (int)$p->tanggal_pengajuan->format('H');
-                        if ($hour === $sHour) {
+                        $pHourStart = (int)explode(':', $p->jam_mulai)[0];
+                        $pHourEnd = (int)explode(':', $p->jam_selesai)[0];
+
+                        if (max($pHourStart, $sHourStart) < min($pHourEnd, $sHourEnd)) {
                             $status = $p->status === 'siap_digunakan' ? 'dipinjam' : 'pending';
                             $peminjaman_id = $p->id_peminjaman;
                             break;
@@ -479,6 +524,8 @@ class AdminController extends Controller
                         'id_peminjaman' => $p->id_peminjaman,
                         'nama_kegiatan' => $p->nama_kegiatan,
                         'keterangan' => $p->keterangan,
+                        'jam_mulai' => date('H:i', strtotime($p->jam_mulai)),
+                        'jam_selesai' => date('H:i', strtotime($p->jam_selesai)),
                         'status' => $p->status
                     ];
                 }),
@@ -494,25 +541,31 @@ class AdminController extends Controller
     public function apiSaveSlots(Request $request)
     {
         try {
-            $ruangan_id = $request->input('ruangan_id');
+            $fasilitas_id = $request->input('fasilitas_id');
+            $type = $request->input('type');
             $tanggal = $request->input('tanggal');
             $slots = $request->input('slots', []);
 
-            if (!$ruangan_id || !$tanggal) {
-                return response()->json(['message' => 'Fasilitas dan tanggal harus dipilih.'], 400);
+            if (!$fasilitas_id || !$tanggal || !$type) {
+                return response()->json(['message' => 'Fasilitas, tipe, dan tanggal harus dipilih.'], 400);
             }
 
             \Illuminate\Support\Facades\DB::beginTransaction();
 
             // Clear old slots
-            \App\Models\Schedule::where('ruangan_id', $ruangan_id)
-                ->where('tanggal', $tanggal)
-                ->delete();
+            $query = \App\Models\Schedule::where('tanggal', $tanggal);
+            if ($type === 'ruangan') {
+                $query->where('ruangan_id', $fasilitas_id);
+            } else {
+                $query->where('barang_id', $fasilitas_id);
+            }
+            $query->delete();
 
             // Save new slots
             foreach ($slots as $s) {
                 \App\Models\Schedule::create([
-                    'ruangan_id' => $ruangan_id,
+                    'ruangan_id' => $type === 'ruangan' ? $fasilitas_id : null,
+                    'barang_id' => $type === 'barang' ? $fasilitas_id : null,
                     'tanggal' => $tanggal,
                     'jam_mulai' => $s['jam_mulai'],
                     'jam_selesai' => $s['jam_selesai'],
@@ -706,10 +759,18 @@ class AdminController extends Controller
         }
  
         $decision = $request->input('status_keputusan', 'disetujui');
-        $statusPengembalian = $decision === 'disetujui' ? 'selesai' : 'ditolak';
+        if ($decision === 'bermasalah') {
+            $statusPengembalian = 'bermasalah';
+            $statusVerifikasi = 'ditolak';
+            $statusPeminjaman = 'selesai';
+        } else {
+            $statusPengembalian = $decision === 'disetujui' ? 'selesai' : 'ditolak';
+            $statusVerifikasi = $statusPengembalian === 'selesai' ? 'disetujui' : 'ditolak';
+            $statusPeminjaman = $statusPengembalian;
+        }
 
         if ($peminjaman) {
-            \Illuminate\Support\Facades\DB::transaction(function() use ($peminjaman, $statusPengembalian, $kategori, $id, $request) {
+            \Illuminate\Support\Facades\DB::transaction(function() use ($peminjaman, $statusPengembalian, $statusVerifikasi, $statusPeminjaman, $kategori, $id, $request) {
                 // Update return table status
                 if ($kategori === 'ruangan') {
                     $peminjaman->pengembalianRuangan->update(['status' => $statusPengembalian]);
@@ -719,7 +780,7 @@ class AdminController extends Controller
 
                 // Update main booking table status
                 $peminjaman->update([
-                    'status' => $statusPengembalian
+                    'status' => $statusPeminjaman
                 ]);
  
                 VerifikasiPengembalian::create([
@@ -727,7 +788,7 @@ class AdminController extends Controller
                     'id_pengembalian_barang' => $kategori === 'barang' ? $id : null,
                     'id_verifikator' => auth()->id() ?: 3,
                     'peran_verifikasi' => 'Admin SBUM',
-                    'status' => $statusPengembalian === 'selesai' ? 'disetujui' : 'ditolak',
+                    'status' => $statusVerifikasi,
                     'catatan' => $request->input('catatan', 'Pengembalian terverifikasi.'),
                     'tanggal' => now(),
                 ]);

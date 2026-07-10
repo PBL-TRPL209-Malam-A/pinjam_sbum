@@ -513,7 +513,9 @@ class KepalaSbumController extends Controller
                 <th>ID Peminjaman</th>
                 <th>Nama Peminjam</th>
                 <th>Fasilitas</th>
+                <th>Nama Gedung</th>
                 <th>Tanggal Kembali</th>
+                <th>Jam Peminjaman</th>
                 <th>Kondisi</th>
                 <th>Status</th>
               </tr>";
@@ -525,12 +527,22 @@ class KepalaSbumController extends Controller
             $nama_peminjam = $p->peminjaman->user ? $p->peminjaman->user->nama_lengkap : '-';
             $fasilitas = $p->peminjaman->nama_fasilitas;
             
+            $nama_gedung = '-';
+            if ($p->peminjaman->jenis_peminjaman === 'ruangan' && $p->peminjaman->ruangan->count() > 0) {
+                $nama_gedung = $p->peminjaman->ruangan->first()->nama_gedung ?? '-';
+            }
+            
             // Format tanggal safely
             $tanggal = '-';
             if (is_string($p->tanggal_kembali)) {
                 $tanggal = date('d M Y', strtotime($p->tanggal_kembali));
             } elseif ($p->tanggal_kembali instanceof \Carbon\Carbon || $p->tanggal_kembali instanceof \DateTime) {
                 $tanggal = $p->tanggal_kembali->format('d M Y');
+            }
+            
+            $jam_peminjaman = '-';
+            if ($p->peminjaman->jam_mulai && $p->peminjaman->jam_selesai) {
+                $jam_peminjaman = substr($p->peminjaman->jam_mulai, 0, 5) . ' - ' . substr($p->peminjaman->jam_selesai, 0, 5);
             }
             
             $kondisi = ucfirst($p->kondisi_kembali);
@@ -542,7 +554,9 @@ class KepalaSbumController extends Controller
                     <td>$id_peminjaman</td>
                     <td>$nama_peminjam</td>
                     <td>$fasilitas</td>
+                    <td>$nama_gedung</td>
                     <td>$tanggal</td>
+                    <td>$jam_peminjaman</td>
                     <td>$kondisi</td>
                     <td>$status</td>
                   </tr>";

@@ -215,7 +215,7 @@
                                                 'tanggal_pengajuan' => date('d M Y', strtotime($p->tanggal_pengajuan)),
                                                 'tanggal_mulai' => date('d M Y H:i', strtotime($p->tanggal_mulai)),
                                                 'tanggal_selesai' => date('d M Y H:i', strtotime($p->tanggal_selesai)),
-                                                'tujuan' => $p->tujuan,
+                                                'tujuan' => $p->nama_kegiatan . ($p->keterangan ? ' - ' . $p->keterangan : ''),
                                                 'status' => $p->status
                                             ];
                                         @endphp

@@ -151,7 +151,7 @@ class AuthPeminjamController extends Controller
             ->first();
 
         // 3. Status Pengajuan Terbaru
-        $pengajuanTerbaru = \App\Models\Peminjaman::with(['ruangan', 'barang'])
+        $pengajuanTerbaru = \App\Models\Peminjaman::with(['ruangan', 'barang', 'pengembalianRuangan', 'pengembalianBarang'])
             ->where('user_id', $userId)
             ->orderBy('id_peminjaman', 'desc')
             ->take(3)
@@ -612,7 +612,7 @@ class AuthPeminjamController extends Controller
             abort(403, 'Akses hanya untuk peminjam.');
         }
 
-        $peminjaman = \App\Models\Peminjaman::with(['ruangan', 'barang', 'dosen'])
+        $peminjaman = \App\Models\Peminjaman::with(['ruangan', 'barang', 'dosen', 'pengembalianRuangan', 'pengembalianBarang'])
             ->where('user_id', auth()->id())
             ->orderBy('id_peminjaman', 'desc')
             ->get();
@@ -631,8 +631,18 @@ class AuthPeminjamController extends Controller
             ->where('id_peminjaman', $id)
             ->firstOrFail();
 
+        // Generate QR Code
+        $urlValidasi = route('validasi.peminjaman', ['id' => $peminjaman->id_peminjaman]);
+        $options = new \chillerlan\QRCode\QROptions([
+            'version'      => 5,
+            'outputType'   => \chillerlan\QRCode\Output\QRGdImagePNG::class,
+            'eccLevel'     => \chillerlan\QRCode\Common\EccLevel::L,
+            'imageBase64'  => true,
+        ]);
+        $qrcode = (new \chillerlan\QRCode\QRCode($options))->render($urlValidasi);
+
         // Load view into PDF
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('peminjam.pdf_bukti', compact('peminjaman'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('peminjam.pdf_bukti', compact('peminjaman', 'qrcode'));
         
         return $pdf->download('Bukti_Peminjaman_' . $peminjaman->id_peminjaman . '.pdf');
     }
@@ -643,7 +653,7 @@ class AuthPeminjamController extends Controller
             abort(403, 'Akses hanya untuk peminjam.');
         }
 
-        $peminjaman = \App\Models\Peminjaman::with(['user', 'ruangan', 'barang', 'pengembalian'])
+        $peminjaman = \App\Models\Peminjaman::with(['user', 'ruangan', 'barang', 'pengembalianRuangan', 'pengembalianBarang'])
             ->where('user_id', auth()->id())
             ->where('id_peminjaman', $id)
             ->firstOrFail();
@@ -652,8 +662,18 @@ class AuthPeminjamController extends Controller
             abort(404, 'Data pengembalian belum ada.');
         }
 
+        // Generate QR Code
+        $urlValidasi = route('validasi.peminjaman', ['id' => $peminjaman->id_peminjaman]);
+        $options = new \chillerlan\QRCode\QROptions([
+            'version'      => 5,
+            'outputType'   => \chillerlan\QRCode\Output\QRGdImagePNG::class,
+            'eccLevel'     => \chillerlan\QRCode\Common\EccLevel::L,
+            'imageBase64'  => true,
+        ]);
+        $qrcode = (new \chillerlan\QRCode\QRCode($options))->render($urlValidasi);
+
         // Load view into PDF
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('peminjam.pdf_bukti_pengembalian', compact('peminjaman'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('peminjam.pdf_bukti_pengembalian', compact('peminjaman', 'qrcode'));
         
         return $pdf->download('Bukti_Pengembalian_' . $peminjaman->id_peminjaman . '.pdf');
     }

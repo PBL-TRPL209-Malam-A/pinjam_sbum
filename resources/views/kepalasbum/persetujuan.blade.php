@@ -64,22 +64,47 @@
                                 </p>
                             </div>
 
-                            <div class="flex gap-2">
-                                <button class="border border-[#e6ddd2] text-[#466454] px-4 py-2 rounded-xl font-semibold hover:bg-[#f5f2ec] transition" data-bs-toggle="modal" data-bs-target="#detailModal{{ $p->id_peminjaman }}">Detail</button>
-                                <form action="{{ route('kepalasbum.verifikasi', $p->id_peminjaman) }}" method="POST" class="inline">
+                            <div class="w-full mt-4 border-t border-[#e6ddd2] pt-4">
+                                <form action="{{ route('kepalasbum.verifikasi', $p->id_peminjaman) }}" method="POST">
                                     @csrf
                                     @method('PUT')
-                                    <input type="hidden" name="status_pengajuan" value="disetujui_kepala">
-                                    <input type="hidden" name="catatan" id="catatan_setuju_{{ $p->id_peminjaman }}" value="">
-                                    <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition" onclick="document.getElementById('catatan_setuju_{{ $p->id_peminjaman }}').value = document.getElementById('catatan_keputusan').value">Setujui</button>
+                                    <div class="mb-3">
+                                        <label class="form-label text-secondary fw-semibold text-sm">Keputusan Akhir <span class="text-danger">*</span></label>
+                                        <div class="flex flex-col sm:flex-row gap-3 mt-1">
+                                            <label class="flex items-center p-3 border rounded-xl flex-1 cursor-pointer bg-[#dcebd7]" style="border-color:#b7d2b6 !important;">
+                                                <input type="radio" name="status_pengajuan" value="disetujui_kepala" class="form-check-input mt-0 me-3" required onchange="handleDecisionChange{{ $p->id_peminjaman }}(this.value)">
+                                                <span class="fw-semibold text-[#466454]">Setujui</span>
+                                            </label>
+                                            <label class="flex items-center p-3 border rounded-xl flex-1 cursor-pointer bg-[#fdf0f0]" style="border-color:#f5c2c7 !important;">
+                                                <input type="radio" name="status_pengajuan" value="ditolak" class="form-check-input mt-0 me-3" required onchange="handleDecisionChange{{ $p->id_peminjaman }}(this.value)">
+                                                <span class="fw-semibold text-danger">Tolak</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3" id="rejectNoteContainer{{ $p->id_peminjaman }}" style="display: none;">
+                                        <label class="form-label text-danger fw-bold text-sm">Alasan Penolakan <span class="text-danger">*</span></label>
+                                        <textarea name="catatan" id="catatan_form_{{ $p->id_peminjaman }}" class="w-full bg-[#fffdfa] border border-danger text-[#33403b] rounded-xl px-4 py-2 focus:outline-none" rows="2" placeholder="Wajib diisi jika ditolak..."></textarea>
+                                    </div>
+                                    
+                                    <div class="flex gap-2 justify-between items-center mt-4">
+                                        <button type="button" class="text-[#466454] font-semibold underline" data-bs-toggle="modal" data-bs-target="#detailModal{{ $p->id_peminjaman }}">Lihat Detail</button>
+                                        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-5 py-2.5 rounded-xl font-semibold transition" onclick="if(this.form.status_pengajuan.value == 'disetujui_kepala') { document.getElementById('catatan_form_{{ $p->id_peminjaman }}').value = document.getElementById('catatan_keputusan').value; }">Simpan Keputusan</button>
+                                    </div>
                                 </form>
-                                <form action="{{ route('kepalasbum.verifikasi', $p->id_peminjaman) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="status_pengajuan" value="ditolak">
-                                    <input type="hidden" name="catatan" id="catatan_tolak_{{ $p->id_peminjaman }}" value="">
-                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold transition" onclick="document.getElementById('catatan_tolak_{{ $p->id_peminjaman }}').value = document.getElementById('catatan_keputusan').value">Tolak</button>
-                                </form>
+                                <script>
+                                    function handleDecisionChange{{ $p->id_peminjaman }}(value) {
+                                        const container = document.getElementById('rejectNoteContainer{{ $p->id_peminjaman }}');
+                                        const field = document.getElementById('catatan_form_{{ $p->id_peminjaman }}');
+                                        if (value === 'ditolak') {
+                                            container.style.display = 'block';
+                                            field.required = true;
+                                        } else {
+                                            container.style.display = 'none';
+                                            field.required = false;
+                                        }
+                                    }
+                                </script>
                             </div>
                         </div>
                     </div>

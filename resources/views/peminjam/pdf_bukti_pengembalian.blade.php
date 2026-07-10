@@ -48,7 +48,7 @@
         .info-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .info-table td {
             padding: 6px 8px;
@@ -77,7 +77,7 @@
         
         .sign-table {
             width: 100%;
-            margin-top: 40px;
+            margin-top: 15px;
             text-align: center;
         }
         .sign-table td {
@@ -85,7 +85,7 @@
             vertical-align: bottom;
         }
         .sign-title {
-            margin-bottom: 60px;
+            margin-bottom: 20px;
         }
         .sign-name {
             font-weight: bold;
@@ -96,7 +96,7 @@
             color: #666;
         }
         .footer-note {
-            margin-top: 50px;
+            margin-top: 20px;
             font-size: 10px;
             color: #777;
             text-align: center;
@@ -122,10 +122,20 @@
         </tr>
     </table>
 
+    @php
+        $pengembalian = $peminjaman->pengembalianRuangan ?: $peminjaman->pengembalianBarang;
+        $isRuangan = $peminjaman->jenis_peminjaman === 'ruangan';
+        $tanggalKembali = $isRuangan ? $pengembalian->tanggal_pengembalian : $pengembalian->tanggal;
+        $catatan = $pengembalian->catatan ?: '-';
+        $statusPengembalian = $pengembalian->status;
+        $idPengembalian = $isRuangan ? $pengembalian->id_pengembalian_ruangan : $pengembalian->id_pengembalian_barang;
+        $kondisi_kembali = ($statusPengembalian === 'bermasalah') ? 'Bermasalah' : 'Baik & Lengkap';
+    @endphp
+
     <!-- Judul Dokumen -->
     <div class="doc-title">
         <h1>SURAT BUKTI PENGEMBALIAN FASILITAS</h1>
-        <p>Nomor Bukti: SBUM-R-{{ $peminjaman->pengembalian->tanggal_kembali ? \Carbon\Carbon::parse($peminjaman->pengembalian->tanggal_kembali)->format('Y') : date('Y') }}-{{ str_pad($peminjaman->pengembalian->id_pengembalian, 4, '0', STR_PAD_LEFT) }}</p>
+        <p>Nomor Bukti: SBUM-R-{{ $tanggalKembali ? \Carbon\Carbon::parse($tanggalKembali)->format('Y') : date('Y') }}-{{ str_pad($idPengembalian, 4, '0', STR_PAD_LEFT) }}</p>
     </div>
 
     <!-- Tabel Informasi -->
@@ -145,7 +155,7 @@
         <tr>
             <td class="label">Fasilitas yang Dikembalikan</td>
             <td class="value">
-                @if($peminjaman->jenis_peminjaman === 'ruangan')
+                @if($isRuangan)
                     Ruangan: {{ $peminjaman->ruangan->first()->nama_ruangan ?? 'N/A' }} ({{ $peminjaman->ruangan->first()->kode_ruangan ?? '-' }} - {{ $peminjaman->ruangan->first()->nama_gedung ?? '-' }})
                 @else
                     Barang: {{ $peminjaman->barang->first()->nama_barang ?? 'N/A' }} ({{ $peminjaman->barang->first()->kode_barang ?? '-' }}) - Jumlah: {{ $peminjaman->barang->first()->pivot->jumlah ?? 1 }} unit
@@ -155,21 +165,21 @@
         <tr>
             <td class="label">Tanggal Kembali</td>
             <td class="value">
-                {{ $peminjaman->pengembalian->tanggal_kembali ? \Carbon\Carbon::parse($peminjaman->pengembalian->tanggal_kembali)->translatedFormat('l, d F Y') : '-' }}
+                {{ $tanggalKembali ? \Carbon\Carbon::parse($tanggalKembali)->translatedFormat('l, d F Y') : '-' }}
             </td>
         </tr>
         <tr>
             <td class="label">Kondisi Fasilitas</td>
             <td class="value">
-                <strong style="text-transform: capitalize;">{{ $peminjaman->pengembalian->kondisi_kembali }}</strong><br>
-                <small>{{ $peminjaman->pengembalian->catatan_kondisi ?? '-' }}</small>
+                <strong style="text-transform: capitalize;">{{ $kondisi_kembali }}</strong><br>
+                <small>{{ $catatan }}</small>
             </td>
         </tr>
         <tr>
             <td class="label">Status Pengembalian</td>
             <td class="value">
-                <span class="status-badge status-{{ $peminjaman->pengembalian->status_pengembalian }}">
-                    {{ str_replace('_', ' ', $peminjaman->pengembalian->status_pengembalian) }}
+                <span class="status-badge status-{{ $statusPengembalian }}">
+                    {{ str_replace('_', ' ', $statusPengembalian) }}
                 </span>
             </td>
         </tr>
@@ -185,12 +195,19 @@
                 <div class="sign-role">NIM: {{ $peminjaman->user->nim ?? '-' }}</div>
             </td>
             <td>
-                <div class="sign-title">Mengetahui,<br>Admin SBUM</div>
-                <div style="height: 50px; font-style: italic; color: #587a68; font-size: 10px; line-height: 50px;">
-                    [DIVERIFIKASI SECARA ELEKTRONIK]
+                <div class="sign-title">Mengetahui,<br>Kepala Bagian SBUM</div>
+                <div style="height: 90px; margin: 10px 0;">
+                    @if(isset($qrcode))
+                        <img src="{{ $qrcode }}" alt="QR Code Tanda Tangan" style="height: 90px; width: 90px; object-fit: contain;">
+                    @else
+                        <img src="{{ public_path('images/qr-ttd.png') }}" alt="QR Code Tanda Tangan" style="height: 90px; width: 90px; object-fit: contain;">
+                    @endif
                 </div>
-                <div class="sign-name">Admin SBUM Politeknik</div>
-                <div class="sign-role">SBUM-POLIBATAM-AUTO</div>
+                @php
+                    $kepalaLog = $peminjaman->verifikasi->where('peran_verifikasi', 'Kepala SBUM')->first();
+                @endphp
+                <div class="sign-name">Kepala SBUM</div>
+                <div class="sign-role">NIP. SBUM-POLIBATAM-AUTO</div>
             </td>
         </tr>
     </table>

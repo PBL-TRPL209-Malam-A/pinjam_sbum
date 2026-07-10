@@ -4,24 +4,7 @@
 
 
 @section('content')
-<style>
-    /* ... Style CSS Anda tetap sama seperti sebelumnya (dipertahankan semuanya) ... */
-    .banner-card { background-color: #edf2ea; border: 1px solid #dfe7dc; border-radius: 1.5rem; }
-    .custom-table { background: #fffdfa; border: 1px solid var(--line); border-radius: 1.5rem; overflow: hidden; }
-    .custom-table th { background-color: #f7f3eb; color: var(--text-main); font-weight: 600; border: none; padding: 1rem 1.5rem; }
-    .custom-table td { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--line); color: var(--text-main); }
-    .badge-aktif { background-color: #e2f0d9; color: #385723; font-size: 0.85rem; font-weight: 600; padding: 0.4rem 1.25rem; border-radius: 2rem; display: inline-block; }
-    .badge-perawatan { background-color: #fcf1d3; color: #7d6006; font-size: 0.85rem; font-weight: 600; padding: 0.4rem 1.25rem; border-radius: 2rem; display: inline-block; }
-    .badge-nonaktif { background-color: #fcebeb; color: #8b3c3c; font-size: 0.85rem; font-weight: 600; padding: 0.4rem 1.25rem; border-radius: 2rem; display: inline-block; }
-    .action-btn-group { display: flex; gap: 0.5rem; }
-    .btn-ubah { border: 1px solid var(--line); background: white; color: var(--text-main); font-weight: 500; border-radius: 0.75rem; padding: 0.4rem 1.2rem; transition: 0.2s; }
-    .btn-ubah:hover { background: #fdfcf9; }
-    .btn-hapus { background-color: #c95b50; color: white; font-weight: 500; border-radius: 0.75rem; padding: 0.4rem 1.2rem; border: none; transition: 0.2s; }
-    .btn-soft-filter { background: #fffdfa; border: 1px solid #dfd4c8; border-radius: 1rem; height: 44px; min-width: 180px; color: #5f6963; font-weight: 500; transition: 0.2s; padding: 0 1.25rem; text-align: left; }
-    .btn-soft-filter:hover { background: #f7f2eb; }
-    .btn-detail { border: 1px solid var(--primary-main); background: white; color: var(--primary-main); font-weight: 500; border-radius: 0.75rem; padding: 0.4rem 1.2rem; transition: 0.2s; text-decoration: none; display: inline-block; }
-    .btn-detail:hover { background: #edf3ee; color: var(--primary-dark); }
-</style>
+
 
 @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" style="border-radius: 0.75rem;">
@@ -48,19 +31,19 @@
     </div>
 @endif
 
-<div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Tambah, ubah, dan hapus data fasilitas</h2>
-        <p class="mb-0 text-secondary text-wrap" style="max-width: 650px;">
+<div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[24px] p-6 lg:p-8 mb-6 shadow-sm">
+    <div>
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Tambah, ubah, dan hapus data fasilitas</h2>
+        <p class="text-[#7d8781] max-w-2xl mb-0">
             Admin mengelola data fasilitas seperti ruangan kampus agar selalu akurat dan siap dipakai pada proses peminjaman.
         </p>
     </div>
 </div>
 
-<div class="card border-0 rounded-4 p-3 mb-4" style="background: #fffdfa; border: 1px solid var(--line) !important;">
-    <div class="d-flex flex-wrap gap-3 align-items-center">
-        <button class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" data-bs-toggle="modal" data-bs-target="#tambahFasilitasModal">Tambah Fasilitas</button>
-        <select class="btn-soft-filter" id="statusFilter" style="appearance: none; -webkit-appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 fill=%22%235f6963%22 viewBox=%220 0 16 16%22><path d=%22M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z%22/></svg>'); background-repeat: no-repeat; background-position: right 1.25rem center; background-size: 10px; cursor: pointer;">
+<div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-4 mb-6">
+    <div class="flex flex-wrap gap-4 items-center">
+        <button class="bg-[#466454] hover:bg-[#395244] text-white px-5 py-2.5 rounded-[14px] font-semibold transition" data-bs-toggle="modal" data-bs-target="#tambahFasilitasModal">Tambah Fasilitas</button>
+        <select class="bg-[#fffdfa] border border-[#dfd4c8] rounded-[14px] px-5 py-2.5 min-w-[200px] text-[#5f6963] font-medium outline-none focus:border-[#466454]" id="statusFilter">
             <option value="all">Status Keaktifan (Semua)</option>
             <option value="Aktif">Aktif</option>
             <option value="Tidak Aktif">Tidak Aktif</option>
@@ -69,51 +52,39 @@
     </div>
 </div>
 
-<div class="mb-3 fw-semibold text-secondary">Tabel Fasilitas</div>
-<div class="custom-table mb-4">
-    <table class="w-full text-left border-collapse">
-        <thead>
-            <tr>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Nama</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kode Ruangan</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Gedung</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Foto</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kategori</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kapasitas</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">PIC Ruangan</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Status</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Aksi</th>
-            </tr>
-        </thead>
+<div class="font-semibold text-[#7d8781] mb-4">Tabel Fasilitas</div>
+<div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] overflow-x-auto mb-6">
+    <table class="w-full text-left whitespace-nowrap">
+        <thead><tr class="bg-[#f7f3eb] text-[#33403b]"><th class="px-6 py-4 font-semibold text-sm">Nama</th><th class="px-6 py-4 font-semibold text-sm">Kode Ruangan</th><th class="px-6 py-4 font-semibold text-sm">Gedung</th><th class="px-6 py-4 font-semibold text-sm">Foto</th><th class="px-6 py-4 font-semibold text-sm">Kategori</th><th class="px-6 py-4 font-semibold text-sm">Kapasitas</th><th class="px-6 py-4 font-semibold text-sm">PIC Ruangan</th><th class="px-6 py-4 font-semibold text-sm">Status</th><th class="px-6 py-4 font-semibold text-sm rounded-tr-none">Aksi</th></tr></thead>
         <tbody>
             @forelse($ruangan as $r)
             <tr>
-                <td class="fw-semibold">{{ $r->nama_ruangan }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><code>{{ $r->kode_ruangan }}</code></td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $r->nama_gedung ?? '-' }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">{{ $r->nama_ruangan }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]"><code>{{ $r->kode_ruangan }}</code></td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $r->nama_gedung ?? '-' }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($r->foto_ruangan)
-                        <img src="{{ asset($r->foto_ruangan) }}" alt="{{ $r->nama_ruangan }}" class="img-fluid rounded-3" style="width: 150px; height: 150px; object-fit: cover; max-width: 100%;">
+                        <img src="{{ asset($r->foto_ruangan) }}" alt="{{ $r->nama_ruangan }}" class="w-[80px] h-[80px] object-cover rounded-xl">
                     @else
-                        <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 150px; height: 150px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">
+                        <div class="w-[80px] h-[80px] rounded-xl flex items-center justify-center bg-[#f7f3eb] text-[#7d8781] text-xs border border-dashed border-[#e6ddd2]">
                             Tidak ada foto
                         </div>
                     @endif
                 </td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Ruangan</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $r->kapasitas ?? 'N/A' }} orang</td>
-                <td class="fw-semibold">{{ $r->pic ? $r->pic->nama_lengkap : '-' }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">Ruangan</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $r->kapasitas ?? 'N/A' }} orang</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">{{ $r->pic ? $r->pic->nama_lengkap : '-' }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($r->status_ruangan == 'tersedia')
-                        <span class="badge-aktif">Aktif</span>
+                        <span class="bg-[#e2f0d9] text-[#385723] px-4 py-1.5 rounded-full text-xs font-semibold">Aktif</span>
                     @elseif($r->status_ruangan == 'maintenance')
-                        <span class="badge-perawatan">Perawatan</span>
+                        <span class="bg-[#fcf1d3] text-[#7d6006] px-4 py-1.5 rounded-full text-xs font-semibold">Perawatan</span>
                     @else
-                        <span class="badge-nonaktif">Tidak Aktif</span>
+                        <span class="bg-[#fcebeb] text-[#8b3c3c] px-4 py-1.5 rounded-full text-xs font-semibold">Tidak Aktif</span>
                     @endif
                 </td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="action-btn-group">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <div class="flex gap-2">
                         <button class="btn btn-detail" data-bs-toggle="modal" data-bs-target="#detailFasilitasModal{{ $r->id_ruangan }}">Detail</button>
                         <button class="btn btn-ubah" data-bs-toggle="modal" data-bs-target="#editFasilitasModal{{ $r->id_ruangan }}">Ubah</button>
                         <form action="{{ route('admin.fasilitas.destroy', $r->id_ruangan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus ruangan ini?');">
@@ -126,18 +97,18 @@
             </tr>
             @empty
             <tr>
-                <td class="fw-semibold">Aula Utama Polibatam</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><code>kode-ruangan</code></td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">-</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">Aula Utama Polibatam</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]"><code>kode-ruangan</code></td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">-</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">Tidak ada foto</div>
                 </td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Ruangan</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">250 orang</td>
-                <td class="fw-semibold">-</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]"><span class="badge-aktif">Aktif</span></td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="action-btn-group">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">Ruangan</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">250 orang</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">-</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]"><span class="bg-[#e2f0d9] text-[#385723] px-4 py-1.5 rounded-full text-xs font-semibold">Aktif</span></td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <div class="flex gap-2">
                         <button class="btn btn-ubah">Ubah</button>
                         <button class="btn btn-hapus">Hapus</button>
                     </div>
@@ -156,25 +127,25 @@
 
 <div class="modal fade" id="tambahFasilitasModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #fffdfa;">
-            <div class="modal-header border-0 pb-0" style="background-color: #f7f3eb; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                <h5 class="modal-title fw-bold text-main">Tambah Fasilitas Ruangan</h5>
+        <div class="modal-content bg-[#fffdfa] border-0 rounded-2xl shadow-xl">
+            <div class="modal-header bg-[#f7f3eb] border-0 rounded-t-2xl pb-4">
+                <h5 class="modal-title font-bold text-[#466454] text-lg">Tambah Fasilitas Ruangan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('admin.fasilitas.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Nama Ruangan</label>
-                        <input type="text" name="nama_ruangan" class="form-control" placeholder="cth: Aula Utama Polibatam" required style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Nama Ruangan</label>
+                        <input type="text" name="nama_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="cth: Aula Utama Polibatam" required >
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Kode Ruangan <span class="text-danger">*</span></label>
-                        <input type="text" name="kode_ruangan" class="form-control" placeholder="cth: RNG_AULA" required style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Kode Ruangan <span class="text-danger">*</span></label>
+                        <input type="text" name="kode_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="cth: RNG_AULA" required >
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Gedung</label>
-                        <select name="nama_gedung" class="form-select" style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Gedung</label>
+                        <select name="nama_gedung" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" >
                             <option value="">-- Pilih Gedung --</option>
                             <option value="Gedung Utama">Gedung Utama</option>
                             <option value="Gedung Tower A dan Tower B">Gedung Tower A dan Tower B</option>
@@ -182,24 +153,24 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Lantai</label>
-                        <input type="text" name="lantai" class="form-control" placeholder="cth: 1" style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Lantai</label>
+                        <input type="text" name="lantai" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="cth: 1" >
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Kapasitas (Orang)</label>
-                        <input type="number" name="kapasitas" class="form-control" placeholder="cth: 250" style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Kapasitas (Orang)</label>
+                        <input type="number" name="kapasitas" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="cth: 250" >
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Status</label>
-                        <select name="status_ruangan" class="form-select" style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Status</label>
+                        <select name="status_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" >
                             <option value="tersedia">Aktif</option>
                             <option value="maintenance">Perawatan</option>
                             <option value="tidak tersedia">Tidak Aktif</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Deskripsi Ruangan</label>
-                        <textarea name="deskripsi_ruangan" class="form-control" rows="3" style="border-radius:0.75rem;" placeholder="Masukkan deskripsi umum ruangan..."></textarea>
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Deskripsi Ruangan</label>
+                        <textarea name="deskripsi_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" rows="3"  placeholder="Masukkan deskripsi umum ruangan..."></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary fw-semibold d-flex justify-content-between align-items-center">
@@ -209,20 +180,20 @@
                         <div id="items-container" class="d-grid gap-2">
                             <div class="row g-2 align-items-center item-row">
                                 <div class="col-md-5">
-                                    <input type="text" name="fasilitas_items[0][nama_fasilitas]" class="form-control" placeholder="Nama Item (cth: AC)" style="border-radius:0.5rem; font-size: 0.9rem;">
+                                    <input type="text" name="fasilitas_items[0][nama_fasilitas]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Nama Item (cth: AC)" style="border-radius:0.5rem; font-size: 0.9rem;">
                                 </div>
                                 <div class="col-md-3">
-                                    <input type="number" name="fasilitas_items[0][jumlah]" class="form-control" placeholder="Jml" min="1" value="1" style="border-radius:0.5rem; font-size: 0.9rem;">
+                                    <input type="number" name="fasilitas_items[0][jumlah]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Jml" min="1" value="1" style="border-radius:0.5rem; font-size: 0.9rem;">
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" name="fasilitas_items[0][keterangan]" class="form-control" placeholder="Keterangan" style="border-radius:0.5rem; font-size: 0.9rem;">
+                                    <input type="text" name="fasilitas_items[0][keterangan]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Keterangan" style="border-radius:0.5rem; font-size: 0.9rem;">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">PIC Ruangan <span class="text-danger">*</span></label>
-                        <select name="pic_id" class="form-select" style="border-radius:0.75rem;" required>
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">PIC Ruangan <span class="text-danger">*</span></label>
+                        <select name="pic_id" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]"  required>
                             <option value="">-- Pilih PIC --</option>
                             @foreach($pics as $p)
                                 <option value="{{ $p->id_user }}">{{ $p->nama_lengkap }}</option>
@@ -230,14 +201,14 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Foto Ruangan</label>
-                        <input type="file" name="foto_ruangan" class="form-control" accept="image/png, image/jpeg, image/jpg, image/webp" style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Foto Ruangan</label>
+                        <input type="file" name="foto_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" accept="image/png, image/jpeg, image/jpg, image/webp" >
                         <div class="form-text text-muted" style="font-size: 0.8rem;">Hanya menerima JPG, JPEG, PNG, WEBP (maks. 10MB)</div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                    <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Fasilitas</button>
+                <div class="modal-footer border-0">
+                    <button type="button" class="border border-[#e6ddd2] text-[#7d8781] px-5 py-2.5 rounded-xl font-semibold hover:bg-[#f5f2ec] transition" data-bs-dismiss="modal" >Batal</button>
+                    <button type="submit" class="bg-[#466454] text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-[#395244] transition" >Simpan Fasilitas</button>
                 </div>
             </form>
         </div>
@@ -247,9 +218,9 @@
 @foreach($ruangan as $r)
     <div class="modal fade" id="editFasilitasModal{{ $r->id_ruangan }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #fffdfa;">
-                <div class="modal-header border-0 pb-0" style="background-color: #f7f3eb; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                    <h5 class="modal-title fw-bold text-main">Ubah Fasilitas Ruangan</h5>
+            <div class="modal-content bg-[#fffdfa] border-0 rounded-2xl shadow-xl">
+                <div class="modal-header bg-[#f7f3eb] border-0 rounded-t-2xl pb-4">
+                    <h5 class="modal-title font-bold text-[#466454] text-lg">Ubah Fasilitas Ruangan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('admin.fasilitas.update', $r->id_ruangan) }}" method="POST" enctype="multipart/form-data">
@@ -257,16 +228,16 @@
                     @method('PUT')
                     <div class="modal-body p-4">
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Nama Ruangan</label>
-                            <input type="text" name="nama_ruangan" class="form-control" value="{{ $r->nama_ruangan }}" required style="border-radius:0.75rem;">
+                            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Nama Ruangan</label>
+                            <input type="text" name="nama_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $r->nama_ruangan }}" required >
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Kode Ruangan <span class="text-danger">*</span></label>
-                            <input type="text" name="kode_ruangan" class="form-control" value="{{ $r->kode_ruangan }}" required style="border-radius:0.75rem;">
+                            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Kode Ruangan <span class="text-danger">*</span></label>
+                            <input type="text" name="kode_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $r->kode_ruangan }}" required >
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Gedung</label>
-                            <select name="nama_gedung" class="form-select" style="border-radius:0.75rem;">
+                            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Gedung</label>
+                            <select name="nama_gedung" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" >
                                 <option value="" {{ empty($r->nama_gedung) ? 'selected' : '' }}>-- Pilih Gedung --</option>
                                 <option value="Gedung Utama" {{ $r->nama_gedung == 'Gedung Utama' ? 'selected' : '' }}>Gedung Utama</option>
                                 <option value="Gedung Tower A dan Tower B" {{ $r->nama_gedung == 'Gedung Tower A dan Tower B' ? 'selected' : '' }}>Gedung Tower A dan Tower B</option>
@@ -274,24 +245,24 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Lantai</label>
-                            <input type="text" name="lantai" class="form-control" value="{{ $r->lantai }}" style="border-radius:0.75rem;">
+                            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Lantai</label>
+                            <input type="text" name="lantai" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $r->lantai }}" >
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Kapasitas (Orang)</label>
-                            <input type="number" name="kapasitas" class="form-control" value="{{ $r->kapasitas }}" style="border-radius:0.75rem;">
+                            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Kapasitas (Orang)</label>
+                            <input type="number" name="kapasitas" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $r->kapasitas }}" >
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Status</label>
-                            <select name="status_ruangan" class="form-select" style="border-radius:0.75rem;">
+                            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Status</label>
+                            <select name="status_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" >
                                 <option value="tersedia" {{ $r->status_ruangan == 'tersedia' ? 'selected' : '' }}>Aktif</option>
                                 <option value="maintenance" {{ $r->status_ruangan == 'maintenance' ? 'selected' : '' }}>Perawatan</option>
                                 <option value="tidak tersedia" {{ $r->status_ruangan == 'tidak tersedia' ? 'selected' : '' }}>Tidak Aktif</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Deskripsi Ruangan</label>
-                            <textarea name="deskripsi_ruangan" class="form-control" rows="3" style="border-radius:0.75rem;" placeholder="Masukkan deskripsi umum ruangan...">{{ $r->deskripsi_ruangan }}</textarea>
+                            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Deskripsi Ruangan</label>
+                            <textarea name="deskripsi_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" rows="3"  placeholder="Masukkan deskripsi umum ruangan...">{{ $r->deskripsi_ruangan }}</textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-secondary fw-semibold d-flex justify-content-between align-items-center">
@@ -303,13 +274,13 @@
                                     <div class="row g-2 align-items-center edit-item-row">
                                         <input type="hidden" name="fasilitas_items[{{ $index }}][id_fasilitas]" value="{{ $f->id_fasilitas }}">
                                         <div class="col-md-5">
-                                            <input type="text" name="fasilitas_items[{{ $index }}][nama_fasilitas]" class="form-control" value="{{ $f->nama_fasilitas }}" style="border-radius:0.5rem; font-size: 0.9rem;" required>
+                                            <input type="text" name="fasilitas_items[{{ $index }}][nama_fasilitas]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $f->nama_fasilitas }}" style="border-radius:0.5rem; font-size: 0.9rem;" required>
                                         </div>
                                         <div class="col-md-3">
-                                            <input type="number" name="fasilitas_items[{{ $index }}][jumlah]" class="form-control" value="{{ $f->jumlah }}" min="1" style="border-radius:0.5rem; font-size: 0.9rem;" required>
+                                            <input type="number" name="fasilitas_items[{{ $index }}][jumlah]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $f->jumlah }}" min="1" style="border-radius:0.5rem; font-size: 0.9rem;" required>
                                         </div>
                                         <div class="col-md-3">
-                                            <input type="text" name="fasilitas_items[{{ $index }}][keterangan]" class="form-control" value="{{ $f->keterangan }}" placeholder="Keterangan" style="border-radius:0.5rem; font-size: 0.9rem;">
+                                            <input type="text" name="fasilitas_items[{{ $index }}][keterangan]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $f->keterangan }}" placeholder="Keterangan" style="border-radius:0.5rem; font-size: 0.9rem;">
                                         </div>
                                         <div class="col-md-1 d-flex justify-content-end">
                                             <button type="button" class="btn btn-sm btn-danger remove-item-btn" style="border-radius:0.5rem;">&times;</button>
@@ -319,8 +290,8 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">PIC Ruangan <span class="text-danger">*</span></label>
-                            <select name="pic_id" class="form-select" style="border-radius:0.75rem;" required>
+                            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">PIC Ruangan <span class="text-danger">*</span></label>
+                            <select name="pic_id" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]"  required>
                                 <option value="">-- Pilih PIC --</option>
                                 @foreach($pics as $p)
                                     <option value="{{ $p->id_user }}" {{ $r->pic_id == $p->id_user ? 'selected' : '' }}>{{ $p->nama_lengkap }}</option>
@@ -328,19 +299,19 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-secondary fw-semibold">Foto Ruangan</label>
+                            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Foto Ruangan</label>
                             @if($r->foto_ruangan)
                                 <div class="mb-2">
                                     <img src="{{ asset($r->foto_ruangan) }}" alt="Foto saat ini" class="img-thumbnail" style="max-width: 150px; height: auto;">
                                 </div>
                             @endif
-                            <input type="file" name="foto_ruangan" class="form-control" accept="image/png, image/jpeg, image/jpg, image/webp" style="border-radius:0.75rem;">
+                            <input type="file" name="foto_ruangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" accept="image/png, image/jpeg, image/jpg, image/webp" >
                             <div class="form-text text-muted" style="font-size: 0.8rem;">Hanya menerima JPG, JPEG, PNG, WEBP (maks. 10MB)</div>
                         </div>
                     </div>
-                    <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Perubahan</button>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="border border-[#e6ddd2] text-[#7d8781] px-5 py-2.5 rounded-xl font-semibold hover:bg-[#f5f2ec] transition" data-bs-dismiss="modal" >Batal</button>
+                        <button type="submit" class="bg-[#466454] text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-[#395244] transition" >Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
@@ -349,9 +320,9 @@
 
     <div class="modal fade" id="detailFasilitasModal{{ $r->id_ruangan }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #fffdfa;">
-                <div class="modal-header border-0 pb-0" style="background-color: #f7f3eb; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                    <h5 class="modal-title fw-bold text-main">Detail Fasilitas Ruangan</h5>
+            <div class="modal-content bg-[#fffdfa] border-0 rounded-2xl shadow-xl">
+                <div class="modal-header bg-[#f7f3eb] border-0 rounded-t-2xl pb-4">
+                    <h5 class="modal-title font-bold text-[#466454] text-lg">Detail Fasilitas Ruangan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -384,11 +355,11 @@
                             <div class="mb-3">
                                 <span class="text-secondary small fw-semibold d-block mb-1">Status Keaktifan</span>
                                 @if($r->status_ruangan == 'tersedia')
-                                    <span class="badge-aktif">Aktif</span>
+                                    <span class="bg-[#e2f0d9] text-[#385723] px-4 py-1.5 rounded-full text-xs font-semibold">Aktif</span>
                                 @elseif($r->status_ruangan == 'maintenance')
-                                    <span class="badge-perawatan">Perawatan</span>
+                                    <span class="bg-[#fcf1d3] text-[#7d6006] px-4 py-1.5 rounded-full text-xs font-semibold">Perawatan</span>
                                 @else
-                                    <span class="badge-nonaktif">Tidak Aktif</span>
+                                    <span class="bg-[#fcebeb] text-[#8b3c3c] px-4 py-1.5 rounded-full text-xs font-semibold">Tidak Aktif</span>
                                 @endif
                             </div>
                         </div>
@@ -415,7 +386,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 pt-0">
+                <div class="modal-footer border-0">
                     <button type="button" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" data-bs-dismiss="modal" style="border-radius:0.75rem; min-width: 100px;">Tutup</button>
                 </div>
             </div>
@@ -487,13 +458,13 @@ document.addEventListener('DOMContentLoaded', function() {
             div.className = 'row g-2 align-items-center item-row';
             div.innerHTML = `
                 <div class="col-md-5">
-                    <input type="text" name="fasilitas_items[${index}][nama_fasilitas]" class="form-control" placeholder="Nama Item" style="border-radius:0.5rem; font-size: 0.9rem;" required>
+                    <input type="text" name="fasilitas_items[${index}][nama_fasilitas]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Nama Item" style="border-radius:0.5rem; font-size: 0.9rem;" required>
                 </div>
                 <div class="col-md-3">
-                    <input type="number" name="fasilitas_items[${index}][jumlah]" class="form-control" placeholder="Jml" min="1" value="1" style="border-radius:0.5rem; font-size: 0.9rem;" required>
+                    <input type="number" name="fasilitas_items[${index}][jumlah]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Jml" min="1" value="1" style="border-radius:0.5rem; font-size: 0.9rem;" required>
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="fasilitas_items[${index}][keterangan]" class="form-control" placeholder="Keterangan" style="border-radius:0.5rem; font-size: 0.9rem;">
+                    <input type="text" name="fasilitas_items[${index}][keterangan]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Keterangan" style="border-radius:0.5rem; font-size: 0.9rem;">
                 </div>
                 <div class="col-md-1 d-flex justify-content-end">
                     <button type="button" class="btn btn-sm btn-danger remove-item-btn" style="border-radius:0.5rem;">&times;</button>
@@ -515,13 +486,13 @@ document.addEventListener('DOMContentLoaded', function() {
             div.className = 'row g-2 align-items-center edit-item-row';
             div.innerHTML = `
                 <div class="col-md-5">
-                    <input type="text" name="fasilitas_items[${index}][nama_fasilitas]" class="form-control" placeholder="Nama Item" style="border-radius:0.5rem; font-size: 0.9rem;" required>
+                    <input type="text" name="fasilitas_items[${index}][nama_fasilitas]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Nama Item" style="border-radius:0.5rem; font-size: 0.9rem;" required>
                 </div>
                 <div class="col-md-3">
-                    <input type="number" name="fasilitas_items[${index}][jumlah]" class="form-control" placeholder="Jml" min="1" value="1" style="border-radius:0.5rem; font-size: 0.9rem;" required>
+                    <input type="number" name="fasilitas_items[${index}][jumlah]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Jml" min="1" value="1" style="border-radius:0.5rem; font-size: 0.9rem;" required>
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="fasilitas_items[${index}][keterangan]" class="form-control" placeholder="Keterangan" style="border-radius:0.5rem; font-size: 0.9rem;">
+                    <input type="text" name="fasilitas_items[${index}][keterangan]" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Keterangan" style="border-radius:0.5rem; font-size: 0.9rem;">
                 </div>
                 <div class="col-md-1 d-flex justify-content-end">
                     <button type="button" class="btn btn-sm btn-danger remove-item-btn" style="border-radius:0.5rem;">&times;</button>

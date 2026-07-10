@@ -4,124 +4,35 @@
 
 
 @section('content')
-<style>
-    .banner-card {
-        background-color: #edf2ea;
-        border: 1px solid #dfe7dc;
-        border-radius: 1.5rem;
-    }
-    .custom-table {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.5rem;
-        overflow: hidden;
-    }
-    .custom-table th {
-        background-color: #f7f3eb;
-        color: var(--text-main);
-        font-weight: 600;
-        border: none;
-        padding: 1rem 1.5rem;
-    }
-    .custom-table td {
-        padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid var(--line);
-        color: var(--text-main);
-    }
-    .badge-baik {
-        background-color: #e2f0d9;
-        color: #385723;
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 0.4rem 1.25rem;
-        border-radius: 2rem;
-        display: inline-block;
-    }
-    .badge-cek {
-        background-color: #fcf1d3;
-        color: #7d6006;
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 0.4rem 1.25rem;
-        border-radius: 2rem;
-        display: inline-block;
-    }
-    .badge-rusak {
-        background-color: #fcebeb;
-        color: #8b3c3c;
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 0.4rem 1.25rem;
-        border-radius: 2rem;
-        display: inline-block;
-    }
-    .action-btn-group {
-        display: flex;
-        gap: 0.5rem;
-    }
-    .btn-ubah {
-        border: 1px solid var(--line);
-        background: white;
-        color: var(--text-main);
-        font-weight: 500;
-        border-radius: 0.75rem;
-        padding: 0.4rem 1.2rem;
-        transition: 0.2s;
-    }
-    .btn-ubah:hover {
-        background: #fdfcf9;
-    }
-    .btn-hapus {
-        background-color: #c95b50;
-        color: white;
-        font-weight: 500;
-        border-radius: 0.75rem;
-        padding: 0.4rem 1.2rem;
-        border: none;
-        transition: 0.2s;
-    }
-    .btn-hapus:hover {
-        background-color: #b34e44;
-        color: white;
-    }
-</style>
+
 
 <!-- Banner Card -->
-<div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Kelola barang inventaris yang dapat dipinjam</h2>
-        <p class="mb-0 text-secondary text-wrap" style="max-width: 650px;">
+<div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[24px] p-6 lg:p-8 mb-6 shadow-sm">
+    <div>
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Kelola barang inventaris yang dapat dipinjam</h2>
+        <p class="text-[#7d8781] max-w-2xl mb-0">
             Admin menyimpan, mengubah, dan memantau stok inventaris seperti projector, sound system, meja, dan kursi.
         </p>
     </div>
 </div>
 
 <!-- Controls Bar -->
-<div class="card border-0 rounded-4 p-3 mb-4" style="background: #fffdfa; border: 1px solid var(--line) !important;">
+<div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-4 mb-6">
     <div class="d-flex flex-wrap gap-3">
-        <button class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" data-bs-toggle="modal" data-bs-target="#tambahInventarisModal">Tambah Inventaris</button>
+        <button class="bg-[#466454] hover:bg-[#395244] text-white px-5 py-2.5 rounded-[14px] font-semibold transition" data-bs-toggle="modal" data-bs-target="#tambahInventarisModal">Tambah Inventaris</button>
     </div>
 </div>
 
 <!-- Table Area -->
-<div class="mb-3 fw-semibold text-secondary">Tabel Inventaris</div>
-<div class="custom-table mb-4">
-    <table class="w-full text-left border-collapse">
-        <thead>
-            <tr>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Barang</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Foto</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Keterangan</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Stok</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">PIC Barang</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Aksi</th>
-            </tr>
-        </thead>
+<div class="font-semibold text-[#7d8781] mb-4">Tabel Inventaris</div>
+<div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] overflow-x-auto mb-6">
+    <table class="w-full text-left whitespace-nowrap">
+        <thead><tr class="bg-[#f7f3eb] text-[#33403b]"><th class="px-6 py-4 font-semibold text-sm">Barang</th><th class="px-6 py-4 font-semibold text-sm">Foto</th><th class="px-6 py-4 font-semibold text-sm">Keterangan</th><th class="px-6 py-4 font-semibold text-sm">Stok</th><th class="px-6 py-4 font-semibold text-sm">PIC Barang</th><th class="px-6 py-4 font-semibold text-sm rounded-tr-none">Aksi</th></tr></thead>
         <tbody>
             @forelse($barang as $b)
             <tr>
-                <td class="fw-semibold">{{ $b->nama_barang }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">{{ $b->nama_barang }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($b->foto_barang)
                         <img src="{{ asset($b->foto_barang) }}" alt="{{ $b->nama_barang }}" class="img-fluid rounded-3" style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;">
                     @else
@@ -130,11 +41,11 @@
                         </div>
                     @endif
                 </td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $b->keterangan ?: 'Gudang SBUM' }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $b->stok_tersedia }} unit</td>
-                <td class="fw-semibold">{{ $b->pic ? $b->pic->nama_lengkap : '-' }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="action-btn-group">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $b->keterangan ?: 'Gudang SBUM' }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $b->stok_tersedia }} unit</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">{{ $b->pic ? $b->pic->nama_lengkap : '-' }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <div class="flex gap-2">
                         <button class="btn btn-ubah" data-bs-toggle="modal" data-bs-target="#editInventarisModal{{ $b->id_barang }}">Ubah</button>
                         <form action="{{ route('admin.inventaris.destroy', $b->id_barang) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus barang ini?');">
                             @csrf
@@ -148,9 +59,9 @@
             <!-- Edit Modal for each Barang -->
             <div class="modal fade" id="editInventarisModal{{ $b->id_barang }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #fffdfa;">
-                        <div class="modal-header border-0 pb-0" style="background-color: #f7f3eb; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                            <h5 class="modal-title fw-bold text-main">Ubah Barang Inventaris</h5>
+                    <div class="modal-content bg-[#fffdfa] border-0 rounded-2xl shadow-xl">
+                        <div class="modal-header bg-[#f7f3eb] border-0 rounded-t-2xl pb-4">
+                            <h5 class="modal-title font-bold text-[#466454] text-lg">Ubah Barang Inventaris</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form action="{{ route('admin.inventaris.update', $b->id_barang) }}" method="POST" enctype="multipart/form-data">
@@ -158,24 +69,24 @@
                             @method('PUT')
                             <div class="modal-body p-4">
                                 <div class="mb-3">
-                                    <label class="form-label text-secondary fw-semibold">Nama Barang</label>
-                                    <input type="text" name="nama_barang" class="form-control" value="{{ $b->nama_barang }}" required style="border-radius:0.75rem;">
+                                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Nama Barang</label>
+                                    <input type="text" name="nama_barang" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $b->nama_barang }}" required >
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-secondary fw-semibold">Kode Barang</label>
-                                    <input type="text" name="kode_barang" class="form-control" value="{{ $b->kode_barang }}" style="border-radius:0.75rem;">
+                                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Kode Barang</label>
+                                    <input type="text" name="kode_barang" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $b->kode_barang }}" >
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-secondary fw-semibold">Stok Tersedia</label>
-                                    <input type="number" name="stok_tersedia" class="form-control" value="{{ $b->stok_tersedia }}" required style="border-radius:0.75rem;">
+                                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Stok Tersedia</label>
+                                    <input type="number" name="stok_tersedia" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $b->stok_tersedia }}" required >
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-secondary fw-semibold">Keterangan / Lokasi</label>
-                                    <input type="text" name="keterangan" class="form-control" value="{{ $b->keterangan }}" placeholder="cth: Gudang SBUM" style="border-radius:0.75rem;">
+                                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Keterangan / Lokasi</label>
+                                    <input type="text" name="keterangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" value="{{ $b->keterangan }}" placeholder="cth: Gudang SBUM" >
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-secondary fw-semibold">PIC Barang <span class="text-danger">*</span></label>
-                                    <select name="pic_id" class="form-select" style="border-radius:0.75rem;" required>
+                                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">PIC Barang <span class="text-danger">*</span></label>
+                                    <select name="pic_id" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]"  required>
                                         <option value="">-- Pilih PIC --</option>
                                         @foreach($pics as $p)
                                             <option value="{{ $p->id_user }}" {{ $b->pic_id == $p->id_user ? 'selected' : '' }}>{{ $p->nama_lengkap }}</option>
@@ -183,19 +94,19 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-secondary fw-semibold">Foto Barang</label>
+                                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Foto Barang</label>
                                     @if($b->foto_barang)
                                         <div class="mb-2">
                                             <img src="{{ asset($b->foto_barang) }}" alt="Foto saat ini" class="img-thumbnail" style="max-width: 150px; height: auto;">
                                         </div>
                                     @endif
-                                    <input type="file" name="foto_barang" class="form-control" accept="image/png, image/jpeg, image/jpg, image/webp" style="border-radius:0.75rem;">
+                                    <input type="file" name="foto_barang" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" accept="image/png, image/jpeg, image/jpg, image/webp" >
                                     <div class="form-text text-muted" style="font-size: 0.8rem;">Hanya menerima JPG, JPEG, PNG, WEBP (maks. 10MB)</div>
                                 </div>
                             </div>
-                            <div class="modal-footer border-0 pt-0">
-                                <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                                <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Perubahan</button>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="border border-[#e6ddd2] text-[#7d8781] px-5 py-2.5 rounded-xl font-semibold hover:bg-[#f5f2ec] transition" data-bs-dismiss="modal" >Batal</button>
+                                <button type="submit" class="bg-[#466454] text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-[#395244] transition" >Simpan Perubahan</button>
                             </div>
                         </form>
                     </div>
@@ -204,51 +115,51 @@
             @empty
             <!-- Realistic fallback content matching Image 3 -->
             <tr>
-                <td class="fw-semibold">LCD Projector Epson</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">LCD Projector Epson</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">
                         Tidak ada foto
                     </div>
                 </td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Gudang SBUM</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">4 unit</td>
-                <td class="fw-semibold">-</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="action-btn-group">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">Gudang SBUM</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">4 unit</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">-</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <div class="flex gap-2">
                         <button class="btn btn-ubah">Ubah</button>
                         <button class="btn btn-hapus">Hapus</button>
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="fw-semibold">Sound System</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">Sound System</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">
                         Tidak ada foto
                     </div>
                 </td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Unit Audio</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">2 set</td>
-                <td class="fw-semibold">-</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="action-btn-group">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">Unit Audio</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">2 set</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">-</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <div class="flex gap-2">
                         <button class="btn btn-ubah">Ubah</button>
                         <button class="btn btn-hapus">Hapus</button>
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="fw-semibold">Kursi Lipat</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">Kursi Lipat</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">
                         Tidak ada foto
                     </div>
                 </td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Gudang Sarpras</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">60 unit</td>
-                <td class="fw-semibold">-</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="action-btn-group">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">Gudang Sarpras</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">60 unit</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">-</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
+                    <div class="flex gap-2">
                         <button class="btn btn-ubah">Ubah</button>
                         <button class="btn btn-hapus">Hapus</button>
                     </div>
@@ -262,33 +173,33 @@
 <!-- Create Modal -->
 <div class="modal fade" id="tambahInventarisModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #fffdfa;">
-            <div class="modal-header border-0 pb-0" style="background-color: #f7f3eb; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                <h5 class="modal-title fw-bold text-main">Tambah Barang Inventaris</h5>
+        <div class="modal-content bg-[#fffdfa] border-0 rounded-2xl shadow-xl">
+            <div class="modal-header bg-[#f7f3eb] border-0 rounded-t-2xl pb-4">
+                <h5 class="modal-title font-bold text-[#466454] text-lg">Tambah Barang Inventaris</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('admin.inventaris.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Nama Barang</label>
-                        <input type="text" name="nama_barang" class="form-control" placeholder="cth: LCD Projector Epson" required style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Nama Barang</label>
+                        <input type="text" name="nama_barang" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="cth: LCD Projector Epson" required >
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Kode Barang</label>
-                        <input type="text" name="kode_barang" class="form-control" placeholder="cth: BRG001" style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Kode Barang</label>
+                        <input type="text" name="kode_barang" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="cth: BRG001" >
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Stok Tersedia</label>
-                        <input type="number" name="stok_tersedia" class="form-control" placeholder="cth: 4" required style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Stok Tersedia</label>
+                        <input type="number" name="stok_tersedia" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="cth: 4" required >
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Keterangan / Lokasi</label>
-                        <input type="text" name="keterangan" class="form-control" placeholder="cth: Gudang SBUM" style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Keterangan / Lokasi</label>
+                        <input type="text" name="keterangan" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="cth: Gudang SBUM" >
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">PIC Barang <span class="text-danger">*</span></label>
-                        <select name="pic_id" class="form-select" style="border-radius:0.75rem;" required>
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">PIC Barang <span class="text-danger">*</span></label>
+                        <select name="pic_id" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]"  required>
                             <option value="">-- Pilih PIC --</option>
                             @foreach($pics as $p)
                                 <option value="{{ $p->id_user }}">{{ $p->nama_lengkap }}</option>
@@ -296,14 +207,14 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-secondary fw-semibold">Foto Barang</label>
-                        <input type="file" name="foto_barang" class="form-control" accept="image/png, image/jpeg, image/jpg, image/webp" style="border-radius:0.75rem;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Foto Barang</label>
+                        <input type="file" name="foto_barang" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" accept="image/png, image/jpeg, image/jpg, image/webp" >
                         <div class="form-text text-muted" style="font-size: 0.8rem;">Hanya menerima JPG, JPEG, PNG, WEBP (maks. 10MB)</div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                    <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Simpan Inventaris</button>
+                <div class="modal-footer border-0">
+                    <button type="button" class="border border-[#e6ddd2] text-[#7d8781] px-5 py-2.5 rounded-xl font-semibold hover:bg-[#f5f2ec] transition" data-bs-dismiss="modal" >Batal</button>
+                    <button type="submit" class="bg-[#466454] text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-[#395244] transition" >Simpan Inventaris</button>
                 </div>
             </form>
         </div>

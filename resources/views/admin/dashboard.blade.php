@@ -58,11 +58,31 @@
                         </div>
                     </div>
                     <div>
-                        @if($index % 2 == 1)
-                            <span class="inline-block bg-[#fcebeb] text-[#8b3c3c] text-[13px] font-semibold px-4 py-1.5 rounded-full">Bentrok</span>
-                        @else
-                            <span class="inline-block bg-[#fcf1d3] text-[#7d6006] text-[13px] font-semibold px-4 py-1.5 rounded-full">Menunggu Admin</span>
-                        @endif
+                        @php
+                            $statusClasses = 'bg-[#fff3cd] text-[#856404]'; 
+                            $statusLabel = 'Menunggu';
+                            
+                            if(in_array($item->status, ['ditolak', 'batal'])) {
+                                $statusClasses = 'bg-[#fcebeb] text-[#8b3c3c]';
+                                $statusLabel = str_replace('_', ' ', Str::title($item->status));
+                            } elseif(in_array($item->status, ['menunggu_dosen'])) {
+                                $statusLabel = 'Menunggu Dosen';
+                            } elseif(in_array($item->status, ['menunggu_pic'])) {
+                                $statusLabel = 'Menunggu PIC';
+                            } elseif(in_array($item->status, ['menunggu_admin'])) {
+                                $statusClasses = 'bg-[#fcf1d3] text-[#7d6006]';
+                                $statusLabel = 'Menunggu Admin';
+                            } elseif(in_array($item->status, ['menunggu_kepala'])) {
+                                $statusLabel = 'Menunggu Ka. SBUM';
+                            } elseif($item->status == 'selesai') {
+                                $statusClasses = 'bg-[#e2e3e5] text-[#383d41]';
+                                $statusLabel = 'Selesai';
+                            } elseif(in_array($item->status, ['siap_digunakan', 'disetujui'])) {
+                                $statusClasses = 'bg-[#dcebd7] text-[#557b58]';
+                                $statusLabel = 'Disetujui';
+                            }
+                        @endphp
+                        <span class="inline-block {{ $statusClasses }} text-[13px] font-semibold px-4 py-1.5 rounded-full">{{ $statusLabel }}</span>
                     </div>
                 </div>
             @empty

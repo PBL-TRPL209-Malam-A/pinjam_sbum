@@ -51,10 +51,10 @@
         .info-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
         .info-table td {
-            padding: 8px 10px;
+            padding: 6px 10px;
             vertical-align: top;
         }
         .info-table td.label {
@@ -87,17 +87,17 @@
         
         .sign-table {
             width: 100%;
-            margin-top: 40px;
+            margin-top: 15px;
             page-break-inside: avoid;
         }
         .sign-table td {
             width: 50%;
             text-align: center;
-            padding-bottom: 60px;
+            padding-bottom: 10px;
         }
         .sign-title {
             font-weight: bold;
-            margin-bottom: 50px;
+            margin-bottom: 10px;
         }
         .sign-name {
             font-weight: bold;
@@ -108,7 +108,7 @@
             color: #666;
         }
         .footer-note {
-            margin-top: 50px;
+            margin-top: 15px;
             border-top: 1px solid #ccc;
             padding-top: 10px;
             font-size: 10px;
@@ -242,7 +242,12 @@
             <!-- Admin SBUM -->
             <tr>
                 <td>Admin SBUM (Operasional)</td>
-                <td>Staf Administrasi SBUM</td>
+                <td>
+                    @php
+                        $adminLog = $peminjaman->verifikasi->where('peran_verifikasi', 'Admin SBUM')->first();
+                    @endphp
+                    {{ $adminLog && $adminLog->verifikator ? $adminLog->verifikator->nama_lengkap : 'Staf Administrasi SBUM' }}
+                </td>
                 <td>
                     @if(in_array($peminjaman->status, ['menunggu_kepala', 'menunggu_pic', 'siap_digunakan', 'selesai']))
                         Disetujui
@@ -253,16 +258,18 @@
                     @endif
                 </td>
                 <td>
-                    @php
-                        $adminLog = $peminjaman->verifikasi->where('peran_verifikasi', 'Admin SBUM')->first();
-                    @endphp
                     {{ $adminLog ? \Carbon\Carbon::parse($adminLog->tanggal)->translatedFormat('d M Y H:i') : '-' }}
                 </td>
             </tr>
             <!-- Kepala SBUM -->
             <tr>
                 <td>Kepala Bagian SBUM</td>
-                <td>Kepala SBUM</td>
+                <td>
+                    @php
+                        $kepalaLog = $peminjaman->verifikasi->where('peran_verifikasi', 'Kepala SBUM')->first();
+                    @endphp
+                    Kepala SBUM
+                </td>
                 <td>
                     @if(in_array($peminjaman->status, ['menunggu_pic', 'siap_digunakan', 'selesai']))
                         Disetujui
@@ -273,9 +280,6 @@
                     @endif
                 </td>
                 <td>
-                    @php
-                        $kepalaLog = $peminjaman->verifikasi->where('peran_verifikasi', 'Kepala SBUM')->first();
-                    @endphp
                     {{ $kepalaLog ? \Carbon\Carbon::parse($kepalaLog->tanggal)->translatedFormat('d M Y H:i') : '-' }}
                 </td>
             </tr>
@@ -319,10 +323,17 @@
             </td>
             <td>
                 <div class="sign-title">Mengetahui,<br>Kepala Bagian SBUM</div>
-                <div style="height: 50px; font-style: italic; color: #587a68; font-size: 10px; line-height: 50px;">
-                    [DIVERIFIKASI SECARA ELEKTRONIK]
+                <div style="height: 90px; margin: 10px 0;">
+                    @if(isset($qrcode))
+                        <img src="{{ $qrcode }}" alt="QR Code Tanda Tangan" style="height: 90px; width: 90px; object-fit: contain;">
+                    @else
+                        <img src="{{ public_path('images/qr-ttd.png') }}" alt="QR Code Tanda Tangan" style="height: 90px; width: 90px; object-fit: contain;">
+                    @endif
                 </div>
-                <div class="sign-name">Kepala SBUM Politeknik</div>
+                @php
+                    $kepalaLog = $peminjaman->verifikasi->where('peran_verifikasi', 'Kepala SBUM')->first();
+                @endphp
+                <div class="sign-name">Kepala SBUM</div>
                 <div class="sign-role">NIP. SBUM-POLIBATAM-AUTO</div>
             </td>
         </tr>

@@ -14,54 +14,46 @@
   }
 </script>
 
-<style>
-    .banner-card {
-        background-color: #edf2ea;
-        border: 1px solid #dfe7dc;
-        border-radius: 1.5rem;
-    }
-    .slot-block {
-        transition: all 0.2s ease-in-out;
-    }
-    .slot-block:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
-</style>
+
 
 <!-- Banner Card -->
-<div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Kelola jadwal agar tidak bentrok</h2>
-        <p class="mb-0 text-secondary text-wrap" style="max-width: 650px;">
+<div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[24px] p-6 lg:p-8 mb-6 shadow-sm">
+    <div>
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Kelola jadwal agar tidak bentrok</h2>
+        <p class="text-[#7d8781] max-w-2xl mb-0">
             Admin mengatur slot penggunaan fasilitas dan memmemvalidasi konflik jadwal sebelum menyimpan.
         </p>
     </div>
 </div>
 
 <!-- Selector and Controls Card -->
-<div class="card border-0 rounded-4 p-3 mb-4" style="background: #fffdfa; border: 1px solid var(--line) !important;">
-    <div class="row align-items-end g-3">
-        <div class="col-md-4">
-            <label class="form-label text-secondary small fw-bold">Fasilitas</label>
-            <select id="ruanganSelect" class="form-select border-0 bg-light rounded-3" style="height: 44px;">
-                @foreach($ruangan as $room)
-                    <option value="{{ $room->id_ruangan }}" {{ $room->id_ruangan == $selectedRuanganId ? 'selected' : '' }}>
-                        {{ $room->nama_ruangan }}
-                    </option>
-                @endforeach
-                @if(count($ruangan) == 0)
-                    <option value="1">Aula Utama</option>
-                    <option value="2">Lab Komputer 1</option>
-                @endif
+<div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-end gap-4">
+        <div class="w-full md:w-1/3">
+            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Fasilitas</label>
+            <select id="ruanganSelect" class="w-full bg-[#fcfbf8] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 h-11 focus:outline-none focus:border-[#466454]">
+                <optgroup label="Ruangan">
+                    @foreach($ruangan as $room)
+                        <option value="ruangan_{{ $room->id_ruangan }}" {{ ($selectedType == 'ruangan' && $room->id_ruangan == $selectedFasilitasId) ? 'selected' : '' }}>
+                            {{ $room->nama_ruangan }}
+                        </option>
+                    @endforeach
+                </optgroup>
+                <optgroup label="Barang">
+                    @foreach($barang as $item)
+                        <option value="barang_{{ $item->id_barang }}" {{ ($selectedType == 'barang' && $item->id_barang == $selectedFasilitasId) ? 'selected' : '' }}>
+                            {{ $item->nama_barang }}
+                        </option>
+                    @endforeach
+                </optgroup>
             </select>
         </div>
-        <div class="col-md-4">
-            <label class="form-label text-secondary small fw-bold">Tanggal</label>
-            <input type="date" id="tanggalInput" class="form-control border-0 bg-light rounded-3" style="height: 44px;" value="{{ $selectedDate }}">
+        <div class="w-full md:w-1/3">
+            <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Tanggal</label>
+            <input type="date" id="tanggalInput" class="w-full bg-[#fcfbf8] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 h-11 focus:outline-none focus:border-[#466454]" value="{{ $selectedDate }}">
         </div>
-        <div class="col-md-4 text-md-end">
-            <button type="button" class="btn btn-main w-100 w-md-auto" style="height: 44px;" data-bs-toggle="modal" data-bs-target="#tambahSlotModal">
+        <div class="w-full md:w-1/3 md:text-right">
+            <button type="button" class="w-full md:w-auto bg-[#466454] hover:bg-[#395244] text-white px-5 py-2.5 rounded-xl font-semibold transition h-11" data-bs-toggle="modal" data-bs-target="#tambahSlotModal">
                 Tambah Slot
             </button>
         </div>
@@ -69,30 +61,30 @@
 </div>
 
 <!-- Calendar Slot Area -->
-<div class="mb-3 fw-semibold text-secondary">Calendar Slot</div>
-<div class="card border-0 rounded-4 p-4 mb-4" style="background: #fffdfa; border: 1px solid var(--line) !important;">
+<div class="font-semibold text-[#7d8781] mb-4">Calendar Slot</div>
+<div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-6 mb-6 overflow-hidden">
     <!-- Horizontal Slot Row -->
     <div id="calendarSlotsContainer" class="flex flex-col gap-4">
         <!-- Loader -->
         <div id="calendarLoader" class="text-center py-5">
-            <div class="spinner-border text-success" role="status">
+            <div class="inline-block animate-spin w-8 h-8 border-4 border-[#466454] border-t-transparent rounded-full" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2 text-muted text-sm">Memuat data jadwal...</p>
+            <p class="mt-4 text-[#7d8781] text-sm">Memuat data jadwal...</p>
         </div>
 
         <!-- Rendered Slots Container -->
-        <div id="slotsGrid" class="d-none">
+        <div id="slotsGrid" class="hidden">
             <!-- Headers and Blocks will be rendered here dynamically -->
         </div>
     </div>
 </div>
 
 <!-- Validasi Konflik Warning Banner & Save Action -->
-<div class="mb-3 fw-semibold text-secondary">Validasi Konflik</div>
-<div class="card border-0 rounded-4 p-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4" style="background: #fffdfa; border: 1px solid var(--line) !important;">
-    <div class="d-flex align-items-center gap-3">
-        <div id="conflictAlert" class="alert border-0 rounded-3 p-2 d-flex align-items-center mb-0 d-none" style="background-color: #fcebeb; color: #8a3c3c;">
+<div class="font-semibold text-[#7d8781] mb-4">Validasi Konflik</div>
+<div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+    <div class="flex items-center gap-4">
+        <div id="conflictAlert" class="bg-[#fcebeb] text-[#8a3c3c] px-4 py-2 rounded-xl flex items-center hidden">
             <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
             <span class="fw-semibold small" id="conflictText">Warning: Jadwal Bentrok</span>
         </div>
@@ -110,22 +102,22 @@
 <!-- Modal Tambah Slot -->
 <div class="modal fade" id="tambahSlotModal" tabindex="-1" aria-labelledby="tambahSlotModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #fffdfa;">
-            <div class="modal-header border-0 pb-0" style="background-color: #f7f3eb; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                <h5 class="modal-title fw-bold text-main" id="tambahSlotModalLabel">Tambah Slot Jadwal</h5>
+        <div class="modal-content bg-[#fffdfa] border-0 rounded-2xl shadow-xl">
+            <div class="modal-header bg-[#f7f3eb] border-0 rounded-t-2xl pb-4">
+                <h5 class="modal-title font-bold text-[#466454] text-lg" id="tambahSlotModalLabel">Tambah Slot Jadwal</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="mb-3">
-                    <label class="form-label text-secondary fw-semibold">Jam Mulai</label>
+                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Jam Mulai</label>
                     <input type="time" id="inputJamMulai" class="form-control rounded-3" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label text-secondary fw-semibold">Jam Selesai</label>
+                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Jam Selesai</label>
                     <input type="time" id="inputJamSelesai" class="form-control rounded-3" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label text-secondary fw-semibold">Status Slot</label>
+                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Status Slot</label>
                     <select id="inputStatus" class="form-select rounded-3">
                         <option value="tersedia">Tersedia</option>
                         <option value="dipinjam">Dipinjam</option>
@@ -133,16 +125,16 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label text-secondary fw-semibold">Hubungkan dengan Peminjaman (Opsional)</label>
+                    <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Hubungkan dengan Peminjaman (Opsional)</label>
                     <select id="inputPeminjaman" class="form-select rounded-3">
                         <option value="">-- Tidak Ada Peminjaman --</option>
                         <!-- Dynamic list of peminjamans will be injected here -->
                     </select>
                 </div>
             </div>
-            <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn action-btn-outline" data-bs-dismiss="modal" style="border-radius:0.75rem;">Batal</button>
-                <button type="button" id="btnAddSlotConfirm" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" style="border-radius:0.75rem;">Tambah Slot</button>
+            <div class="modal-footer border-0">
+                <button type="button" class="border border-[#e6ddd2] text-[#7d8781] px-5 py-2.5 rounded-xl font-semibold hover:bg-[#f5f2ec] transition" data-bs-dismiss="modal" >Batal</button>
+                <button type="button" id="btnAddSlotConfirm" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition inline-block" >Tambah Slot</button>
             </div>
         </div>
     </div>
@@ -163,6 +155,10 @@
             <div>
                 <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Judul Acara</span>
                 <p id="modalEventTitle" class="text-base font-bold text-[#33403b] mt-1 mb-0">-</p>
+            </div>
+            <div>
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Waktu Penggunaan</span>
+                <p id="modalEventTime" class="text-sm font-bold text-[#33403b] mt-1 mb-0">-</p>
             </div>
             <div>
                 <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Keterangan / Deskripsi</span>
@@ -202,16 +198,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Fetch and load slots
     function loadSlots() {
-        const ruanganId = ruanganSelect.value;
+        const valSplit = ruanganSelect.value.split('_');
+        const type = valSplit[0];
+        const fasilitasId = valSplit[1];
         const tanggal = tanggalInput.value;
 
-        if (!ruanganId || !tanggal) return;
+        if (!fasilitasId || !tanggal || !type) return;
 
         // Show loading state
-        calendarLoader.classList.remove('d-none');
-        slotsGrid.classList.add('d-none');
+        calendarLoader.classList.remove('hidden');
+        slotsGrid.classList.add('hidden');
 
-        fetch(`/admin/jadwal/api-slots?ruangan_id=${ruanganId}&tanggal=${tanggal}`)
+        fetch(`/admin/jadwal/api-slots?fasilitas_id=${fasilitasId}&type=${type}&tanggal=${tanggal}`)
             .then(response => {
                 if (!response.ok) throw new Error('Gagal mengambil data jadwal');
                 return response.json();
@@ -238,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Terjadi kesalahan koneksi server.');
             })
             .finally(() => {
-                calendarLoader.classList.add('d-none');
+                calendarLoader.classList.add('hidden');
             });
     }
 
@@ -254,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function renderSlotsGrid() {
         slotsGrid.innerHTML = '';
-        slotsGrid.classList.remove('d-none');
+        slotsGrid.classList.remove('hidden');
 
         if (activeSlots.length === 0) {
             slotsGrid.innerHTML = '<div class="text-center text-muted py-4">Belum ada slot waktu terdaftar. Silakan tambahkan slot baru.</div>';
@@ -371,13 +369,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (conflicts.length > 0) {
             conflictText.textContent = conflicts.join(' | ');
-            conflictAlert.classList.remove('d-none');
-            noConflictAlert.classList.add('d-none');
+            conflictAlert.classList.remove('hidden');
+            noConflictAlert.classList.add('hidden');
             btnSaveSchedule.disabled = true;
             hasConflict = true;
         } else {
-            conflictAlert.classList.add('d-none');
-            noConflictAlert.classList.remove('d-none');
+            conflictAlert.classList.add('hidden');
+            noConflictAlert.classList.remove('hidden');
             btnSaveSchedule.disabled = false;
             hasConflict = false;
         }
@@ -481,6 +479,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const modalContent = document.getElementById('eventDetailModalContent');
         
         document.getElementById('modalEventTitle').textContent = booking.nama_kegiatan || 'Tidak ada judul';
+        document.getElementById('modalEventTime').textContent = booking.jam_mulai ? `${booking.jam_mulai} - ${booking.jam_selesai}` : '-';
         document.getElementById('modalEventDescription').textContent = booking.keterangan || 'Tidak ada deskripsi/keterangan.';
         
         const statusEl = document.getElementById('modalEventStatus');

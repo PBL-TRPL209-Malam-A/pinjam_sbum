@@ -46,50 +46,49 @@
 </div>
 
 <!-- Table: Managed Rooms -->
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
-    <div class="fw-semibold text-secondary">Fasilitas Ruangan Anda</div>
-    <form action="{{ route('pic.dashboard') }}" method="GET" class="d-flex align-items-center gap-2" style="max-width: 350px; width: 100%;">
+<div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4">
+    <div class="font-semibold text-[#7d8781]">Fasilitas Ruangan Anda</div>
+    <form action="{{ route('pic.dashboard') }}" method="GET" class="flex items-center gap-2 w-full md:max-w-sm">
         <input type="hidden" name="search_item" value="{{ request('search_item') }}">
-        <input type="text" name="search_room" class="form-control" placeholder="Cari ruangan..." value="{{ request('search_room') }}" style="border-radius: 0.75rem; border: 1px solid var(--line); background: #fffdfa; height: 2.5rem; font-size: 0.9rem;">
-        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-3 py-1.5 rounded-lg text-sm transition inline-block" style="min-width: auto; height: 2.5rem; border-radius: 0.75rem; padding: 0 1rem; font-size: 0.9rem; color: white;">Cari</button>
+        <input type="text" name="search_room" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 h-10 focus:outline-none focus:border-[#466454]" placeholder="Cari ruangan..." value="{{ request('search_room') }}">
+        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 h-10 rounded-xl font-semibold transition">Cari</button>
         @if(request('search_room'))
-            <a href="{{ route('pic.dashboard', ['search_item' => request('search_item')]) }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" style="height: 2.5rem; border-radius: 0.75rem; font-size: 0.9rem;">Reset</a>
+            <a href="{{ route('pic.dashboard', ['search_item' => request('search_item')]) }}" class="border border-[#e6ddd2] text-[#33403b] px-4 h-10 rounded-xl font-semibold flex items-center justify-center hover:bg-[#f5f2ec] transition">Reset</a>
         @endif
     </form>
 </div>
-<div class="custom-table mb-4">
-    <table class="w-full text-left border-collapse">
-        <thead>
-            <tr>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Nama Ruangan</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kode Ruangan</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Gedung</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Lantai</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Kapasitas</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Status</th>
+<div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] overflow-x-auto mb-6">
+    <table class="w-full text-left whitespace-nowrap">
+        <thead><tr class="bg-[#f7f3eb] text-[#33403b]">
+            <th class="px-6 py-4 font-semibold text-sm">Nama Ruangan</th>
+                <th class="px-6 py-4 font-semibold text-sm">Kode Ruangan</th>
+                <th class="px-6 py-4 font-semibold text-sm">Gedung</th>
+                <th class="px-6 py-4 font-semibold text-sm">Lantai</th>
+                <th class="px-6 py-4 font-semibold text-sm">Kapasitas</th>
+                <th class="px-6 py-4 font-semibold text-sm">Status</th>
             </tr>
         </thead>
         <tbody>
             @forelse($ruangan as $room)
             <tr>
-                <td class="fw-semibold">{{ $room->nama_ruangan }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $room->kode_ruangan }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $room->nama_gedung ?? 'Gedung Utama' }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">Lantai {{ $room->lantai ?? '1' }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $room->kapasitas }} orang</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">{{ $room->nama_ruangan }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $room->kode_ruangan }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $room->nama_gedung ?? 'Gedung Utama' }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">Lantai {{ $room->lantai ?? '1' }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $room->kapasitas }} orang</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($room->status_ruangan == 'tersedia')
-                        <span class="badge-aktif">Tersedia</span>
+                        <span class="bg-[#e2f0d9] text-[#385723] px-4 py-1.5 rounded-full text-xs font-semibold">Tersedia</span>
                     @elseif($room->status_ruangan == 'tidak tersedia')
-                        <span class="badge-tidak-tersedia">Tidak Tersedia</span>
+                        <span class="bg-[#fcebeb] text-[#8b3c3c] px-4 py-1.5 rounded-full text-xs font-semibold">Tidak Tersedia</span>
                     @elseif($room->status_ruangan == 'maintenance')
-                        <span class="badge-maintenance">Maintenance</span>
+                        <span class="bg-[#fcf1d3] text-[#7d6006] px-4 py-1.5 rounded-full text-xs font-semibold">Maintenance</span>
                     @endif
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="text-center py-4 text-muted">Tidak ada data fasilitas ruangan yang dikelola.</td>
+                <td colspan="6" class="px-6 py-8 text-center text-[#7d8781]">Tidak ada data fasilitas ruangan yang dikelola.</td>
             </tr>
             @endforelse
         </tbody>
@@ -97,32 +96,31 @@
 </div>
 
 <!-- Table: Managed Items -->
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3 mt-4">
-    <div class="fw-semibold text-secondary">Barang Inventaris Anda</div>
-    <form action="{{ route('pic.dashboard') }}" method="GET" class="d-flex align-items-center gap-2" style="max-width: 350px; width: 100%;">
+<div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4 mt-8">
+    <div class="font-semibold text-[#7d8781]">Barang Inventaris Anda</div>
+    <form action="{{ route('pic.dashboard') }}" method="GET" class="flex items-center gap-2 w-full md:max-w-sm">
         <input type="hidden" name="search_room" value="{{ request('search_room') }}">
-        <input type="text" name="search_item" class="form-control" placeholder="Cari barang..." value="{{ request('search_item') }}" style="border-radius: 0.75rem; border: 1px solid var(--line); background: #fffdfa; height: 2.5rem; font-size: 0.9rem;">
-        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-3 py-1.5 rounded-lg text-sm transition inline-block" style="min-width: auto; height: 2.5rem; border-radius: 0.75rem; padding: 0 1rem; font-size: 0.9rem; color: white;">Cari</button>
+        <input type="text" name="search_item" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 h-10 focus:outline-none focus:border-[#466454]" placeholder="Cari barang..." value="{{ request('search_item') }}">
+        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 h-10 rounded-xl font-semibold transition">Cari</button>
         @if(request('search_item'))
-            <a href="{{ route('pic.dashboard', ['search_room' => request('search_room')]) }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" style="height: 2.5rem; border-radius: 0.75rem; font-size: 0.9rem;">Reset</a>
+            <a href="{{ route('pic.dashboard', ['search_room' => request('search_room')]) }}" class="border border-[#e6ddd2] text-[#33403b] px-4 h-10 rounded-xl font-semibold flex items-center justify-center hover:bg-[#f5f2ec] transition">Reset</a>
         @endif
     </form>
 </div>
-<div class="custom-table mb-4">
-    <table class="w-full text-left border-collapse">
-        <thead>
-            <tr>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Nama Barang</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Foto</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Keterangan/Lokasi</th>
-                <th class="p-4 font-semibold text-sm border-b border-[#e6ddd2]">Total Stok</th>
+<div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] overflow-x-auto mb-6">
+    <table class="w-full text-left whitespace-nowrap">
+        <thead><tr class="bg-[#f7f3eb] text-[#33403b]">
+            <th class="px-6 py-4 font-semibold text-sm">Nama Barang</th>
+                <th class="px-6 py-4 font-semibold text-sm">Foto</th>
+                <th class="px-6 py-4 font-semibold text-sm">Keterangan/Lokasi</th>
+                <th class="px-6 py-4 font-semibold text-sm">Total Stok</th>
             </tr>
         </thead>
         <tbody>
             @forelse($barang as $item)
             <tr>
-                <td class="fw-semibold">{{ $item->nama_barang }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
+                <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">{{ $item->nama_barang }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($item->foto_barang)
                         <img src="{{ asset($item->foto_barang) }}" alt="{{ $item->nama_barang }}" class="img-fluid rounded-3" style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;">
                     @else
@@ -131,8 +129,8 @@
                         </div>
                     @endif
                 </td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $item->keterangan ?: 'Gudang SBUM' }}</td>
-                <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $item->stok_tersedia }} unit</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $item->keterangan ?: 'Gudang SBUM' }}</td>
+                <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $item->stok_tersedia }} unit</td>
             </tr>
             @empty
             <tr>

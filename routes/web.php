@@ -111,3 +111,6 @@ Route::middleware(['auth', 'role:pamdal'])->group(function () {
     Route::get('/pamdal/profil', [\App\Http\Controllers\PamdalController::class, 'profilIndex'])->name('pamdal.profil');
     Route::put('/pamdal/profil', [\App\Http\Controllers\PamdalController::class, 'profilUpdate'])->name('pamdal.profil.update');
 });
+
+// Public Validation Route for QR Code
+Route::get('/validasi/peminjaman/{id}', [\App\Http\Controllers\ValidasiController::class, 'cekPeminjaman'])->name('validasi.peminjaman');

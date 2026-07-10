@@ -121,6 +121,10 @@
                 <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Keterangan / Deskripsi</span>
                 <div id="modalEventDescription" class="text-sm text-gray-600 mt-1 bg-[#fffdfa] border border-solid border-[#e7ddd1] rounded-2xl p-4 min-h-[80px] whitespace-pre-line text-left">-</div>
             </div>
+            <div>
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Waktu Pemakaian</span>
+                <p id="modalEventTime" class="text-sm font-semibold text-[#5d7d6b] mt-1 mb-0">-</p>
+            </div>
             <div id="modalEventStatusContainer" class="flex items-center justify-between pt-2">
                 <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</span>
                 <span id="modalEventStatus" class="px-3 py-1 text-xs font-bold rounded-full">-</span>
@@ -236,6 +240,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                     showBookingDetailModal({
                                         nama_kegiatan: slot.peminjaman.nama_kegiatan,
                                         keterangan: slot.peminjaman.keterangan,
+                                        jam_mulai: slot.peminjaman.jam_mulai,
+                                        jam_selesai: slot.peminjaman.jam_selesai,
                                         status: slot.status
                                     });
                                 });
@@ -283,6 +289,13 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('modalEventTitle').textContent = booking.nama_kegiatan || 'Tidak ada judul';
         document.getElementById('modalEventDescription').textContent = booking.keterangan || 'Tidak ada deskripsi/keterangan.';
         
+        if (booking.jam_mulai && booking.jam_selesai) {
+            document.getElementById('modalEventTime').textContent = `${booking.jam_mulai.substring(0, 5)} - ${booking.jam_selesai.substring(0, 5)}`;
+            document.getElementById('modalEventTime').parentElement.style.display = 'block';
+        } else {
+            document.getElementById('modalEventTime').parentElement.style.display = 'none';
+        }
+
         const statusEl = document.getElementById('modalEventStatus');
         const displayStatus = booking.status.toLowerCase() === 'dipinjam' ? 'dipakai' : booking.status;
         statusEl.textContent = displayStatus.toUpperCase();

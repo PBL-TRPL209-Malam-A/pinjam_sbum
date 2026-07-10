@@ -11,6 +11,7 @@ class Schedule extends Model
 
     protected $fillable = [
         'ruangan_id',
+        'barang_id',
         'tanggal',
         'jam_mulai',
         'jam_selesai',
@@ -25,6 +26,11 @@ class Schedule extends Model
     public function ruangan()
     {
         return $this->belongsTo(Ruangan::class, 'ruangan_id', 'id_ruangan');
+    }
+
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class, 'barang_id', 'id_barang');
     }
 
     public function peminjaman()

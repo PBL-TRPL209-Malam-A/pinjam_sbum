@@ -143,14 +143,22 @@
                                 @php
                                     $statusClass = 'bg-[#f3e7c8] text-[#92723c] border-[#e3c98b]';
                                     $statusText = 'Menunggu';
-                                    if(in_array($pengajuan->status, ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala', 'menunggu_pic'])) {
-                                        if($pengajuan->status == 'menunggu_dosen') $statusText = 'Menunggu Dosen';
-                                        elseif($pengajuan->status == 'menunggu_admin') $statusText = 'Menunggu Admin';
-                                        elseif($pengajuan->status == 'menunggu_kepala') $statusText = 'Menunggu Ka. SBUM';
-                                        elseif($pengajuan->status == 'menunggu_pic') $statusText = 'Menunggu PIC';
-                                    } elseif($pengajuan->status == 'disetujui' || $pengajuan->status == 'selesai') {
+                                    
+                                    if ($pengajuan->pengembalian && in_array($pengajuan->pengembalian->status_pengembalian, ['menunggu_pic', 'menunggu_admin'])) {
+                                        $statusClass = 'bg-blue-100 text-blue-700 border-blue-200';
+                                        if($pengajuan->pengembalian->status_pengembalian == 'menunggu_pic') $statusText = 'Menunggu Kembali (PIC)';
+                                        elseif($pengajuan->pengembalian->status_pengembalian == 'menunggu_admin') $statusText = 'Menunggu Kembali (Admin)';
+                                    } elseif(in_array($pengajuan->status, ['menunggu_dosen', 'menunggu_admin', 'menunggu_kepala', 'menunggu_pic'])) {
+                                        if($pengajuan->status == 'menunggu_dosen') $statusText = 'Menunggu Pinjam (Dosen)';
+                                        elseif($pengajuan->status == 'menunggu_admin') $statusText = 'Menunggu Pinjam (Admin)';
+                                        elseif($pengajuan->status == 'menunggu_kepala') $statusText = 'Menunggu Pinjam (Ka. SBUM)';
+                                        elseif($pengajuan->status == 'menunggu_pic') $statusText = 'Menunggu Pinjam (PIC)';
+                                    } elseif($pengajuan->status == 'disetujui' || $pengajuan->status == 'siap_digunakan') {
                                         $statusClass = 'bg-[#dcebd7] text-[#557b58] border-[#b7d2b6]';
-                                        $statusText = 'Disetujui';
+                                        $statusText = 'Peminjaman Disetujui';
+                                    } elseif($pengajuan->status == 'selesai') {
+                                        $statusClass = 'bg-[#dcebd7] text-[#557b58] border-[#b7d2b6]';
+                                        $statusText = 'Selesai / Dikembalikan';
                                     } elseif($pengajuan->status == 'ditolak' || $pengajuan->status == 'batal') {
                                         $statusClass = 'bg-red-100 text-red-700 border-red-200';
                                         $statusText = $pengajuan->status == 'batal' ? 'Dibatalkan' : 'Ditolak';

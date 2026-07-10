@@ -4,74 +4,10 @@
 
 
 @section('content')
-<style>
-    .banner-card {
-        background-color: #edf2ea;
-        border: 1px solid #dfe7dc;
-        border-radius: 1.5rem;
-    }
-    .detail-card, .status-side-card {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.5rem;
-        padding: 1.5rem;
-    }
-    .info-row {
-        margin-bottom: 0.85rem;
-    }
-    .info-label {
-        color: var(--text-muted);
-        font-size: 0.85rem;
-        font-weight: 500;
-        margin-bottom: 0.2rem;
-    }
-    .info-value {
-        color: var(--text-main);
-        font-weight: 600;
-        font-size: 0.95rem;
-    }
-    .status-badge-ready {
-        background-color: #e2f0d9;
-        color: #385723;
-        font-weight: 600;
-        padding: 0.6rem;
-        border-radius: 0.75rem;
-        text-align: center;
-        display: block;
-        width: 100%;
-        border: 1px solid #c5e1b5;
-        font-size: 0.95rem;
-    }
-    .btn-confirm-return {
-        background-color: var(--primary-main);
-        color: white;
-        font-weight: 600;
-        border-radius: 0.75rem;
-        height: 48px;
-        border: none;
-        width: 100%;
-        transition: 0.2s;
-    }
-    .btn-confirm-return:hover {
-        background-color: var(--primary-dark);
-    }
-    .btn-reject-return {
-        background-color: #c95b50;
-        color: white;
-        font-weight: 600;
-        border-radius: 0.75rem;
-        height: 48px;
-        border: none;
-        width: 100%;
-        transition: 0.2s;
-    }
-    .btn-reject-return:hover {
-        background-color: #b34e44;
-    }
-</style>
+
 
 <!-- Banner Card -->
-<div class="card banner-card shadow-none mb-4">
+<div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[24px] p-6 lg:p-8 mb-6 shadow-sm">
     <div class="p-6 lg:p-8">
         <h2 class="text-xl font-semibold text-[#466454] mb-2">Konfirmasi pengembalian fasilitas</h2>
         <p class="text-[#7d8781] max-w-2xl">
@@ -94,46 +30,23 @@
     @endif
 @endforeach
 
-<style>
-    .list-item-card {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.25rem;
-        padding: 1.25rem;
-        cursor: pointer;
-        transition: 0.2s;
-        margin-bottom: 1rem;
-        text-align: left;
-    }
-    .list-item-card.active {
-        background-color: #f7f3eb;
-        border-left: 5px solid var(--primary-main);
-    }
-    .badge-verifikasi-soft {
-        background-color: #fcf1d3;
-        color: #7d6006;
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 0.4rem 1rem;
-        border-radius: 2rem;
-    }
-</style>
 
-<div class="row g-4 mb-4">
+
+<div class="flex flex-col lg:flex-row gap-6 mb-6">
     <!-- Left Column: Antrian Permohonan Masuk -->
-    <div class="col-lg-6">
-        <div class="mb-3 fw-semibold text-secondary text-start">Daftar Antrean Pengembalian</div>
-        <div class="d-grid gap-2">
+    <div class="w-full lg:w-1/2">
+        <div class="font-semibold text-[#7d8781] mb-4">Daftar Antrean Pengembalian</div>
+        <div class="flex flex-col gap-3">
             @forelse($peminjaman as $item)
-                <div class="list-item-card {{ $item->id_peminjaman == $selectedId ? 'active' : '' }}" onclick="window.location.href='?selected_id={{ $item->id_peminjaman }}'">
-                    <div class="d-flex justify-content-between align-items-start">
+                <div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[20px] p-5 cursor-pointer transition hover:bg-[#f7f3eb] border-l-[6px] {{ $item->id_peminjaman == $selectedId ? 'border-l-[#466454] bg-[#f7f3eb]' : 'border-l-[#dfd4c8]' }}" onclick="window.location.href='?selected_id={{ $item->id_peminjaman }}'">
+                    <div class="flex justify-between items-start">
                         <div>
-                            <div class="fw-bold text-main">SBUM-2026-{{ str_pad($item->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · {{ $item->nama_kegiatan }}</div>
-                            <div class="text-secondary small mt-1">
+                            <div class="font-bold text-[#466454]">SBUM-2026-{{ str_pad($item->id_peminjaman, 4, '0', STR_PAD_LEFT) }} · {{ $item->nama_kegiatan }}</div>
+                            <div class="text-[#54615b] text-sm mt-1">
                                 Peminjam: {{ $item->user->nama_lengkap ?? 'Peminjam' }} · 
                                 {{ $item->ruangan->isNotEmpty() ? $item->ruangan->first()->nama_ruangan : ($item->barang->isNotEmpty() ? $item->barang->first()->nama_barang : 'Fasilitas') }}
                             </div>
-                            <div class="text-muted small mt-2">
+                            <div class="text-[#7b8681] text-xs mt-2">
                                 @php
                                     $returnDate = $item->jenis_peminjaman === 'ruangan'
                                         ? ($item->pengembalianRuangan->tanggal_pengembalian ?? null)
@@ -149,7 +62,7 @@
                     </div>
                 </div>
             @empty
-                <div class="card p-5 text-center text-secondary border-0" style="background:#fffdfa; border-radius:1.5rem; border: 1px solid var(--line) !important;">
+                <div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-10 text-center text-[#7d8781]">
                     Tidak ada antrean pengembalian.
                 </div>
             @endforelse
@@ -157,7 +70,7 @@
     </div>
 
     <!-- Right Column: Details & Form Pengembalian -->
-    <div class="col-lg-6">
+    <div class="w-full lg:w-1/2">
         @if($selectedItem)
             @php
                 $fotoPath = $selectedItem->jenis_peminjaman === 'ruangan' 
@@ -181,19 +94,19 @@
                 <input type="hidden" name="peminjaman_id" value="{{ $selectedItem->id_peminjaman }}">
                 <input type="hidden" name="status_pengembalian" id="pengembalianField" value="selesai">
 
-                <div class="mb-3 fw-semibold text-secondary text-start">Detail Verifikasi Pengembalian</div>
-                <div class="detail-card mb-4" style="background: #fffdfa; border: 1px solid var(--line); border-radius: 1.5rem; padding: 1.5rem;">
-                    <div class="row g-3 mb-4 text-start">
-                        <div class="col-md-6">
-                            <div class="info-row">
-                                <div class="info-label">ID Peminjaman</div>
-                                <div class="info-value">SBUM-2026-{{ str_pad($selectedItem->id_peminjaman, 4, '0', STR_PAD_LEFT) }}</div>
+                <div class="font-semibold text-[#7d8781] mb-4">Detail Verifikasi Pengembalian</div>
+                <div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-6 lg:p-8 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <div class="mb-3">
+                                <div class="text-[#7d8781] text-xs font-semibold mb-1 uppercase tracking-wider">ID Peminjaman</div>
+                                <div class="text-[#33403b] font-semibold text-sm">SBUM-2026-{{ str_pad($selectedItem->id_peminjaman, 4, '0', STR_PAD_LEFT) }}</div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="info-row">
-                                <div class="info-label">Fasilitas</div>
-                                <div class="info-value">
+                        <div>
+                            <div class="mb-3">
+                                <div class="text-[#7d8781] text-xs font-semibold mb-1 uppercase tracking-wider">Fasilitas</div>
+                                <div class="text-[#33403b] font-semibold text-sm">
                                     @if($selectedItem->ruangan->isNotEmpty())
                                         {{ $selectedItem->ruangan->first()->nama_ruangan }}
                                     @elseif($selectedItem->barang->isNotEmpty())
@@ -205,38 +118,38 @@
                             </div>
                         </div>
                         @if($selectedItem->jenis_peminjaman === 'barang')
-                        <div class="col-md-6">
-                            <div class="info-row">
-                                <div class="info-label">Jumlah Barang</div>
-                                <div class="info-value">
+                        <div>
+                            <div class="mb-3">
+                                <div class="text-[#7d8781] text-xs font-semibold mb-1 uppercase tracking-wider">Jumlah Barang</div>
+                                <div class="text-[#33403b] font-semibold text-sm">
                                     {{ count($selectedItem->barang) > 0 ? ($selectedItem->barang->first()->pivot->jumlah ?? 1) : 1 }} Buah
                                 </div>
                             </div>
                         </div>
                         @endif
-                        <div class="col-md-6">
-                            <div class="info-row">
-                                <div class="info-label">Tanggal Pengembalian</div>
-                                <div class="info-value">{{ $returnDate ? \Carbon\Carbon::parse($returnDate)->translatedFormat('d M Y') : '-' }}</div>
+                        <div>
+                            <div class="mb-3">
+                                <div class="text-[#7d8781] text-xs font-semibold mb-1 uppercase tracking-wider">Tanggal Pengembalian</div>
+                                <div class="text-[#33403b] font-semibold text-sm">{{ $returnDate ? \Carbon\Carbon::parse($returnDate)->translatedFormat('d M Y') : '-' }}</div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="info-row">
-                                <div class="info-label">Jam Selesai Aktual</div>
-                                <div class="info-value">{{ $returnTime ? substr($returnTime, 0, 5) : '-' }}</div>
+                        <div>
+                            <div class="mb-3">
+                                <div class="text-[#7d8781] text-xs font-semibold mb-1 uppercase tracking-wider">Jam Selesai Aktual</div>
+                                <div class="text-[#33403b] font-semibold text-sm">{{ $returnTime ? substr($returnTime, 0, 5) : '-' }}</div>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="info-row">
-                                <div class="info-label">Catatan Pengembalian Peminjam</div>
-                                <div class="info-value">{{ $returnCatatan ?: '-' }}</div>
+                        <div class="md:col-span-2">
+                            <div class="mb-3">
+                                <div class="text-[#7d8781] text-xs font-semibold mb-1 uppercase tracking-wider">Catatan Pengembalian Peminjam</div>
+                                <div class="text-[#33403b] font-semibold text-sm">{{ $returnCatatan ?: '-' }}</div>
                             </div>
                         </div>
                     </div>
 
-                    <hr class="my-4" style="border-top: 1px solid var(--line);">
+                    <hr class="my-6 border-[#e6ddd2]">
 
-                    <div class="mb-3 fw-semibold text-secondary text-start">Bukti Fisik Pasca-Pakai</div>
+                    <div class="font-semibold text-[#7d8781] mb-4">Bukti Fisik Pasca-Pakai</div>
                     <div class="mb-3 text-start">
                         <div class="info-label mb-2">Foto Kondisi Fasilitas</div>
                         @if($fotoPath)
@@ -256,7 +169,7 @@
                             $dokumenUrl = asset($dokumenPath);
                             @endphp
                             <div>
-                                <a href="{{ $dokumenUrl }}" download class="btn btn-upload-photo" style="background-color: var(--soft-bg); border-color: var(--line); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border-radius: 0.75rem; text-decoration: none; padding: 0.5rem 1.5rem; width: auto; font-size: 0.9rem;">
+                                <a href="{{ $dokumenUrl }}" download class="inline-flex items-center justify-center gap-2 bg-[#f7f6f2] border border-[#dfd4c8] text-[#33403b] rounded-xl px-6 py-2.5 font-medium hover:bg-[#f0e9df] transition">
                                     <i class="bi bi-file-earmark-pdf text-danger"></i> Unduh Dokumen PDF
                                 </a>
                             </div>
@@ -265,19 +178,32 @@
                         @endif
                     </div>
 
-                    <div class="mt-4 text-start">
-                        <label class="form-label text-secondary small fw-semibold">Catatan Verifikasi PIC</label>
-                        <textarea name="catatan" class="form-control" rows="3" style="border-radius: 0.75rem; border-color: #dfd4c8; font-size: 0.9rem;" placeholder="Masukkan catatan hasil verifikasi pengembalian..."></textarea>
+                    <div class="mt-4 mb-4">
+                        <label class="form-label text-secondary fw-semibold">Keputusan Verifikasi <span class="text-danger">*</span></label>
+                        <div class="d-flex flex-column gap-2">
+                            <label class="d-flex align-items-center p-3 border rounded-3" style="cursor: pointer; background:#dcebd7; border-color:#b7d2b6 !important;">
+                                <input type="radio" name="status_pengembalian" value="selesai" class="form-check-input mt-0 me-3" required onchange="handleDecisionChange(this.value)">
+                                <span class="fw-semibold text-[#466454]">Terima Pengembalian</span>
+                            </label>
+                            <label class="d-flex align-items-center p-3 border rounded-3" style="cursor: pointer; background:#fdf0f0; border-color:#f5c2c7 !important;">
+                                <input type="radio" name="status_pengembalian" value="ditolak" class="form-check-input mt-0 me-3" required onchange="handleDecisionChange(this.value)">
+                                <span class="fw-semibold text-danger">Tolak Pengembalian</span>
+                            </label>
+                        </div>
                     </div>
 
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="button" onclick="submitPengembalian('selesai')" class="btn btn-confirm-return">Terima Pengembalian</button>
-                        <button type="button" onclick="submitPengembalian('ditolak')" class="btn btn-reject-return">Tolak Pengembalian</button>
+                    <div class="mt-4 mb-3" id="rejectNoteContainer" style="display: none;">
+                        <label class="block text-sm font-semibold text-[#54615b] mb-1.5" id="rejectLabel">Alasan Penolakan <span class="text-danger">*</span></label>
+                        <textarea name="catatan" id="catatanField" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" rows="3" placeholder="Masukkan alasan penolakan..."></textarea>
+                    </div>
+
+                    <div class="modal-footer border-0 pt-0 d-flex w-100 mt-4 px-0">
+                        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-3 rounded-xl font-semibold transition w-100 border-0" style="border-radius:0.75rem;">Simpan Keputusan</button>
                     </div>
                 </div>
             </form>
         @else
-            <div class="card p-5 text-center text-secondary border-0" style="background:#fffdfa; border-radius:1.5rem; border: 1px solid var(--line) !important;">
+            <div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-10 text-center text-[#7d8781]">
                 Pilih antrean pengembalian di kolom kiri untuk melakukan verifikasi.
             </div>
         @endif
@@ -297,9 +223,26 @@
 </div>
 
 <script>
-    function submitPengembalian(status) {
-        document.getElementById('pengembalianField').value = status;
-        document.getElementById('pengembalianForm').submit();
+    function handleDecisionChange(value) {
+        const rejectContainer = document.getElementById('rejectNoteContainer');
+        const catatanField = document.getElementById('catatanField');
+        const rejectLabel = document.getElementById('rejectLabel');
+        
+        if (value === 'ditolak') {
+            rejectContainer.style.display = 'block';
+            catatanField.required = true;
+            catatanField.classList.add('border-danger');
+            catatanField.classList.remove('border-[#e6ddd2]');
+            rejectLabel.classList.add('text-danger');
+            rejectLabel.classList.remove('text-[#54615b]');
+        } else {
+            rejectContainer.style.display = 'none';
+            catatanField.required = false;
+            catatanField.classList.remove('border-danger');
+            catatanField.classList.add('border-[#e6ddd2]');
+            rejectLabel.classList.remove('text-danger');
+            rejectLabel.classList.add('text-[#54615b]');
+        }
     }
 
     function zoomImage(element) {

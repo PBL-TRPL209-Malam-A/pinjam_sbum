@@ -444,6 +444,21 @@
 @endforeach
 
 <script>
+    function handleDecisionChange(value) {
+        var catatanField = document.querySelector('textarea[name="catatan"]');
+        if (!catatanField) return;
+
+        if (value === 'bermasalah') {
+            catatanField.required = true;
+            catatanField.classList.add('border-danger');
+            catatanField.placeholder = "Wajib: Deskripsikan secara rinci permasalahan fasilitas...";
+        } else {
+            catatanField.required = false;
+            catatanField.classList.remove('border-danger');
+            catatanField.placeholder = "Contoh: fasilitas kembali lengkap dan kondisi dinyatakan baik.";
+        }
+    }
+
     function submitDecision(status) {
         document.getElementById('keputusanField').value = status;
         
@@ -464,6 +479,10 @@
 
         var form = document.getElementById('decisionForm') || document.querySelector('form');
         if (form) {
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
             form.submit();
         }
     }

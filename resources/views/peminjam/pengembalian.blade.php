@@ -75,15 +75,15 @@
                                     <div class="status-good h-12 flex items-center justify-center rounded-2xl border-2 border-[#557b58] bg-[#dcebd7] text-[#557b58] font-semibold cursor-pointer transition hover:bg-[#c5dec0]">
                                         Baik
                                     </div>
-                                    <div class="status-note h-12 flex items-center justify-center rounded-2xl border-2 border-transparent bg-[#f4e7c9] text-[#92723c] font-semibold cursor-pointer transition hover:bg-[#ebd5a7]">
-                                        Ada Catatan
+                                    <div class="status-note h-12 flex items-center justify-center rounded-2xl border-2 border-transparent bg-[#fdf0f0] text-[#c0392b] font-semibold cursor-pointer transition hover:bg-[#f8e1e1]">
+                                        Lapor Kerusakan
                                     </div>
                                 </div>
                             </div>
  
                             <div id="catatanContainer" style="display: none;">
-                                <label class="block text-[#5c6761] font-semibold mb-2">Catatan Pengembalian</label>
-                                <textarea name="catatan" class="w-full px-4 py-3 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition min-h-[100px]" placeholder="Masukkan catatan pengembalian (opsional)"></textarea>
+                                <label class="block text-[#5c6761] font-semibold mb-2">Catatan Pengembalian <span class="text-red-500">*</span></label>
+                                <textarea name="catatan" id="catatanField" class="w-full px-4 py-3 rounded-2xl border border-[#dfd4c8] bg-[#fffdfa] focus:outline-none focus:border-[#466454] transition min-h-[100px]" placeholder="Wajib diisi jika melapor kerusakan..."></textarea>
                             </div>
  
                             <div>
@@ -142,26 +142,29 @@
         const choiceGood = document.querySelector('.status-good');
         const choiceNote = document.querySelector('.status-note');
         const kondisiInput = document.getElementById('kondisiInput');
+        const catatanField = document.getElementById('catatanField');
 
         if (choiceGood && choiceNote && kondisiInput) {
             choiceGood.addEventListener('click', function() {
                 kondisiInput.value = 'baik';
                 choiceGood.classList.add('border-[#557b58]');
                 choiceGood.classList.remove('border-transparent');
-                choiceNote.classList.remove('border-[#92723c]');
+                choiceNote.classList.remove('border-[#c0392b]');
                 choiceNote.classList.add('border-transparent');
                 
                 document.getElementById('catatanContainer').style.display = 'none';
+                if (catatanField) catatanField.required = false;
             });
 
             choiceNote.addEventListener('click', function() {
                 kondisiInput.value = 'ada_catatan';
-                choiceNote.classList.add('border-[#92723c]');
+                choiceNote.classList.add('border-[#c0392b]');
                 choiceNote.classList.remove('border-transparent');
                 choiceGood.classList.remove('border-[#557b58]');
                 choiceGood.classList.add('border-transparent');
                 
                 document.getElementById('catatanContainer').style.display = 'block';
+                if (catatanField) catatanField.required = true;
             });
         }
     });

@@ -4,107 +4,27 @@
 
 
 @section('content')
+
 <style>
-    .banner-card {
-        background-color: #edf2ea;
-        border: 1px solid #dfe7dc;
-        border-radius: 1.5rem;
-    }
-    .queue-card {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.25rem;
-        padding: 1.25rem;
-        cursor: pointer;
-        transition: 0.2s;
-        border-left: 5px solid #dfd4c8;
-    }
-    .queue-card.active {
-        background-color: #f7f3eb;
-        border-left-color: var(--primary-main);
-    }
-    .checklist-card, .decision-card {
-        background: #fffdfa;
-        border: 1px solid var(--line);
-        border-radius: 1.5rem;
-        padding: 1.5rem;
-    }
-    .checklist-item {
-        background-color: #f7f6f2;
-        border: 1px solid #dfd4c8;
-        border-radius: 0.75rem;
-        padding: 0.85rem 1.25rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 0.75rem;
-    }
-    .timeline-bar {
-        display: flex;
-        gap: 0.5rem;
-        margin-top: 1rem;
-    }
     .timeline-step {
-        flex: 1;
-        height: 8px;
-        border-radius: 10px;
-        background-color: #dfd4c8;
+        background-color: #e6ddd2;
     }
     .timeline-step.completed {
-        background-color: #557a67;
-    }
-    .btn-decision-verify {
-        background-color: #16a34a;
-        color: white;
-        font-weight: 600;
-        border-radius: 0.75rem;
-        height: 48px;
-        border: none;
-        width: 100%;
-        transition: 0.2s;
-    }
-    .btn-decision-verify:hover {
-        background-color: #15803d;
-    }
-    .btn-decision-reject {
-        background-color: #dc2626;
-        color: white;
-        font-weight: 600;
-        border-radius: 0.75rem;
-        height: 48px;
-        border: none;
-        width: 100%;
-        transition: 0.2s;
-    }
-    .btn-decision-reject:hover {
-        background-color: #b91c1c;
-    }
-    .btn-decision-revision {
-        border: none;
-        background-color: #eab308;
-        color: white;
-        font-weight: 600;
-        border-radius: 0.75rem;
-        height: 48px;
-        width: 100%;
-        transition: 0.2s;
-    }
-    .btn-decision-revision:hover {
-        background-color: #ca8a04;
+        background-color: #466454;
     }
 </style>
 
 <!-- Banner Card -->
-<div class="card banner-card shadow-none mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <h2 class="fs-5 fw-semibold mb-2 text-main">Admin memverifikasi pengajuan peminjaman</h2>
-        <p class="mb-0 text-secondary text-wrap" style="max-width: 650px;">
+<div class="bg-[#edf2ea] border border-[#dfe7dc] rounded-[24px] p-6 lg:p-8 mb-6 shadow-sm">
+    <div>
+        <h2 class="text-xl font-semibold text-[#466454] mb-2">Admin memverifikasi pengajuan peminjaman</h2>
+        <p class="text-[#7d8781] max-w-2xl mb-0">
             Admin mengecek kelengkapan data, ketersediaan fasilitas, dan hasil verifikasi dosen sebelum lanjut ke tahap berikutnya.
         </p>
     </div>
 </div>
 
-<div class="row g-4">
+<div class="flex flex-col lg:flex-row gap-6">
     <!-- Left Column: Antrian Verifikasi -->
     <div class="col-lg-7">
         <div class="mb-3 fw-semibold text-secondary">Antrian Verifikasi</div>
@@ -249,7 +169,7 @@
                 <input type="hidden" name="status_pengajuan" id="statusField" value="disetujui">
 
                 <div class="mb-3 fw-semibold text-secondary text-start">Checklist Verifikasi</div>
-                <div class="checklist-card mb-4">
+                <div class="bg-[#fffdfa] border border-[#e6ddd2] rounded-[24px] p-6 lg:p-8 mb-6">
                     <div class="checklist-item text-start">
                         <input class="form-check-input mt-0" type="checkbox" id="check1" required>
                         <label class="form-check-label text-main fw-semibold ms-2" for="check1">Data peminjaman lengkap</label>
@@ -263,21 +183,31 @@
                         <label class="form-check-label text-main fw-semibold ms-2" for="check3">Dokumen pendukung valid</label>
                     </div>
 
-                    <div class="mt-4 text-start" id="rejectNoteContainer" style="display: none;">
-                        <label class="form-label text-danger fw-bold">Alasan Penolakan <span class="text-danger">*</span></label>
-                        <textarea name="catatan" id="catatanField" class="form-control border-danger" rows="3" placeholder="Wajib: Berikan alasan kenapa pengajuan ini ditolak..." style="border-radius: 0.75rem;"></textarea>
+                    <div class="mt-4 mb-4 text-start">
+                        <label class="form-label text-secondary fw-semibold">Keputusan Verifikasi <span class="text-danger">*</span></label>
+                        <div class="d-flex flex-column gap-2">
+                            <label class="d-flex align-items-center p-3 border rounded-3" style="cursor: pointer; background:#dcebd7; border-color:#b7d2b6 !important;">
+                                <input type="radio" name="status_pengajuan" value="disetujui" class="form-check-input mt-0 me-3" required onchange="handleDecisionChange(this.value)">
+                                <span class="fw-semibold text-[#466454]">Disetujui (Lanjut ke Kepala SBUM)</span>
+                            </label>
+                            <label class="d-flex align-items-center p-3 border rounded-3" style="cursor: pointer; background:#fdf4d6; border-color:#f5da79 !important;">
+                                <input type="radio" name="status_pengajuan" value="disetujui_bypass" class="form-check-input mt-0 me-3" required onchange="handleDecisionChange(this.value)">
+                                <span class="fw-semibold" style="color: #9c6c06;">Disetujui & Bypass Kepala SBUM</span>
+                            </label>
+                            <label class="d-flex align-items-center p-3 border rounded-3" style="cursor: pointer; background:#fdf0f0; border-color:#f5c2c7 !important;">
+                                <input type="radio" name="status_pengajuan" value="ditolak" class="form-check-input mt-0 me-3" required onchange="handleDecisionChange(this.value)">
+                                <span class="fw-semibold text-danger">Tolak Pengajuan</span>
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3 fw-semibold text-secondary text-start">Keputusan</div>
-                <div class="decision-card">
-                    <div class="d-grid gap-2" id="actionButtonsContainer">
-                        <button type="submit" onclick="setStatus('disetujui')" class="btn btn-decision-verify">Verifikasi</button>
-                        <button type="button" onclick="showRejectNote()" class="btn btn-decision-reject">Tolak</button>
+                    <div class="mt-4 text-start" id="rejectNoteContainer" style="display: none;">
+                        <label class="form-label fw-bold" id="rejectLabel">Catatan / Alasan <span class="text-danger">*</span></label>
+                        <textarea name="catatan" id="catatanField" class="form-control" rows="3" placeholder="Wajib: Berikan alasan jika ditolak atau bypass..." style="border-radius: 0.75rem;"></textarea>
                     </div>
-                    <div class="d-grid gap-2 mt-3" id="confirmRejectContainer" style="display: none;">
-                        <button type="button" onclick="cancelReject()" class="btn btn-light" style="border-radius:0.75rem; color:#7d8781;">Batal</button>
-                        <button type="submit" onclick="setStatus('ditolak')" class="btn btn-decision-reject">Konfirmasi Tolak</button>
+
+                    <div class="modal-footer border-0 pt-0 d-flex w-100 mt-4 px-0">
+                        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-3 rounded-xl font-semibold transition w-100 border-0" style="border-radius:0.75rem;">Simpan Keputusan</button>
                     </div>
                 </div>
             </form>
@@ -296,43 +226,49 @@
         }
     }
 
-    function setStatus(status) {
-        var statusField = document.getElementById('statusField');
-        if (statusField) {
-            statusField.value = status;
-        }
+    function handleDecisionChange(value) {
+        var rejectContainer = document.getElementById('rejectNoteContainer');
+        var catatanField = document.getElementById('catatanField');
+        var rejectLabel = document.getElementById('rejectLabel');
         
-        // Remove 'required' logic for checkboxes if rejecting or requesting revision
         var check1 = document.getElementById('check1');
         var check2 = document.getElementById('check2');
         var check3 = document.getElementById('check3');
-        if (check1 && check2 && check3) {
-            if (status === 'ditolak' || status === 'revisi') {
-                check1.removeAttribute('required');
-                check2.removeAttribute('required');
-                check3.removeAttribute('required');
-            } else {
-                check1.setAttribute('required', 'required');
-                check2.setAttribute('required', 'required');
-                check3.setAttribute('required', 'required');
-            }
-        }
-    }
-</script>
 
-<script>
-    function showRejectNote() {
-        document.getElementById('rejectNoteContainer').style.display = 'block';
-        document.getElementById('actionButtonsContainer').style.display = 'none';
-        document.getElementById('confirmRejectContainer').style.display = 'block';
-        document.getElementById('catatanField').required = true;
-    }
-    function cancelReject() {
-        document.getElementById('rejectNoteContainer').style.display = 'none';
-        document.getElementById('actionButtonsContainer').style.display = 'block';
-        document.getElementById('confirmRejectContainer').style.display = 'none';
-        document.getElementById('catatanField').required = false;
-        document.getElementById('catatanField').value = '';
+        if (value === 'ditolak') {
+            rejectContainer.style.display = 'block';
+            catatanField.required = true;
+            catatanField.classList.add('border-danger');
+            catatanField.classList.remove('border-warning');
+            rejectLabel.classList.add('text-danger');
+            rejectLabel.classList.remove('text-warning');
+            
+            if(check1) check1.required = false;
+            if(check2) check2.required = false;
+            if(check3) check3.required = false;
+        } else if (value === 'disetujui_bypass') {
+            rejectContainer.style.display = 'block';
+            catatanField.required = true;
+            catatanField.classList.remove('border-danger');
+            catatanField.classList.add('border-warning');
+            rejectLabel.classList.remove('text-danger');
+            rejectLabel.classList.add('text-warning');
+            
+            if(check1) check1.required = true;
+            if(check2) check2.required = true;
+            if(check3) check3.required = true;
+        } else {
+            rejectContainer.style.display = 'none';
+            catatanField.required = false;
+            catatanField.classList.remove('border-danger');
+            catatanField.classList.remove('border-warning');
+            rejectLabel.classList.remove('text-danger');
+            rejectLabel.classList.remove('text-warning');
+            
+            if(check1) check1.required = true;
+            if(check2) check2.required = true;
+            if(check3) check3.required = true;
+        }
     }
 </script>
 

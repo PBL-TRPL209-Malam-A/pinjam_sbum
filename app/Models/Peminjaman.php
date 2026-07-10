@@ -149,6 +149,11 @@ class Peminjaman extends Model
         return $this->hasOne(PengembalianBarang::class, 'peminjaman_id', 'id_peminjaman');
     }
 
+    public function getPengembalianAttribute()
+    {
+        return $this->pengembalianRuangan ?? $this->pengembalianBarang;
+    }
+
     public function verifikasi()
     {
         return $this->hasMany(VerifikasiPeminjaman::class, 'id_peminjaman', 'id_peminjaman');
