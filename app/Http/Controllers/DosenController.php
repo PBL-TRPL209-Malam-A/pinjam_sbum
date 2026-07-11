@@ -49,7 +49,10 @@ class DosenController extends Controller
     public function verifikasi(Request $request, $id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
-        
+
+        if ($peminjaman->dosen_id !== auth()->id()) {
+            abort(403, 'Anda tidak berhak memverifikasi peminjaman ini.');
+        }
         $request->validate([
             'status_pengajuan' => 'required|in:verif_dosen,ditolak,disetujui,pending,revisi',
             'catatan' => 'nullable|string',

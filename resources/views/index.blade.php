@@ -21,8 +21,24 @@
                 </nav>
 
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="{{ route('login') }}" class="px-5 py-2.5 text-sm font-bold text-[#1f5f4d] bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition shadow-sm">Masuk</a>
-                    <a href="{{ route('register') }}" class="px-5 py-2.5 text-sm font-bold text-white bg-[#1f5f4d] rounded-xl hover:bg-[#184b3c] transition shadow-md shadow-green-900/20">Daftar</a>
+                    @auth
+                        @php
+                            $user = auth()->user();
+                            $dashboardRoute = match (true) {
+                                $user->isAdmin() && \Illuminate\Support\Facades\Route::has('admin.dashboard') => 'admin.dashboard',
+                                $user->isPic() && \Illuminate\Support\Facades\Route::has('pic.dashboard') => 'pic.dashboard',
+                                $user->isDosen() && \Illuminate\Support\Facades\Route::has('dosen.dashboard') => 'dosen.dashboard',
+                                $user->isPeminjam() && \Illuminate\Support\Facades\Route::has('peminjam.dashboard') => 'peminjam.dashboard',
+                                $user->isKepalaSbum() && \Illuminate\Support\Facades\Route::has('kepalasbum.persetujuan') => 'kepalasbum.persetujuan',
+                                $user->isPamdal() && \Illuminate\Support\Facades\Route::has('pamdal.dashboard') => 'pamdal.dashboard',
+                                default => 'home',
+                            };
+                        @endphp
+                        <a href="{{ route($dashboardRoute) }}" class="px-5 py-2.5 text-sm font-bold text-white bg-[#1f5f4d] rounded-xl hover:bg-[#184b3c] transition shadow-md shadow-green-900/20">Dashboard Saya</a>
+                    @else
+                        <a href="{{ route('login') }}" class="px-5 py-2.5 text-sm font-bold text-[#1f5f4d] bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition shadow-sm">Masuk</a>
+                        <a href="{{ route('register') }}" class="px-5 py-2.5 text-sm font-bold text-white bg-[#1f5f4d] rounded-xl hover:bg-[#184b3c] transition shadow-md shadow-green-900/20">Daftar</a>
+                    @endauth
                 </div>
             </div>
         </div>

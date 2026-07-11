@@ -497,7 +497,14 @@ class AuthPeminjamController extends Controller
         ]);
 
         $peminjaman = \App\Models\Peminjaman::findOrFail($request->peminjaman_id);
-
+        
+        if ($peminjaman->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak berhak mengembalikan fasilitas ini.');
+        }
+        
+        if ($peminjaman->status !== 'siap_digunakan') {
+            return back()->with('error', 'Fasilitas ini belum siap atau sudah dikembalikan.');
+        }
         $fotoPath = null;
         if ($request->hasFile('foto_kondisi')) {
             $file = $request->file('foto_kondisi');

@@ -65,6 +65,10 @@ class PicController extends Controller
         ]);
 
         $peminjaman = Peminjaman::findOrFail($request->peminjaman_id);
+        if ($peminjaman->pic_id !== auth()->id()) {
+            abort(403, 'Anda tidak berhak memverifikasi fasilitas ini.');
+        }
+        
         $status = $request->status_kesiapan === 'siap' ? 'menunggu_admin' : 'ditolak';
 
         $fotoPath = null;
@@ -138,6 +142,10 @@ class PicController extends Controller
         ]);
 
         $peminjaman = Peminjaman::findOrFail($request->peminjaman_id);
+        if ($peminjaman->pic_id !== auth()->id()) {
+            abort(403, 'Anda tidak berhak memverifikasi fasilitas ini.');
+        }
+        
         $statusPengembalian = $request->status_pengembalian === 'selesai' ? 'menunggu_admin' : 'ditolak';
 
         \Illuminate\Support\Facades\DB::transaction(function () use ($peminjaman, $statusPengembalian, $request) {
