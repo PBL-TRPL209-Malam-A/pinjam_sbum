@@ -98,6 +98,15 @@ class AuthPeminjamController extends Controller
                 ]);
         }
 
+        // Check if the user is inactive (status = 0)
+        if (!$user->status) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'login' => 'Akun Anda dinonaktifkan. Silakan hubungi Kepala SBUM.',
+                ]);
+        }
+
         Auth::login($user);
         $request->session()->regenerate();
 

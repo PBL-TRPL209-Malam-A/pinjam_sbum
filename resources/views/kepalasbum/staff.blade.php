@@ -66,7 +66,7 @@
                             </thead>
                             <tbody>
                                 @forelse($staff as $s)
-                                <tr>
+                                <tr class="staff-row" data-role="{{ $s->roles->first()->nama_role ?? '' }}" data-status="{{ $s->status ? 'Aktif' : 'Nonaktif' }}">
                                     <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
                                         <div class="font-semibold text-[#466454]">{{ $s->nama_lengkap }}</div>
                                         @if($s->nik)
@@ -82,7 +82,7 @@
                                     </td>
                                     <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $s->email }}</td>
                                     <td class="p-4 border-b border-[#e6ddd2] text-[#54615b]">
-                                        @if($s->id_user != 6) {{-- Just for mockup variations --}}
+                                        @if($s->status)
                                             <span class="inline-block bg-[#d1fae5] text-[#065f46] text-[13px] font-semibold px-3 py-1 rounded-full">Aktif</span>
                                         @else
                                             <span class="inline-block bg-[#f3f4f6] text-[#4b5563] text-[13px] font-semibold px-3 py-1 rounded-full">Nonaktif</span>
@@ -192,6 +192,13 @@
                                         <input type="email" name="email" class="w-full bg-[#fcfbf8] border border-[#e6ddd2] rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#466454] transition" value="{{ $s->email }}" required>
                                     </div>
                                     <div class="mb-4">
+                                        <label class="block text-[#54615b] font-medium mb-2 text-sm">Status Akun</label>
+                                        <select name="status" class="w-full bg-[#fcfbf8] border border-[#e6ddd2] rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#466454] transition" required>
+                                            <option value="1" {{ $s->status ? 'selected' : '' }}>Aktif</option>
+                                            <option value="0" {{ !$s->status ? 'selected' : '' }}>Nonaktif</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
                                         <label class="block text-[#54615b] font-medium mb-2 text-sm">Password Baru</label>
                                         <input type="password" name="password" class="w-full bg-[#fcfbf8] border border-[#e6ddd2] rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#466454] transition" placeholder="Kosongkan jika tidak ingin mengubah">
                                     </div>
@@ -207,9 +214,39 @@
                 @endforeach
 
                 <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 mb-6">
-                    <h3 class="text-xl font-bold text-[#466454] mb-2">Hak Akses Staff</h3>
-                    <p class="text-[#7d8781]">
-                        Role yang bisa dikelola misalnya Admin SBUM, PIC, Pamdal, dan staff lain yang terlibat di operasional peminjaman.
-                    </p>
-                </div>
+                                    <h3 class="text-xl font-bold text-[#466454] mb-2">Hak Akses Staff</h3>
+                                    <p class="text-[#7d8781]">
+                                        Role yang bisa dikelola misalnya Admin SBUM, PIC, Pamdal, dan staff lain yang terlibat di operasional peminjaman.
+                                    </p>
+                                </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const roleFilter = document.getElementById('roleFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const rows = document.querySelectorAll('.staff-row');
+
+    function filterTable() {
+        const selectedRole = roleFilter.value;
+        const selectedStatus = statusFilter.value;
+
+        rows.forEach(row => {
+            const role = row.getAttribute('data-role');
+            const status = row.getAttribute('data-status');
+
+            const roleMatch = (selectedRole === 'all' || role === selectedRole);
+            const statusMatch = (selectedStatus === 'all' || status === selectedStatus);
+
+            if (roleMatch && statusMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    if (roleFilter) roleFilter.addEventListener('change', filterTable);
+    if (statusFilter) statusFilter.addEventListener('change', filterTable);
+});
+</script>
 @endsection
