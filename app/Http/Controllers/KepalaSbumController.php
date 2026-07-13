@@ -59,6 +59,7 @@ class KepalaSbumController extends Controller
             'role_id' => 'required|exists:role,id_role',
             'email' => 'required|email|max:150|unique:user,email,' . $id . ',id_user',
             'password' => 'nullable|string|min:6',
+            'status' => 'required|in:0,1',
         ]);
 
         \Illuminate\Support\Facades\DB::beginTransaction();
@@ -67,6 +68,7 @@ class KepalaSbumController extends Controller
                 'nama_lengkap' => $request->nama_lengkap,
                 'nik' => $request->nik,
                 'email' => $request->email,
+                'status' => $request->status,
             ];
 
             if ($request->filled('password')) {
