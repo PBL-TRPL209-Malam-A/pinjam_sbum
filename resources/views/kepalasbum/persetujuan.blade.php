@@ -82,26 +82,30 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="mb-3" id="rejectNoteContainer{{ $p->id_peminjaman }}" style="display: none;">
-                                        <label class="form-label text-danger fw-bold text-sm">Alasan Penolakan <span class="text-danger">*</span></label>
-                                        <textarea name="catatan" id="catatan_form_{{ $p->id_peminjaman }}" class="w-full bg-[#fffdfa] border border-danger text-[#33403b] rounded-xl px-4 py-2 focus:outline-none" rows="2" placeholder="Wajib diisi jika ditolak..."></textarea>
+                                    <div class="mb-3" id="rejectNoteContainer{{ $p->id_peminjaman }}">
+                                        <label class="form-label text-secondary fw-semibold text-sm">Catatan Keputusan <span class="text-danger" id="catatan_req_{{ $p->id_peminjaman }}" style="display:none;">*</span></label>
+                                        <textarea name="catatan" id="catatan_form_{{ $p->id_peminjaman }}" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" rows="2" placeholder="Tambahkan catatan (Wajib diisi jika ditolak)"></textarea>
                                     </div>
                                     
                                     <div class="flex gap-2 justify-between items-center mt-4">
                                         <button type="button" class="text-[#466454] font-semibold underline" data-bs-toggle="modal" data-bs-target="#detailModal{{ $p->id_peminjaman }}">Lihat Detail</button>
-                                        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-5 py-2.5 rounded-xl font-semibold transition" onclick="if(this.form.status_pengajuan.value == 'disetujui_kepala') { document.getElementById('catatan_form_{{ $p->id_peminjaman }}').value = document.getElementById('catatan_keputusan').value; }">Simpan Keputusan</button>
+                                        <button type="submit" class="bg-[#466454] hover:bg-[#395244] text-white px-5 py-2.5 rounded-xl font-semibold transition">Simpan Keputusan</button>
                                     </div>
                                 </form>
                                 <script>
                                     function handleDecisionChange{{ $p->id_peminjaman }}(value) {
-                                        const container = document.getElementById('rejectNoteContainer{{ $p->id_peminjaman }}');
+                                        const reqIndicator = document.getElementById('catatan_req_{{ $p->id_peminjaman }}');
                                         const field = document.getElementById('catatan_form_{{ $p->id_peminjaman }}');
                                         if (value === 'ditolak') {
-                                            container.style.display = 'block';
+                                            reqIndicator.style.display = 'inline';
                                             field.required = true;
+                                            field.classList.add('border-danger');
+                                            field.classList.remove('border-[#e6ddd2]');
                                         } else {
-                                            container.style.display = 'none';
+                                            reqIndicator.style.display = 'none';
                                             field.required = false;
+                                            field.classList.remove('border-danger');
+                                            field.classList.add('border-[#e6ddd2]');
                                         }
                                     }
                                 </script>
@@ -196,11 +200,5 @@
                     @endforelse
                 </div>
 
-                <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 mb-6">
-                    <h3 class="text-xl font-bold text-[#466454] mb-2">Catatan Keputusan</h3>
-                    <p class="text-[#7d8781] text-sm mb-4">
-                        Tambahkan alasan persetujuan atau penolakan agar proses audit dan histori keputusan jelas.
-                    </p>
-                    <textarea id="catatan_keputusan" rows="3" class="w-full bg-[#fcfbf8] border border-[#e6ddd2] rounded-[16px] p-4 text-[#54615b] focus:outline-none focus:border-[#466454] transition" placeholder="Contoh: Disetujui karena sesuai agenda kampus dan kapasitas ruangan mencukupi."></textarea>
-                </div>
+
 @endsection

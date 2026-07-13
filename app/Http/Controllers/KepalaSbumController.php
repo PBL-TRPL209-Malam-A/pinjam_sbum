@@ -59,6 +59,7 @@ class KepalaSbumController extends Controller
             'role_id' => 'required|exists:role,id_role',
             'email' => 'required|email|max:150|unique:user,email,' . $id . ',id_user',
             'password' => 'nullable|string|min:6',
+            'status' => 'required|in:0,1',
         ]);
 
         \Illuminate\Support\Facades\DB::beginTransaction();
@@ -67,6 +68,7 @@ class KepalaSbumController extends Controller
                 'nama_lengkap' => $request->nama_lengkap,
                 'nik' => $request->nik,
                 'email' => $request->email,
+                'status' => $request->status,
             ];
 
             if ($request->filled('password')) {
@@ -202,7 +204,7 @@ class KepalaSbumController extends Controller
     // F-019, F-020: Laporan
     public function laporanIndex(\Illuminate\Http\Request $request)
     {
-        $query = Peminjaman::with(['user', 'ruangan', 'barang']);
+        $query = Peminjaman::with(['user', 'ruangan', 'barang'])->orderBy('tanggal_pengajuan', 'desc');
 
         if ($request->filled('periode')) {
             $yearMonth = explode('-', $request->periode);
@@ -263,6 +265,8 @@ class KepalaSbumController extends Controller
                 'status_pengembalian' => $b->peminjaman->status === 'selesai' ? 'dikonfirmasi_admin' : 'pending',
             ]);
         }
+        
+        $pengembalian = $pengembalian->sortByDesc('tanggal_kembali');
 
         // Statistik Laporan
         $totalPeminjaman = $peminjaman->count();
@@ -342,6 +346,8 @@ class KepalaSbumController extends Controller
                 'status_pengembalian' => $b->peminjaman->status === 'selesai' ? 'dikonfirmasi_admin' : 'pending',
             ]);
         }
+        
+        $pengembalian = $pengembalian->sortByDesc('tanggal_kembali');
 
         $totalPengembalian = $pengembalian->count();
         $kondisiBaik = 0;

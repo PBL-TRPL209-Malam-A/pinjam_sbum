@@ -64,9 +64,9 @@
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $r->nama_gedung ?? '-' }}</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($r->foto_ruangan)
-                        <img src="{{ asset($r->foto_ruangan) }}" alt="{{ $r->nama_ruangan }}" class="w-[80px] h-[80px] object-cover rounded-xl">
+                        <img src="{{ asset($r->foto_ruangan) }}" alt="{{ $r->nama_ruangan }}" class="w-20 h-20 min-w-20 object-cover rounded-xl border border-[#e6ddd2]">
                     @else
-                        <div class="w-[80px] h-[80px] rounded-xl flex items-center justify-center bg-[#f7f3eb] text-[#7d8781] text-xs border border-dashed border-[#e6ddd2]">
+                        <div class="w-20 h-20 min-w-20 rounded-xl flex items-center justify-center bg-[#f7f3eb] text-[#7d8781] text-xs border border-dashed border-[#e6ddd2] text-center p-2">
                             Tidak ada foto
                         </div>
                     @endif
@@ -84,13 +84,13 @@
                     @endif
                 </td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="flex gap-2">
-                        <button class="btn btn-detail" data-bs-toggle="modal" data-bs-target="#detailFasilitasModal{{ $r->id_ruangan }}">Detail</button>
-                        <button class="btn btn-ubah" data-bs-toggle="modal" data-bs-target="#editFasilitasModal{{ $r->id_ruangan }}">Ubah</button>
-                        <form action="{{ route('admin.fasilitas.destroy', $r->id_ruangan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus ruangan ini?');">
+                    <div class="flex items-center gap-2">
+                        <button class="bg-[#eef4f1] text-[#466454] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#dce9e2] transition" data-bs-toggle="modal" data-bs-target="#detailFasilitasModal{{ $r->id_ruangan }}">Detail</button>
+                        <button class="bg-[#f0f5ff] text-[#2563eb] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#dbeafe] transition" data-bs-toggle="modal" data-bs-target="#editFasilitasModal{{ $r->id_ruangan }}">Ubah</button>
+                        <form action="{{ route('admin.fasilitas.destroy', $r->id_ruangan) }}" method="POST" class="m-0" onsubmit="return confirm('Apakah Anda yakin ingin menghapus ruangan ini?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-hapus">Hapus</button>
+                            <button type="submit" class="bg-[#fef2f2] text-[#dc2626] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#fee2e2] transition">Hapus</button>
                         </form>
                     </div>
                 </td>
@@ -108,9 +108,9 @@
                 <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">-</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]"><span class="bg-[#e2f0d9] text-[#385723] px-4 py-1.5 rounded-full text-xs font-semibold">Aktif</span></td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="flex gap-2">
-                        <button class="btn btn-ubah">Ubah</button>
-                        <button class="btn btn-hapus">Hapus</button>
+                    <div class="flex items-center gap-2">
+                        <button class="bg-[#f0f5ff] text-[#2563eb] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#dbeafe] transition">Ubah</button>
+                        <button class="bg-[#fef2f2] text-[#dc2626] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#fee2e2] transition">Hapus</button>
                     </div>
                 </td>
             </tr>
@@ -145,12 +145,13 @@
                     </div>
                     <div class="mb-3">
                         <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Gedung</label>
-                        <select name="nama_gedung" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" >
-                            <option value="">-- Pilih Gedung --</option>
-                            <option value="Gedung Utama">Gedung Utama</option>
-                            <option value="Gedung Tower A dan Tower B">Gedung Tower A dan Tower B</option>
-                            <option value="Gedung Technopreneur">Gedung Technopreneur</option>
-                        </select>
+                        <input type="text" list="gedung_options_create" name="nama_gedung" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Ketik atau pilih gedung..." autocomplete="off">
+                        <datalist id="gedung_options_create">
+                            <option value="Gedung Utama"></option>
+                            <option value="Gedung Tower A"></option>
+                            <option value="Gedung Tower B"></option>
+                            <option value="Gedung Technopreneur"></option>
+                        </datalist>
                     </div>
                     <div class="mb-3">
                         <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Lantai</label>
@@ -237,12 +238,13 @@
                         </div>
                         <div class="mb-3">
                             <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Gedung</label>
-                            <select name="nama_gedung" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" >
-                                <option value="" {{ empty($r->nama_gedung) ? 'selected' : '' }}>-- Pilih Gedung --</option>
-                                <option value="Gedung Utama" {{ $r->nama_gedung == 'Gedung Utama' ? 'selected' : '' }}>Gedung Utama</option>
-                                <option value="Gedung Tower A dan Tower B" {{ $r->nama_gedung == 'Gedung Tower A dan Tower B' ? 'selected' : '' }}>Gedung Tower A dan Tower B</option>
-                                <option value="Gedung Technopreneur" {{ $r->nama_gedung == 'Gedung Technopreneur' ? 'selected' : '' }}>Gedung Technopreneur</option>
-                            </select>
+                            <input type="text" list="gedung_options_edit_{{ $r->id_ruangan }}" name="nama_gedung" class="w-full bg-[#fffdfa] border border-[#e6ddd2] text-[#33403b] rounded-xl px-4 py-2 focus:outline-none focus:border-[#466454]" placeholder="Ketik atau pilih gedung..." value="{{ $r->nama_gedung }}" autocomplete="off">
+                            <datalist id="gedung_options_edit_{{ $r->id_ruangan }}">
+                                <option value="Gedung Utama"></option>
+                                <option value="Gedung Tower A"></option>
+                                <option value="Gedung Tower B"></option>
+                                <option value="Gedung Technopreneur"></option>
+                            </datalist>
                         </div>
                         <div class="mb-3">
                             <label class="block text-sm font-semibold text-[#54615b] mb-1.5">Lantai</label>

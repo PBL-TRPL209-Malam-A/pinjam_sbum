@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('peminjaman', function (Blueprint $table) {
-            $table->integer('pic_id')->nullable()->after('dosen_id');
-            $table->foreign('pic_id')->references('id_user')->on('user')->onDelete('set null');
-        });
+        if (!Schema::hasColumn('peminjaman', 'pic_id')) {
+            Schema::table('peminjaman', function (Blueprint $table) {
+                $table->integer('pic_id')->nullable()->after('dosen_id');
+                $table->foreign('pic_id')->references('id_user')->on('user')->onDelete('set null');
+            });
+        }
     }
 
     /**
