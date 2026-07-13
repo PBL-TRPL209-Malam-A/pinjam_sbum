@@ -202,7 +202,7 @@ class KepalaSbumController extends Controller
     // F-019, F-020: Laporan
     public function laporanIndex(\Illuminate\Http\Request $request)
     {
-        $query = Peminjaman::with(['user', 'ruangan', 'barang']);
+        $query = Peminjaman::with(['user', 'ruangan', 'barang'])->orderBy('tanggal_pengajuan', 'desc');
 
         if ($request->filled('periode')) {
             $yearMonth = explode('-', $request->periode);
@@ -263,6 +263,8 @@ class KepalaSbumController extends Controller
                 'status_pengembalian' => $b->peminjaman->status === 'selesai' ? 'dikonfirmasi_admin' : 'pending',
             ]);
         }
+        
+        $pengembalian = $pengembalian->sortByDesc('tanggal_kembali');
 
         // Statistik Laporan
         $totalPeminjaman = $peminjaman->count();
@@ -342,6 +344,8 @@ class KepalaSbumController extends Controller
                 'status_pengembalian' => $b->peminjaman->status === 'selesai' ? 'dikonfirmasi_admin' : 'pending',
             ]);
         }
+        
+        $pengembalian = $pengembalian->sortByDesc('tanggal_kembali');
 
         $totalPengembalian = $pengembalian->count();
         $kondisiBaik = 0;

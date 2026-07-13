@@ -34,9 +34,9 @@
                 <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">{{ $b->nama_barang }}</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
                     @if($b->foto_barang)
-                        <img src="{{ asset($b->foto_barang) }}" alt="{{ $b->nama_barang }}" class="img-fluid rounded-3" style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;">
+                        <img src="{{ asset($b->foto_barang) }}" alt="{{ $b->nama_barang }}" class="w-20 h-20 min-w-20 object-cover rounded-xl border border-[#e6ddd2]">
                     @else
-                        <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-3" style="width: 100px; height: 100px; max-width: 100%; border: 1px dashed var(--line); font-size: 0.8rem;">
+                        <div class="w-20 h-20 min-w-20 rounded-xl flex items-center justify-center bg-[#f7f3eb] text-[#7d8781] text-xs border border-dashed border-[#e6ddd2] text-center p-2">
                             Tidak ada foto
                         </div>
                     @endif
@@ -45,16 +45,48 @@
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">{{ $b->stok_tersedia }} unit</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">{{ $b->pic ? $b->pic->nama_lengkap : '-' }}</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="flex gap-2">
-                        <button class="btn btn-ubah" data-bs-toggle="modal" data-bs-target="#editInventarisModal{{ $b->id_barang }}">Ubah</button>
-                        <form action="{{ route('admin.inventaris.destroy', $b->id_barang) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus barang ini?');">
+                    <div class="flex items-center gap-2">
+                        <button class="bg-[#fdfcf9] border border-[#e6ddd2] text-[#54615b] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#f7f3eb] transition" data-bs-toggle="modal" data-bs-target="#detailInventarisModal{{ $b->id_barang }}">Detail</button>
+                        <button class="bg-[#f0f5ff] text-[#2563eb] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#dbeafe] transition" data-bs-toggle="modal" data-bs-target="#editInventarisModal{{ $b->id_barang }}">Ubah</button>
+                        <form action="{{ route('admin.inventaris.destroy', $b->id_barang) }}" method="POST" class="m-0" onsubmit="return confirm('Apakah Anda yakin ingin menghapus barang ini?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-hapus">Hapus</button>
+                            <button type="submit" class="bg-[#fef2f2] text-[#dc2626] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#fee2e2] transition">Hapus</button>
                         </form>
                     </div>
                 </td>
             </tr>
+
+            <!-- Detail Modal for each Barang -->
+            <div class="modal fade" id="detailInventarisModal{{ $b->id_barang }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content bg-[#fffdfa] border-0 rounded-2xl shadow-xl">
+                        <div class="modal-header bg-[#f7f3eb] border-0 rounded-t-2xl pb-4">
+                            <h5 class="modal-title font-bold text-[#466454] text-lg">Detail Barang Inventaris</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            @if($b->foto_barang)
+                                <div class="mb-4 text-center">
+                                    <img src="{{ asset($b->foto_barang) }}" alt="{{ $b->nama_barang }}" class="img-fluid rounded-xl border border-[#e6ddd2] max-h-48 mx-auto object-cover">
+                                </div>
+                            @endif
+                            <table class="w-full text-sm text-[#54615b]">
+                                <tbody>
+                                    <tr class="border-b border-[#e6ddd2]"><td class="py-2 font-semibold">Nama Barang</td><td class="py-2">{{ $b->nama_barang }}</td></tr>
+                                    <tr class="border-b border-[#e6ddd2]"><td class="py-2 font-semibold">Kode Barang</td><td class="py-2">{{ $b->kode_barang ?? '-' }}</td></tr>
+                                    <tr class="border-b border-[#e6ddd2]"><td class="py-2 font-semibold">Stok Tersedia</td><td class="py-2">{{ $b->stok_tersedia }} unit</td></tr>
+                                    <tr class="border-b border-[#e6ddd2]"><td class="py-2 font-semibold">Keterangan/Lokasi</td><td class="py-2">{{ $b->keterangan ?: 'Gudang SBUM' }}</td></tr>
+                                    <tr><td class="py-2 font-semibold">PIC Barang</td><td class="py-2">{{ $b->pic ? $b->pic->nama_lengkap : '-' }}</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer border-0 p-4 pt-0">
+                            <button type="button" class="bg-[#466454] hover:bg-[#395244] text-white px-4 py-2 rounded-xl font-semibold transition" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Edit Modal for each Barang -->
             <div class="modal fade" id="editInventarisModal{{ $b->id_barang }}" tabindex="-1" aria-hidden="true">
@@ -125,9 +157,9 @@
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">4 unit</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">-</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="flex gap-2">
-                        <button class="btn btn-ubah">Ubah</button>
-                        <button class="btn btn-hapus">Hapus</button>
+                    <div class="flex items-center gap-2">
+                        <button class="bg-[#f0f5ff] text-[#2563eb] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#dbeafe] transition">Ubah</button>
+                        <button class="bg-[#fef2f2] text-[#dc2626] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#fee2e2] transition">Hapus</button>
                     </div>
                 </td>
             </tr>
@@ -142,9 +174,9 @@
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">2 set</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">-</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="flex gap-2">
-                        <button class="btn btn-ubah">Ubah</button>
-                        <button class="btn btn-hapus">Hapus</button>
+                    <div class="flex items-center gap-2">
+                        <button class="bg-[#f0f5ff] text-[#2563eb] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#dbeafe] transition">Ubah</button>
+                        <button class="bg-[#fef2f2] text-[#dc2626] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#fee2e2] transition">Hapus</button>
                     </div>
                 </td>
             </tr>
@@ -159,12 +191,11 @@
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">60 unit</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] font-semibold text-[#33403b]">-</td>
                 <td class="px-6 py-4 border-b border-[#e6ddd2] text-[#54615b]">
-                    <div class="flex gap-2">
-                        <button class="btn btn-ubah">Ubah</button>
-                        <button class="btn btn-hapus">Hapus</button>
+                    <div class="flex items-center gap-2">
+                        <button class="bg-[#f0f5ff] text-[#2563eb] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#dbeafe] transition">Ubah</button>
+                        <button class="bg-[#fef2f2] text-[#dc2626] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#fee2e2] transition">Hapus</button>
                     </div>
                 </td>
-            </tr>
             @endforelse
         </tbody>
     </table>

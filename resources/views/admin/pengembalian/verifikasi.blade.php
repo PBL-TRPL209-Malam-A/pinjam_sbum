@@ -182,7 +182,7 @@
                     <div class="timeline-container mt-3">
                         <div class="d-flex justify-content-between align-items-center position-relative mb-1" style="height: 8px;">
                             <!-- Progress line background -->
-                            <div class="position-absolute top-50 start-0 end-0 translate-middle-y" style="height: 4px; background-color: #dfd4c8; z-index: 1;"></div>
+                            <div class="position-absolute top-50 start-0 end-0 translate-middle-y" style="height: 4px; background-color: #d8e5de; z-index: 1;"></div>
                             
                             <!-- Progress line active -->
                             @php
@@ -194,20 +194,20 @@
                                     $width = '100%';
                                 }
                             @endphp
-                            <div class="position-absolute top-50 start-0 translate-middle-y" style="height: 4px; background-color: var(--primary-main); width: {{ $width }}; z-index: 2; transition: 0.3s;"></div>
+                            <div class="position-absolute top-50 start-0 translate-middle-y" style="height: 4px; background-color: #466454; width: {{ $width }}; z-index: 2; transition: 0.3s;"></div>
 
                             <!-- Step 1: Diajukan -->
-                            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 16px; height: 16px; background-color: var(--primary-main); border: 2px solid #fffdfa; z-index: 3;"></div>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 16px; height: 16px; background-color: #466454; border: 2px solid #fffdfa; z-index: 3;"></div>
                             
                             <!-- Step 2: PIC Fasilitas -->
                             @php
-                                $step2Color = ($status === 'menunggu_admin' || $status === 'selesai') ? 'var(--primary-main)' : '#dfd4c8';
+                                $step2Color = ($status === 'menunggu_admin' || $status === 'selesai') ? '#466454' : '#d8e5de';
                             @endphp
                             <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 16px; height: 16px; background-color: {{ $step2Color }}; border: 2px solid #fffdfa; z-index: 3;"></div>
                             
                             <!-- Step 3: Admin SBUM -->
                             @php
-                                $step3Color = ($status === 'selesai') ? 'var(--primary-main)' : '#dfd4c8';
+                                $step3Color = ($status === 'selesai') ? '#466454' : '#d8e5de';
                             @endphp
                             <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 16px; height: 16px; background-color: {{ $step3Color }}; border: 2px solid #fffdfa; z-index: 3;"></div>
                         </div>
@@ -465,16 +465,24 @@
         var check1 = document.getElementById('check1');
         var check2 = document.getElementById('check2');
         var check3 = document.getElementById('check3');
+        var catatanField = document.querySelector('textarea[name="catatan"]');
 
         if (status === 'disetujui') {
             if (!check1.checked || !check2.checked || !check3.checked) {
                 alert('Silahkan centang semua checklist verifikasi sebelum menyetujui pengembalian.');
                 return;
             }
-        } else {
+            if(catatanField) catatanField.required = false;
+        } else if (status === 'bermasalah') {
             check1.removeAttribute('required');
             check2.removeAttribute('required');
             check3.removeAttribute('required');
+            
+            if(catatanField) {
+                catatanField.required = true;
+                catatanField.classList.add('border-danger');
+                catatanField.placeholder = "Wajib: Deskripsikan secara rinci permasalahan fasilitas...";
+            }
         }
 
         var form = document.getElementById('decisionForm') || document.querySelector('form');

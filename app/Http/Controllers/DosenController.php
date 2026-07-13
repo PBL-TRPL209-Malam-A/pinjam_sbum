@@ -18,16 +18,35 @@ class DosenController extends Controller
             ->get();
             
         $menungguVerifikasi = Peminjaman::where('dosen_id', $dosenId)->where('status', 'menunggu_dosen')->count();
-        $disetujuiHariIni = Peminjaman::where('dosen_id', $dosenId)->whereIn('status', ['menunggu_admin', 'menunggu_kepala', 'menunggu_pic', 'siap_digunakan'])->count();
+        $disetujuiHariIni = VerifikasiPeminjaman::where('id_verifikator', $dosenId)->where('peran_verifikasi', 'Dosen')->whereIn('status', ['disetujui', 'menunggu_pic'])->whereDate('tanggal', today())->count();
         $ditolakRevisi = Peminjaman::where('dosen_id', $dosenId)->whereIn('status', ['ditolak', 'revisi'])->count();
         $kegiatanTerdekat = Peminjaman::where('dosen_id', $dosenId)->where('status', 'siap_digunakan')->count();
+
+        // Data Asli untuk Riwayat Keputusan
+        $riwayatKeputusan = VerifikasiPeminjaman::with('peminjaman.ruangan', 'peminjaman.barang')
+            ->where('id_verifikator', auth()->user()->id_user)
+            ->where('peran_verifikasi', 'Dosen')
+            ->orderBy('tanggal', 'desc')
+            ->take(5)
+            ->get();
+
+        // Data Asli untuk Jadwal Kegiatan
+        $jadwalKegiatan = Peminjaman::with('ruangan', 'barang', 'user')
+            ->where('dosen_id', $dosenId)
+            ->whereIn('status', ['menunggu_admin', 'menunggu_kepala', 'menunggu_pic', 'siap_digunakan'])
+            ->where('tanggal_pengajuan', '>=', today())
+            ->orderBy('tanggal_pengajuan', 'asc')
+            ->take(3)
+            ->get();
 
         return view('dosen.dashboard', compact(
             'peminjaman',
             'menungguVerifikasi',
             'disetujuiHariIni',
             'ditolakRevisi',
-            'kegiatanTerdekat'
+            'kegiatanTerdekat',
+            'riwayatKeputusan',
+            'jadwalKegiatan'
         ));
     }
 

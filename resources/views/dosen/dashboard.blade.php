@@ -69,33 +69,8 @@
                 </div>
             </div>
         @empty
-            <!-- Fallbacks to match mockup exactly -->
-            <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[20px] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-                <div>
-                    <div class="font-semibold text-[#466454]">SBUM-2026-0148 - Seminar Peminjam Baru</div>
-                    <div class="text-[#7d8781] text-sm mt-1">Moch Azmi · Aula Utama · 12 Apr 2026</div>
-                </div>
-                <div>
-                    <span class="inline-block bg-[#fcf1d3] text-[#7d6006] text-[13px] font-semibold px-4 py-1.5 rounded-full">Perlu Verifikasi</span>
-                </div>
-            </div>
-            <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[20px] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-                <div>
-                    <div class="font-semibold text-[#466454]">SBUM-2026-0149 - Workshop UI/UX</div>
-                    <div class="text-[#7d8781] text-sm mt-1">Ayudia · Lab Komputer 1 · 13 Apr 2026</div>
-                </div>
-                <div>
-                    <span class="inline-block bg-[#f3f4f6] text-[#4b5563] text-[13px] font-semibold px-4 py-1.5 rounded-full">Pending</span>
-                </div>
-            </div>
-            <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[20px] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-                <div>
-                    <div class="font-semibold text-[#466454]">SBUM-2026-0150 - Rapat Organisasi</div>
-                    <div class="text-[#7d8781] text-sm mt-1">Danudenta · Ruang Rapat SBUM · 14 Apr 2026</div>
-                </div>
-                <div>
-                    <span class="inline-block bg-[#fcf1d3] text-[#7d6006] text-[13px] font-semibold px-4 py-1.5 rounded-full">Perlu Verifikasi</span>
-                </div>
+            <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[20px] p-5 text-center text-[#7d8781] text-sm italic">
+                Belum ada antrian verifikasi saat ini.
             </div>
         @endforelse
     </div>
@@ -103,23 +78,35 @@
     <!-- Right Column: Riwayat Keputusan & Jadwal -->
     <div class="lg:col-span-5">
         <div class="mb-4 font-semibold text-[#7d8781]">Riwayat Keputusan</div>
-        <div class="bg-[#edf2ea] text-[#466454] rounded-[16px] p-4 flex items-center mb-3 font-semibold text-sm">
-            Disetujui · Projector Epson - 10 Apr
-        </div>
-        <div class="bg-[#fcebeb] text-[#8b3c3c] rounded-[16px] p-4 flex items-center mb-3 font-semibold text-sm">
-            Ditolak · Lab Komputer 2 - 09 Apr
-        </div>
+        
+        @forelse($riwayatKeputusan as $riwayat)
+            @php
+                $isDisetujui = $riwayat->status == 'disetujui';
+                $bgClass = $isDisetujui ? 'bg-[#edf2ea]' : 'bg-[#fcebeb]';
+                $textClass = $isDisetujui ? 'text-[#466454]' : 'text-[#8b3c3c]';
+                $statusText = $isDisetujui ? 'Disetujui' : 'Ditolak/Revisi';
+                $fasilitasText = $riwayat->peminjaman->nama_fasilitas;
+            @endphp
+            <div class="{{ $bgClass }} {{ $textClass }} rounded-[16px] p-4 flex items-center mb-3 font-semibold text-sm">
+                {{ $statusText }} · {{ $fasilitasText }} - {{ $riwayat->tanggal->format('d M') }}
+            </div>
+        @empty
+            <div class="text-[#7d8781] text-sm italic mb-3">Belum ada riwayat keputusan.</div>
+        @endforelse
 
         <div class="mb-4 mt-8 font-semibold text-[#7d8781]">Jadwal Kegiatan Peminjam</div>
         <div class="bg-[#fcfbf8] border border-[#e6ddd2] rounded-[24px] p-6 mb-6">
-            <div class="mb-4">
-                <div class="text-[#7d8781] text-sm font-semibold">12 Apr · 08.00 - 12.00</div>
-                <div class="font-semibold text-[#466454] mt-1">Aula Utama · Seminar Peminjam Baru</div>
-            </div>
-            <div>
-                <div class="text-[#7d8781] text-sm font-semibold">13 Apr · 09.00 - 11.00</div>
-                <div class="font-semibold text-[#466454] mt-1">Lab Komputer 1 · Workshop UI/UX</div>
-            </div>
+            @forelse($jadwalKegiatan as $jadwal)
+                @php
+                    $fasilitasText = $jadwal->nama_fasilitas;
+                @endphp
+                <div class="{{ !$loop->last ? 'mb-4' : '' }}">
+                    <div class="text-[#7d8781] text-sm font-semibold">{{ \Carbon\Carbon::parse($jadwal->tanggal_pengajuan)->format('d M') }} · {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H.i') }} - {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H.i') }}</div>
+                    <div class="font-semibold text-[#466454] mt-1">{{ $fasilitasText }} · {{ $jadwal->nama_kegiatan }}</div>
+                </div>
+            @empty
+                <div class="text-[#7d8781] text-sm italic">Belum ada jadwal kegiatan terdekat yang disetujui.</div>
+            @endforelse
         </div>
     </div>
 </div>

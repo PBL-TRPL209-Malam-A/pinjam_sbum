@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::table('schedules', function (Blueprint $table) {
             $table->integer('ruangan_id')->nullable()->change();
-            $table->integer('barang_id')->nullable()->after('ruangan_id');
+            if (!Schema::hasColumn('schedules', 'barang_id')) {
+                $table->integer('barang_id')->nullable()->after('ruangan_id');
+            }
         });
     }
 

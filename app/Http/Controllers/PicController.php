@@ -31,7 +31,14 @@ class PicController extends Controller
             })
             ->get();
 
-        $peminjamanDisetujui = Peminjaman::where('status', 'disetujui')->count();
+        $peminjamanDisetujui = Peminjaman::where('status', 'menunggu_pic')
+            ->where(function($q) {
+                $q->whereHas('ruangan', function($q2) {
+                    $q2->where('pic_id', auth()->id());
+                })->orWhereHas('barang', function($q2) {
+                    $q2->where('pic_id', auth()->id());
+                });
+            })->count();
         $kesiapanSelesai = 8; // Mocked
         $kendalaDilaporkan = 1; // Mocked
 

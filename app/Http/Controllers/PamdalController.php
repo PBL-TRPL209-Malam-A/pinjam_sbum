@@ -13,7 +13,7 @@ class PamdalController extends Controller
         $today = \Carbon\Carbon::today();
         
         $todaySchedules = Peminjaman::with(['user', 'ruangan', 'barang'])
-            ->whereDate('tanggal_pengajuan', $today)
+            ->whereDate('tanggal_pengajuan', '>=', $today)
             ->whereIn('status', ['siap_digunakan', 'sedang_digunakan', 'selesai'])
             ->count();
             
@@ -23,7 +23,14 @@ class PamdalController extends Controller
         $adaKendala = \App\Models\VerifikasiPeminjaman::where('peran_verifikasi', 'Pamdal')
             ->where('status', 'ditolak')->count();
 
-        return view('pamdal.dashboard', compact('todaySchedules', 'totalPengawasan', 'amanTerkendali', 'adaKendala'));
+        $jadwalKegiatan = Peminjaman::with(['user', 'ruangan', 'barang'])
+            ->whereDate('tanggal_pengajuan', '>=', $today)
+            ->whereIn('status', ['siap_digunakan', 'sedang_digunakan', 'selesai'])
+            ->orderBy('tanggal_pengajuan', 'asc')
+            ->orderBy('jam_mulai', 'asc')
+            ->get();
+
+        return view('pamdal.dashboard', compact('todaySchedules', 'totalPengawasan', 'amanTerkendali', 'adaKendala', 'jadwalKegiatan'));
     }
 
     // Monitoring Hari Ini (Pengawasan)
